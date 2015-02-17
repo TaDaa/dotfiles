@@ -1,0 +1,295 @@
+extends c
+
+###########################################################################
+#                            TextMate Snippets                            #
+###########################################################################
+snippet beginend "$1.begin(), $1.end() (beginend)"
+${1:v}${1/^.*?(-)?(>)?$/(?2::(?1:>:.))/}begin(), $1${1/^.*?(-)?(>)?$/(?2::(?1:>:.))/}end()
+endsnippet
+
+#`!p vim.command('call feedkeys("\<C-space>")')`
+snippet "\,p\b" "public .. (public)" r
+->
+endsnippet
+snippet "\bpu|pub\b" "public .. (public)" r
+public:
+	${1}
+endsnippet
+snippet "\bpi|pri\b" "private .. (private)" r
+private:
+	${1}
+endsnippet
+snippet "\bpo|pro\b" "protected .. (protected)" r
+protected:
+	${1}
+endsnippet
+snippet "\b[,]{0,1}oo\b" "or ||" refs
+|| 
+endsnippet
+snippet "\b[,]{0,1}pa\b" "parenthesis" r
+(${1})
+endsnippet
+snippet "\b[,]{0,1}par\b" "parenthesis with array" r
+([${1}])
+endsnippet
+snippet "\b[,]{0,1}ar\b" "array" r
+[${1}]
+endsnippet
+snippet wh "while" w
+while (${1}) {`!p
+if (t[2] and t[2].find('\n') != 0):
+	snip >> 1
+	snip += ''
+else:
+	res = ''
+`${2}`!p
+if (t[2] and t[2].find('\n') != 0):
+	snip += '}'
+else:
+	res = '}'
+`${3}
+endsnippet
+snippet try "try...catch" w
+try {
+	${1}
+} catch (${2:e}) {`!p
+if (t[3] and t[3].find('\n') != 0):
+	snip >> 1
+	snip += ''
+else:
+	res=''
+`${3}`!p
+if (t[3] and t[3].find('\n') != 0):
+	snip += '}'
+else:
+	res = '}'
+`${4}
+endsnippet
+snippet do "do while" w
+do {`!p
+if (t[1] and t[1].find('\n') != 0):
+	snip >> 1
+	snip += ''
+else:
+	res=""
+`${1}`!p
+if (t[1] and t[1].find('\n') != 0):
+	snip += '}'
+else:
+	res="}"
+` while (${2})${3}
+endsnippet
+snippet fl "for loop - no vars" w
+for (${1};${2};${3}) {`!p
+if (t[4] and t[4].find('\n') != 0):
+	snip >> 1
+	snip += ''
+else:
+	res = ''`${4}`!p
+if (t[4] and t[4].find('\n') != 0):
+	snip += '}'
+else:
+	res = '}'`${5}
+endsnippet
+snippet flu "for loop up" w
+for (${1};${1/(int[\s\t]*)|((=|,).*)//g}<${1/(.*,)|(=.*)|(int[\s\t]*.*)//g)/};${1/(int[\s\t]*)|((=|,).*)//g}++) {`!p
+if (t[2] and t[2].find('\n') != 0):
+	snip >> 1
+	snip += ''
+else:
+	res = ''`${2}`!p
+if (t[2] and t[2].find('\n') != 0):
+	snip += '}'
+else:
+	res = '}'`${3}
+endsnippet
+#fld
+snippet fld "for loop - increment down and cached length (decrementer, assume 0)" w
+for (${1};${1/(int[\s\t]*)|((=|,).*)//g}>=0;${1/(int[\s\t]*)|((=|,).*)//g}--) {`!p
+if (t[2] and t[2].find('\n') != 0):
+	snip >> 1
+	snip += ''
+else:
+	res = ''`${2}`!p
+if (t[2] and t[2].find('\n') != 0):
+	snip += '}'
+else:
+	res = '}'`${3}
+endsnippet
+snippet "\bsw|switch\b" "switch..." r
+switch (${1}) {`!p
+if (t[2] and t[2].find('\n') != 0):
+	snip >> 1
+	snip += ''
+else:
+	res = ''
+`${2:case }`!p
+if (t[3] and t[3].find('\n') != 0):
+	snip >> 1
+	snip += ''
+else:
+	res = ''
+`${3:default }
+}
+${4}
+endsnippet
+snippet "(?<!')(?![.])+'p" "single quote" r
+'+
+'${1}'${2}
+endsnippet
+#STRING -single
+snippet "''p\b" "single quote" r
+'${1}'+
+'${2}'${3}
+endsnippet
+#STRING -double
+snippet "(?<!\")(?![.])+\"p" "single quote" r
+"+
+"${1}"${2}
+endsnippet
+#STRING -double
+snippet "\"\"p\b" "double quote" r
+"${1}"+
+"${2}"${3}
+endsnippet
+
+#CASE
+snippet "\bcase|ca\b" "case..." r
+case ${1}:${2}`!p
+if (t[2] and t[3] and t[2].find('\n') != 0):
+	snip >> 1
+	snip += ''
+else:
+	res = ''
+`${3:break;}
+endsnippet
+#DEFAULT
+snippet "\bdefault|\bdf\b" "default..." r
+default: ${1}`!p
+if (t[1] and t[2] and t[1].find('\n') != 0):
+	snip >> 1
+	snip += ' '
+else:
+	res = ''
+`${2:break;}
+endsnippet
+
+#BREAK
+snippet br "break;" w
+break;${1}
+endsnippet
+
+#CONTINUE
+snippet "\bcn|co\b" "continue;" r
+continue;${1}
+endsnippet
+
+#RETURN
+snippet "\bre|ret\b" "return" r
+return${1/.+/ /}${1:null};
+endsnippet	
+
+snippet "\bif\b" "if..." r
+if (${1}) {
+	${2}
+}${3/.+/ /}${3}
+endsnippet
+
+#ELSE IF
+snippet "\bei|elseif\b" "else if..." r
+else if (${1}) {
+	${2}
+}${3/.+/ /}${3}
+endsnippet
+
+#ELSE
+snippet "\bel\b|\belse\b" "else..." r
+else {
+	${1}
+}${2}
+endsnippet
+
+snippet "\b[,]{0,1}e\b" "assignment" r
+= 
+endsnippet
+#e 
+
+#n
+snippet n "not" w
+!
+endsnippet
+#ee
+snippet ee "Equality" w
+== 
+endsnippet
+#ne
+snippet ne "Not equals" w
+!= 
+endsnippet
+snippet l "less than" w
+< 
+endsnippet
+snippet le "less than equal" w
+<= 
+endsnippet
+
+#g
+snippet g "greater than" w
+> 
+endsnippet
+
+#ge
+snippet ge "greater than equals" w
+>= 
+endsnippet
+
+snippet "\bvi|vir\b" "virtual" r
+virtual ~${1} ();
+endsnippet
+
+snippet cl "class .. (class)"
+class ${1:`!p snip.rv = snip.basename or "name"`} {
+${2}
+}
+endsnippet
+
+snippet "\bclvi|clvir\b" "class virtual .. (class virtual)" r
+class ${1:`!p snip.rv = snip.basename or "name"`}
+{
+public:
+	virtual ~${1/(\w+).*/$1/} ();
+${2}
+};
+endsnippet
+
+snippet ns "namespace .. (namespace)"
+namespace${1/.+/ /m}${1:`!p snip.rv = snip.basename or "name"`}
+{
+	${VISUAL}${0:${VISUAL/(.*)/(?1::\/* code *\/)/}}
+}${1/.+/ \/* /m}$1${1/.+/ *\/ /m}
+endsnippet
+
+snippet readfile "read file (readF)"
+std::vector<char> v;
+if (FILE *fp = fopen(${1:"filename"}, "r"))
+{
+	char buf[1024];
+	while(size_t len = fread(buf, 1, sizeof(buf), fp))
+		v.insert(v.end(), buf, buf + len);
+	fclose(fp);
+}
+endsnippet
+
+snippet map "std::map (map)"
+std::map<${1:key}, ${2:value}> map$0;
+endsnippet
+
+snippet vector "std::vector (v)"
+std::vector<${1:char}> v$0;
+endsnippet
+
+snippet tp "template <typename ..> (template)"
+template <typename ${1:_InputIter}>
+endsnippet
+
+# vim:ft=snippets:

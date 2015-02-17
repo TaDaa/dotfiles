@@ -1,0 +1,1 @@
+autohotkey.exe autohotkey.ahk

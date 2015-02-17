@@ -1,0 +1,208 @@
+
+let g:arr_esc="\<c-[>"
+set nocompatible
+source $VIMRUNTIME/vimrc_example.vim
+source $VIMRUNTIME/mswin.vim
+behave mswin
+
+let g:user_vim_dir='C:/users/tlovell/.vim' "full path to vim files
+
+let &runtimepath.=','.g:user_vim_dir.'/custom'
+let &runtimepath.=','.g:user_vim_dir.'/dependencies'
+"let &runtimepath.=','.g:user_vim_dir.'/vimfiles'
+
+set rtp-='~/.vim/vimfiles'
+set rtp-='~/vimfiles'
+
+filetype off
+let &runtimepath.=','.g:user_vim_dir.'\\bundle\\vundle'
+
+call vundle#rc()
+"preload eclim
+"Bundle 'vimfiles/eclim'
+Bundle 'vimfiles'
+Bundle 'gmarik/vundle'
+Bundle 'kien/ctrlp.vim'
+Bundle 'scrooloose/nerdtree'
+Bundle 'scrooloose/nerdcommenter'
+Bundle 'terryma/vim-multiple-cursors'
+"Bundle 'pangloss/vim-javascript'
+Bundle 'chriskempson/vim-tomorrow-theme'
+Bundle 'altercation/vim-colors-solarized'
+Bundle 'chriskempson/base16-vim'
+Bundle 'tpope/vim-surround'
+Bundle 'tomasr/molokai'
+Bundle 'nielsmadan/harlequin'
+Bundle 'nanotech/jellybeans.vim'
+Bundle 'w0ng/vim-hybrid'
+Bundle 'noahfrederick/vim-hemisu'
+"Bundle 'jelera/vim-javascript-syntax'
+Bundle 'Raimondi/delimitMate'
+Bundle 'mattn/emmet-vim'
+Bundle 'skammer/vim-css-color'
+Bundle 'morhetz/gruvbox'
+Bundle 'vim-scripts/candycode.vim'
+Bundle 'rking/ag.vim'
+Bundle 'vim-scripts/summerfruit256.vim'
+Bundle 'vim-scripts/pyte'
+Bundle 'vim-scripts/ironman.vim'
+Bundle 'vim-scripts/louver.vim'
+Bundle 'tpope/vim-repeat'
+Bundle 'SirVer/ultisnips'
+Bundle 'neowit/vim-force.com'
+Bundle 'ycm'
+Bundle 'ciaranm/detectindent'
+Bundle 'Jonty/svnblame.vim'
+Bundle 'cocopon/iceberg.vim'
+Bundle 'reedes/vim-colors-pencil'
+Bundle 'TaDaa/vim-emmet-autocompleter'
+Bundle 'TaDaa/vim-emmet-visualforce-autocompleter'
+"Bundle 'emmet-completions'
+"Bundle 'emmet-completions-visualforce'
+"Bundle 'tadaa'
+"Bundle 'async-complete'
+
+filetype on
+filetype plugin on 
+filetype indent on
+"cd /IDEXX/projects/trunk/src/main/webapp "current working directory
+cd /IDEXX/projects/ForceTadaa "current working directory
+
+autocmd FileType scss syn cluster sassCssAttributes add=@cssColors "VIM-CSS-COLOR
+autocmd VimEnter * NERDTree
+autocmd BufEnter * NERDTreeMirror
+autocmd VimEnter * wincmd w
+
+let g:NERDTreeChDirMode=2 "NERDTree
+let g:NERDTreeMapOpen='<CR>' "NERDTree
+let g:NERDTreeMapPreview='<S-CR>' "NERDTree
+let g:NERDTreeMapOpenSplit='<C-x>' "NERDTree
+let g:NERDTreeMapPreviewSplit='px' "NERDTree
+let g:NERDTreeMapOpenVSplit='<C-v>' "NERDTree
+let g:NERDTreeMapPreviewVSplit='pv' "NERDTree
+let g:ctrlp_working_path_mode = '0' "CTRLP
+let g:ctrlp_custom_ignore = { 
+	\ 'dir' : '\v[\/](\.svn|\.git|\.hg|\.sencha|\.sass-cache|build|fa|webapp\\ext|webapp\\touch|images|icons|docs|deft|fonts|assembly|test)$'
+\ } "CTRLP
+"let g:agprg="C:\\ag\\ag.exe --column" "AG
+let g:agprg=g:user_vim_dir.'\\dependencies\\windows\\ag\\ag.exe --column' "AG
+let g:aghighlight=1 "AG
+let g:agformat="%f:%l:%c:%m" "AG
+"let g:ycm_server_keep_logfiles=1
+"let g:ycm_server_log_level='debug'
+let g:ycm_global_ycm_extra_conf= g:user_vim_dir.'/custom/ycm/.ycm_extra_conf.py'
+let g:EclimCompletionMethod = 'omnifunc' "YCM
+let g:EclimJavascriptLintConf=g:user_vim_dir.'\\custom\\Eclim\\jslint.conf' "ECLIM validation
+let g:UltiSnipsExpandTrigger="<NUL>"  "ULTISNIPS
+let g:UltiSnipsJumpForwardTrigger="<NUL>" "ULTISNIPS
+let g:UltiSnipsJumpBackwardTrigger="<c-k>" "ULTISNIPS
+let delimitMate_expand_cr=1
+let g:emmet_completions_use_omnifunc=1 "vim-emmet-autocompleter
+let g:apex_server=1 "force
+let g:apex_server_timeoutSec=60*30
+let g:apex_binary_tee="C:/MinGW/msys/1.0/bin/tee.exe"
+let g:apex_binary_tee="C:/MinGW/msys/1.0/bin/touch.exe"
+let g:apex_backup_folder="C:\\Users\\tlovell\\force\\backup"
+let g:apex_temp_folder="C:\\Users\\tlovell\\force\\temp"
+let g:apex_properties_folder="C:\\Users\\tlovell\\force"
+"let g:apex_tooling_force_dot_com_path=g:user_vim_dir.'\\dependencies\\windows\\force\\tooling-force.com-0.3.1.6.jar'
+"let g:apex_tooling_force_dot_com_path=g:user_vim_dir.'\\dependencies\\windows\\force\\tooling-force.com-0.3.1.6a.jar'
+let g:apex_tooling_force_dot_com_path='C:/IDEXX/projects/git/tooling-force.com/target/scala-2.10/tooling-force.com-assembly-0.1-SNAPSHOT.jar'
+let g:ycm_semantic_triggers = {
+\	'visualforce' : ['<',':',']','}','>','^',' ','','['],
+\	'vfp' : ['<',']','}','>','^','[','+', ' '],
+\	'apex' : ['<','.'],
+\	'apexcode' : ['<','.'],
+\	'html' : ['<',']','}','>','^','[','+', ' '],
+\	'svg' : ['<',']','}','>','^','[','+', ' ']
+\ }
+
+"\	'test' : ['<','>',':']
+
+" USER SPECIFIED
+:command Bd bd
+set guioptions-=T
+set number
+set relativenumber
+set nowrap
+set ic!
+set fenc=utf-8
+set background=dark
+set renderoptions=type:directx,renmode:5
+set lsp=1
+set expandtab
+set shiftwidth=4
+set tabstop=4
+set softtabstop=4
+"set ignorecase
+"set smartcase
+"set wildmenu
+"set wildmode=list:longest,full
+
+set cot=menu,longest,preview,menuone
+set guifont=anonymous\ pro:h10:w5.6
+set encoding=utf-8
+set anti
+"set statusline+=%-10n\ %F
+let &backupdir=g:user_vim_dir.'\\backup//'
+let &directory=g:user_vim_dir.'\\swap//'
+
+colorscheme hemisu
+hi LineNr guifg=#555555
+hi Normal guibg=#012333 guifg=#eeeeee	
+hi Visual guibg=#555555
+
+"visual shifting (does not exit Visual mode)
+vnoremap < <gv
+vnoremap > >gv
+
+
+"REMAP
+nnoremap <Leader>n :NERDTreeToggle<CR>
+nnoremap <Leader>ct :call NERDComment(0,"toggle")<CR>
+vnoremap <Leader>ct :call NERDComment(0,"toggle")<CR>
+imap <c-l> <right>
+imap <c-h> <left>
+
+
+python3 globals()["extpathloader"] = (__import__('imp')).load_source('extpathloader', vim.eval('g:user_vim_dir')+'\\custom\\UltiSnips\\extpathloader.py')
+
+
+silent execute '!mkdir "'.$VIMRUNTIME.'/temp"'
+silent execute '!del "'.$VIMRUNTIME.'/temp/*~"'
+if has("gui_running")
+  if has("win32")
+    " Open the folder containing the currently open file. Double <CR> at end
+    " is so you don't have to hit return after command. Double quotes are
+    " not necessary in the 'explorer.exe %:p:h' section.
+    :map <silent> <C-F5> :if expand("%:p:h") != ""<CR>:!start explorer.exe %:p:h<CR>:endif<CR><CR>
+  endif
+endif
+
+imap <C-j> <C-R>=UltiSnips_ExpandSnippetOrJump()<CR><C-space>
+
+
+"set diffexpr=MyDiff()
+"function MyDiff()
+  "let opt = '-a --binary '
+  "if &diffopt =~ 'icase' | let opt = opt . '-i ' | endif
+  "if &diffopt =~ 'iwhite' | let opt = opt . '-b ' | endif
+  "let arg1 = v:fname_in
+  "if arg1 =~ ' ' | let arg1 = '"' . arg1 . '"' | endif
+  "let arg2 = v:fname_new
+  "if arg2 =~ ' ' | let arg2 = '"' . arg2 . '"' | endif
+  "let arg3 = v:fname_out
+  "if arg3 =~ ' ' | let arg3 = '"' . arg3 . '"' | endif
+  "let eq = ''
+  "if $VIMRUNTIME =~ ' '
+    "if &sh =~ '\<cmd'
+      "let cmd = '""' . $VIMRUNTIME . '\diff"'
+      "let eq = '"'
+    "else
+      "let cmd = substitute($VIMRUNTIME, ' ', '" ', '') . '\diff"'
+    "endif
+  "else
+    "let cmd = $VIMRUNTIME . '\diff'
+  "endif
+  "silent execute '!' . cmd . ' ' . opt . arg1 . ' ' . arg2 . ' > ' . arg3 . eq
+"endfunction
