@@ -8,8 +8,8 @@ let &runtimepath.=",".g:user_vim_dir."custom"
 let &runtimepath.=",".g:user_vim_dir."dependencies"
 "let &runtimepath.=','.g:user_vim_dir.'vimfiles'
 
-set rtp-='~/.vim/vimfiles'
-set rtp-='~/vimfiles'
+"set rtp-='~/.vim/vimfiles'
+"set rtp-='~/vimfiles'
 
 filetype off
 let &runtimepath.=",".g:user_vim_dir."bundle/vundle"
