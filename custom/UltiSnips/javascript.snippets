@@ -14,11 +14,11 @@
 #endsnippet
 
 #window
-snippet "\b[,]{0,1}(w|win)\b" "window" r
+snippet "\b[,]{0,1}(win)\b" "window" r
 window
 endsnippet
 #document
-snippet "\b[,]{0,1}(d|doc)\b" "document" r
+snippet "\b[,]{0,1}(doc)\b" "document" r
 document
 endsnippet
 
@@ -201,8 +201,11 @@ snippet "\.sp\b" "splice..." r
 endsnippet
 
 #v
-snippet v "var" w
-var ${1};${2}
+snippet "([^\(]{1})v|^v\b" "var" r
+`!p
+res = match.group(0) if match.group(0) is not None else ''
+res += "ar"
+` ${1};${2}
 endsnippet
 
 #wh 

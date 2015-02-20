@@ -3,16 +3,16 @@ let g:arr_esc="\<c-[>"
 set nocompatible
 behave mswin
 
-let g:user_vim_dir=fnamemodify("~/.vim",":p") "full path to vim files
-let &runtimepath.=",".g:user_vim_dir."custom"
-let &runtimepath.=",".g:user_vim_dir."dependencies"
-"let &runtimepath.=','.g:user_vim_dir.'vimfiles'
+let g:user_vim_dir="~/.vim" "full path to vim files
+let &runtimepath.=",".g:user_vim_dir."/custom"
+let &runtimepath.=",".g:user_vim_dir."/dependencies"
+"let &runtimepath.=','.g:user_vim_dir.'/vimfiles'
 
 set rtp-='~/.vim/vimfiles'
 set rtp-='~/vimfiles'
 
 filetype off
-let &runtimepath.=",".g:user_vim_dir."bundle/vundle"
+let &runtimepath.=",".g:user_vim_dir."/bundle/vundle"
 call vundle#rc()
 
 "preload eclim
@@ -79,13 +79,14 @@ let g:ctrlp_working_path_mode = '0' "CTRLP
 let g:ctrlp_custom_ignore = { 
 	\ 'dir' : '\v[\/](\.svn|\.git|\.hg|\.sencha|\.sass-cache|build|fa|webapp/ext|webapp/touch|images|icons|docs|deft|fonts|assembly|test)$'
 \ } "CTRLP
+let g:agprg=g:user_vim_dir.'/dependencies/windows/ag/ag.exe --column' "AG
 let g:aghighlight=1 "AG
 let g:agformat="%f:%l:%c:%m" "AG
 "let g:ycm_server_keep_logfiles=1
 "let g:ycm_server_log_level='debug'
-let g:ycm_global_ycm_extra_conf= g:user_vim_dir.'custom/ycm/.ycm_extra_conf.py'
+let g:ycm_global_ycm_extra_conf= g:user_vim_dir.'/custom/ycm/.ycm_extra_conf.py'
 let g:EclimCompletionMethod = 'omnifunc' "YCM
-let g:EclimJavascriptLintConf=g:user_vim_dir.'custom/Eclim/jslint.conf' "ECLIM validation
+let g:EclimJavascriptLintConf=g:user_vim_dir.'/custom/Eclim/jslint.conf' "ECLIM validation
 let g:UltiSnipsExpandTrigger="<NUL>"  "ULTISNIPS
 let g:UltiSnipsJumpForwardTrigger="<NUL>" "ULTISNIPS
 let g:UltiSnipsJumpBackwardTrigger="<c-k>" "ULTISNIPS
@@ -129,10 +130,11 @@ set incsearch
 set hlsearch
 
 set cot=menu,longest,preview,menuone
+set guifont=anonymous\ pro:h10:w5.6
 set encoding=utf-8
 set anti
-let &backupdir=g:user_vim_dir.'backup'
-let &directory=g:user_vim_dir.'swap'
+set backupdir=g:user_vim_dir."/backup"
+set directory=g:user_vim_dir."/swap"
 
 colorscheme hemisu
 hi LineNr guifg=#555555
@@ -155,43 +157,51 @@ imap <c-h> <left>
 python << EOF
 import vim
 import os
-globals()["extpathloader"] = (__import__('imp')).load_source('extpathloader', os.path.realpath(vim.eval('g:user_vim_dir')+'custom/UltiSnips/extpathloader.py'))
+globals()["extpathloader"] = (__import__('imp')).load_source('extpathloader', os.path.realpath(os.getcwd()+'/.vim/custom/UltiSnips/extpathloader.py'))
 EOF
 
 
 silent execute '!mkdir "'.$VIMRUNTIME.'/temp"'
 silent execute '!del "'.$VIMRUNTIME.'/temp/*~"'
-
-"SPECIAL ECLIPSE COMMAND  -- open in eclipse
-command! -nargs=* EclipseOpen call EclipseOpen(<f-args>)
-
-function! EclipseOpen (...) 
-    if a:0
-        let f=getcwd()."/".a:1
-    else
-        let f=expand('%')
-    endif
-    exec("!open -a Eclipse ".f)
-endfunction
-
-
 if has("gui_running")
   if has("win32")
       "TODO put in custom dependencies
       set guioptions-=T
-      let g:agprg=g:user_vim_dir.'dependencies/windows/ag/ag.exe --column' "AG
       let g:apex_binary_tee="C:/MinGW/msys/1.0/bin/tee.exe"
       let g:apex_binary_tee="C:/MinGW/msys/1.0/bin/touch.exe"
-      set guifont=anonymous\ pro:h10:w5.6
-      " Open the folder containing the currently open file. Double <CR> at end
-      " is so you don't have to hit return after command. Double quotes are
-      " not necessary in the 'explorer.exe %:p:h' section.
-      imap <C-j> <C-R>=UltiSnips_ExpandSnippetOrJump()<CR><C-space>
-      :map <silent> <C-F5> :if expand("%:p:h") != ""<CR>:!start explorer.exe %:p:h<CR>:endif<CR><CR>
+    " Open the folder containing the currently open file. Double <CR> at end
+    " is so you don't have to hit return after command. Double quotes are
+    " not necessary in the 'explorer.exe %:p:h' section.
+    imap <C-j> <C-R>=UltiSnips_ExpandSnippetOrJump()<CR><C-space>
+    :map <silent> <C-F5> :if expand("%:p:h") != ""<CR>:!start explorer.exe %:p:h<CR>:endif<CR><CR>
   else
-      let g:UltiSnipsExpandSnippetOrJump = "UltiSnips#ExpandSnippetOrJump"
-      set guifont=anonymous\ pro:h12
-      set lsp=3
-      imap <C-j> <C-R>=UltiSnips#ExpandSnippetOrJump()<CR><C-space>
+    imap <C-j> <C-R>=UltiSnips#ExpandSnippetOrJump()<CR><C-space>
   endif
 endif
+
+
+
+"set diffexpr=MyDiff()
+"function MyDiff()
+  "let opt = '-a --binary '
+  "if &diffopt =~ 'icase' | let opt = opt . '-i ' | endif
+  "if &diffopt =~ 'iwhite' | let opt = opt . '-b ' | endif
+  "let arg1 = v:fname_in
+  "if arg1 =~ ' ' | let arg1 = '"' . arg1 . '"' | endif
+  "let arg2 = v:fname_new
+  "if arg2 =~ ' ' | let arg2 = '"' . arg2 . '"' | endif
+  "let arg3 = v:fname_out
+  "if arg3 =~ ' ' | let arg3 = '"' . arg3 . '"' | endif
+  "let eq = ''
+  "if $VIMRUNTIME =~ ' '
+    "if &sh =~ '\<cmd'
+      "let cmd = '""' . $VIMRUNTIME . '\diff"'
+      "let eq = '"'
+    "else
+      "let cmd = substitute($VIMRUNTIME, ' ', '" ', '') . '\diff"'
+    "endif
+  "else
+    "let cmd = $VIMRUNTIME . '\diff'
+  "endif
+  "silent execute '!' . cmd . ' ' . opt . arg1 . ' ' . arg2 . ' > ' . arg3 . eq
+"endfunction

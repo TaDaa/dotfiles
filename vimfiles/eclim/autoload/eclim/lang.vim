@@ -107,8 +107,6 @@ function! eclim#lang#CodeComplete(command, findstart, base, ...) " {{{
           \ 'word': word,
           \ 'menu': menu,
           \ 'info': info,
-          \ 'kind': 's', 
-          \ 'icase': 1, 
           \ 'dup': 1
         \ }
 
