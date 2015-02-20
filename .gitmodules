@@ -6,29 +6,14 @@ url = https://github.com/gmarik/Vundle.vim
 path = bundle/ctrlp.vim
 url = https://github.com/kien/ctrlp.vim
 
-[submodule "bundle/vim-javascript"]
-path = bundle/vim-javascript
-url = https://github.com/pangloss/vim-javascript
-
-[submodule "bundle/vim-javascript-syntax"]
-path = bundle/vim-javascript-syntax
-url = https://github.com/jalera/vim-javascript-syntax
 
 [submodule "bundle/ir_black"]
 path = bundle/ir_black
 url = https://github.com/twerth/ir_black
 
-[submodule "bundle/vim-irblack"]
-path = bundle/vim-irblack
-url = https://github.com/twerth/ir_black
-
 [submodule "bundle/moria"]
 path = bundle/moria
 url = https://github.com/vim-scripts/moria
-
-[submodule "bundle/solarized"]
-path = bundle/solarized
-url = https://github.com/altercation/vim-colors-solarized
 
 [submodule "bundle/vim-atom-dark"]
 path = bundle/vim-atom-dark
