@@ -4,12 +4,18 @@ set nocompatible
 behave mswin
 
 let g:user_vim_dir=fnamemodify("~/.vim",":p") "full path to vim files
+if has("win32")
+    source $VIMRUNTIME/mswin.vim
+    syntax on
+    let g:user_vim_dir=substitute(g:user_vim_dir,'/','\\','g')
+endif
+
 let &runtimepath.=",".g:user_vim_dir."custom"
 let &runtimepath.=",".g:user_vim_dir."dependencies"
 "let &runtimepath.=','.g:user_vim_dir.'vimfiles'
 
 "set rtp-='~/.vim/vimfiles'
-"set rtp-='~/vimfiles'
+set rtp-='~/vimfiles'
 
 filetype off
 let &runtimepath.=",".g:user_vim_dir."bundle/vundle"
@@ -48,7 +54,6 @@ Bundle 'vim-scripts/louver.vim'
 Bundle 'tpope/vim-repeat'
 Bundle 'SirVer/ultisnips'
 Bundle 'neowit/vim-force.com'
-Bundle 'Valloric/YouCompleteMe'
 Bundle 'ciaranm/detectindent'
 Bundle 'Jonty/svnblame.vim'
 Bundle 'cocopon/iceberg.vim'
@@ -63,7 +68,7 @@ Bundle 'TaDaa/vim-emmet-visualforce-autocompleter'
 filetype on
 filetype plugin on 
 filetype indent on
-"cd /IDEXX/projects/trunk/src/main/webapp "current working directory
+cd /IDEXX/projects/trunk/src/main/webapp "current working directory
 "cd /IDEXX/projects/ForceTadaa "current working directory
 
 autocmd FileType scss syn cluster sassCssAttributes add=@cssColors "VIM-CSS-COLOR
@@ -134,8 +139,6 @@ set hlsearch
 set cot=menu,longest,preview,menuone
 set encoding=utf-8
 set anti
-let &backupdir=g:user_vim_dir.'backup'
-let &directory=g:user_vim_dir.'swap'
 
 colorscheme hemisu
 hi LineNr guifg=#555555
@@ -180,19 +183,25 @@ endfunction
 
 if has("gui_running")
   if has("win32")
+      Bundle 'YouCompleteMe_Win32'
       "TODO put in custom dependencies
       set guioptions-=T
       let g:agprg=g:user_vim_dir.'dependencies/windows/ag/ag.exe --column' "AG
       let g:apex_binary_tee="C:/MinGW/msys/1.0/bin/tee.exe"
       let g:apex_binary_tee="C:/MinGW/msys/1.0/bin/touch.exe"
+      let &backupdir=g:user_vim_dir.'backup'
+      let &directory=g:user_vim_dir.'swap'
       set guifont=anonymous\ pro:h10:w5.6
       " Open the folder containing the currently open file. Double <CR> at end
       " is so you don't have to hit return after command. Double quotes are
       " not necessary in the 'explorer.exe %:p:h' section.
-      imap <C-j> <C-R>=UltiSnips_ExpandSnippetOrJump()<CR><C-space>
+      imap <C-j> <C-R>=UltiSnips#ExpandSnippetOrJump()<CR><C-space>
       :map <silent> <C-F5> :if expand("%:p:h") != ""<CR>:!start explorer.exe %:p:h<CR>:endif<CR><CR>
   else
+      Bundle 'Valloric/YouCompleteMe'
       let g:UltiSnipsExpandSnippetOrJump = "UltiSnips#ExpandSnippetOrJump"
+      let &backupdir=g:user_vim_dir.'backup'
+      let &directory=g:user_vim_dir.'swap'
       set guifont=anonymous\ pro:h12
       set lsp=3
       imap <C-j> <C-R>=UltiSnips#ExpandSnippetOrJump()<CR><C-space>
