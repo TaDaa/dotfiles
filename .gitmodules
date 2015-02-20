@@ -23,7 +23,7 @@ url = https://github.com/gosukiwi/vim-atom-dark
 path = bundle/vim-colors-solarized
 url = https://github.com/altercation/vim-colors-solarized
 
-[submodule "nerdtree"]
+[submodule "bundle/nerdtree"]
 path = bundle/nerdtree
 url = https://github.com/scrooloose/nerdtree
 
