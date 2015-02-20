@@ -10,7 +10,7 @@ url = https://github.com/kien/ctrlp.vim
 path = bundle/vim-javascript
 url = https://github.com/pangloss/vim-javascript
 
-[submodule "bundle/vim-javascript"]
+[submodule "bundle/vim-javascript-syntax"]
 path = bundle/vim-javascript-syntax
 url = https://github.com/jalera/vim-javascript-syntax
 
