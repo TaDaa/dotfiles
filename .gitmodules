@@ -1,3 +1,136 @@
-[submodule "bundle/vundle"]
-path = bundle/vundle
+[submodule "bundle/vundle.vim"]
+path = bundle/vundle.vim
 url = https://github.com/gmarik/Vundle.vim
+
+[submodule "bundle/ctrlp.vim"]
+path = bundle/ctrlp.vim
+url = https://github.com/kien/ctrlp.vim
+
+[submodule "bundle/nerdtree"]
+path = bundle/nerdtree
+url = https://github.com/scrooloose/nerdtree
+
+[submodule "bundle/nerdcommenter"]
+path = bundle/nerdcommenter
+url = https://github.com/scrooloose/nerdcommenter
+
+[submodule "bundle/vim-multiple-cursors"]
+path = bundle/vim-multiple-cursors
+url = https://github.com/terryma/vim-multiple-cursors
+
+[submodule "bundle/vim-tomorrow-theme"]
+path = bundle/vim-tomorrow-theme
+url = https://github.com/chriskempson/vim-tomorrow-theme
+
+[submodule "bundle/vim-colors-solarized"]
+path = bundle/vim-colors-solarized
+url = https://github.com/altercation/vim-colors-solarized
+
+[submodule "bundle/base16-vim"]
+path = bundle/base16-vim
+url = https://github.com/chriskempson/base16-vim
+
+[submodule "bundle/vim-surround"]
+path = bundle/vim-surround
+url = https://github.com/tpope/vim-surround
+
+[submodule "bundle/molokai"]
+path = bundle/molokai
+url = https://github.com/tomasr/molokai
+
+[submodule "bundle/harlequin"]
+path = bundle/harlequin
+url = https://github.com/nielsmadan/harlequin
+
+[submodule "bundle/jellybeans.vim"]
+path = bundle/jellybeans.vim
+url = https://github.com/nanotech/jellybeans.vim
+
+[submodule "bundle/vim-hybrid"]
+path = bundle/vim-hybrid
+url = https://github.com/w0ng/vim-hybrid
+
+[submodule "bundle/vim-hemisu"]
+path = bundle/vim-hemisu
+url = https://github.com/noahfrederick/vim-hemisu
+
+[submodule "bundle/delimitMate"]
+path = bundle/delimitMate
+url = https://github.com/Raimondi/delimitMate
+
+[submodule "bundle/emmet-vim"]
+path = bundle/emmet-vim
+url = https://github.com/mattn/emmet-vim
+
+[submodule "bundle/vim-css-color"]
+path = bundle/vim-css-color
+url = https://github.com/skammer/vim-css-color
+
+[submodule "bundle/gruvbox"]
+path = bundle/gruvbox
+url = https://github.com/morhetz/gruvbox
+
+[submodule "bundle/candycode.vim"]
+path = bundle/candycode.vim
+url = https://github.com/vim-scripts/candycode.vim
+
+[submodule "bundle/ag.vim"]
+path = bundle/ag.vim
+url = https://github.com/rking/ag.vim
+
+[submodule "bundle/summerfruit256.vim"]
+path = bundle/summerfruit256.vim
+url = https://github.com/vim-scripts/summerfruit256.vim
+
+[submodule "bundle/pyte"]
+path = bundle/pyte
+url = https://github.com/vim-scripts/pyte
+
+[submodule "bundle/ironman.vim"]
+path = bundle/ironman.vim
+url = https://github.com/vim-scripts/ironman.vim
+
+[submodule "bundle/louver.vim"]
+path = bundle/louver.vim
+url = https://github.com/vim-scripts/louver.vim
+
+[submodule "bundle/vim-repeat"]
+path = bundle/vim-repeat
+url = https://github.com/tpope/vim-repeat
+
+[submodule "bundle/ultisnips"]
+path = bundle/ultisnips
+url = https://github.com/SirVer/ultisnips
+
+[submodule "bundle/vim-force.com"]
+path = bundle/vim-force.com
+url = https://github.com/neowit/vim-force.com
+
+[submodule "bundle/YouCompleteMe"]
+path = bundle/YouCompleteMe
+url = https://github.com/Valloric/YouCompleteMe
+
+[submodule "bundle/detectindent"]
+path = bundle/detectindent
+url = https://github.com/ciaranm/detectindent
+
+[submodule "bundle/svnblame.vim"]
+path = bundle/svnblame.vim
+url = https://github.com/Jonty/svnblame.vim
+
+[submodule "bundle/iceberg.vim"]
+path = bundle/iceberg.vim
+url = https://github.com/cocopon/iceberg.vim
+
+[submodule "bundle/vim-colors-pencil"]
+path = bundle/vim-colors-pencil
+url = https://github.com/reedes/vim-colors-pencil
+
+[submodule "bundle/vim-emmet-autocompleter"]
+path = bundle/vim-emmet-autocompleter
+url = https://github.com/TaDaa/vim-emmet-autocompleter
+
+[submodule "bundle/vim-emmet-visualforce-autocompleter"]
+path = bundle/vim-emmet-visualforce-autocompleter
+url = https://github.com/TaDaa/vim-emmet-visualforce-autocompleter
+

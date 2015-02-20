@@ -18,7 +18,7 @@ call vundle#rc()
 "preload eclim
 "Bundle 'vimfiles/eclim'
 Bundle 'vimfiles'
-Bundle 'gmarik/vundle'
+Bundle 'gmarik/vundle.vim'
 Bundle 'kien/ctrlp.vim'
 Bundle 'scrooloose/nerdtree'
 Bundle 'scrooloose/nerdcommenter'
