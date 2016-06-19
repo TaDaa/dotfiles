@@ -96,11 +96,11 @@ endsnippet
 
 
 #and &&
-snippet "\b[,]{0,1}aa\b" "and &&" refs
+snippet "\b[,]{0,1}aa\b" "and &&" r
 && 
 endsnippet
 #or ||
-snippet "\b[,]{0,1}oo\b" "or ||" refs
+snippet "\b[,]{0,1}oo\b" "or ||" r
 || 
 endsnippet
 #p ()
@@ -137,11 +137,11 @@ snippet "{}p|\bop\b" "object key" r
 	'${1}' : ${2}
 }${3}
 endsnippet
-snippet "([^\{o\}]{1})p\b" "property in object" r
-`!p
-res = match.group(1) if match.group(1) is not None else ''
-`'${1}' : ${2}
-endsnippet
+#snippet "([^\{o\}]{1})p\b" "property in object" r
+#`!p
+#res = match.group(1) if match.group(1) is not None else ''
+#`'${1}' : ${2}
+#endsnippet
 snippet "(\{p)(})?" "object key" r
 {
 	'${1}' : ${2}
@@ -153,6 +153,17 @@ endsnippet
 snippet "," "object key" r
 ,
 '${1}' : ${2}
+endsnippet
+
+#setget
+snippet "\bsetget\b" "setter/getter" r
+${1} = function (v) {
+	if (arguments.length) {
+		${2:$1} = v; 
+		return this;
+	}
+	return $2;
+};
 endsnippet
 
 #proto
@@ -243,7 +254,7 @@ else:
 endsnippet
 
 #do
-snippet do "do while" w
+snippet dw "do while" w
 do {`!p
 if (t[1] and t[1].find('\n') != 0):
 	snip >> 1
@@ -423,7 +434,7 @@ break;${1}
 endsnippet
 
 #CONTINUE
-snippet "\bcn|co\b" "continue;" r
+snippet "\bcn\b|\bco\b" "continue;" r
 continue;${1}
 endsnippet
 

@@ -21,6 +21,7 @@ filetype off
 let &runtimepath.=",".g:user_vim_dir."bundle/vundle"
 call vundle#rc()
 
+
 "preload eclim
 "Bundle 'vimfiles/eclim'
 Bundle 'vimfiles'
@@ -53,13 +54,15 @@ Bundle 'vim-scripts/ironman.vim'
 Bundle 'vim-scripts/louver.vim'
 Bundle 'tpope/vim-repeat'
 Bundle 'SirVer/ultisnips'
+Bundle 'git://repo.or.cz/vcscommand'
 Bundle 'neowit/vim-force.com'
 Bundle 'ciaranm/detectindent'
-Bundle 'Jonty/svnblame.vim'
 Bundle 'cocopon/iceberg.vim'
 Bundle 'reedes/vim-colors-pencil'
+Bundle 'maksimr/vim-jsbeautify'
 Bundle 'TaDaa/vim-emmet-autocompleter'
 Bundle 'TaDaa/vim-emmet-visualforce-autocompleter'
+Bundle 'juneedahamed/vc.vim'
 "Bundle 'emmet-completions'
 "Bundle 'emmet-completions-visualforce'
 "Bundle 'tadaa'
@@ -68,13 +71,11 @@ Bundle 'TaDaa/vim-emmet-visualforce-autocompleter'
 filetype on
 filetype plugin on 
 filetype indent on
-cd /IDEXX/projects/trunk/src/main/webapp "current working directory
+"instead of cd -- select the first directory in nerd tree bookmars
+"
+"cd /IDEXX/projects/trunk/src/main/webapp "current working directory
 "cd /IDEXX/projects/ForceTadaa "current working directory
 
-autocmd FileType scss syn cluster sassCssAttributes add=@cssColors "VIM-CSS-COLOR
-autocmd VimEnter * NERDTree
-autocmd BufEnter * NERDTreeMirror
-autocmd VimEnter * wincmd w
 
 let g:NERDTreeChDirMode=2 "NERDTree
 let g:NERDTreeMapOpen='<CR>' "NERDTree
@@ -85,7 +86,7 @@ let g:NERDTreeMapOpenVSplit='<C-v>' "NERDTree
 let g:NERDTreeMapPreviewVSplit='pv' "NERDTree
 let g:ctrlp_working_path_mode = '0' "CTRLP
 let g:ctrlp_custom_ignore = { 
-	\ 'dir' : '\v[\/](\.svn|\.git|\.hg|\.sencha|\.sass-cache|build|fa|webapp/ext|webapp/touch|images|icons|docs|deft|fonts|assembly|test)$'
+	\ 'dir' : '\v[\/](LYNXXLogs|target|\.DS_STORE|\.settings|\.svn|\.git|\.hg|\.sencha|\.sass-cache|build|fa|webapp/ext|webapp/touch|images|icons|docs|deft|fonts|assembly|test|classes)$',
 \ } "CTRLP
 let g:aghighlight=1 "AG
 let g:agformat="%f:%l:%c:%m" "AG
@@ -94,8 +95,11 @@ let g:agformat="%f:%l:%c:%m" "AG
 let g:ycm_global_ycm_extra_conf= g:user_vim_dir.'custom/ycm/.ycm_extra_conf.py'
 let g:EclimCompletionMethod = 'omnifunc' "YCM
 let g:EclimJavascriptLintConf=g:user_vim_dir.'custom/Eclim/jslint.conf' "ECLIM validation
-let g:UltiSnipsExpandTrigger="<NUL>"  "ULTISNIPS
-let g:UltiSnipsJumpForwardTrigger="<NUL>" "ULTISNIPS
+"THESE TWO WERE CHANGED FROM NUL -- MIGHT NEED TO CHANGE BACK DEPENDING ON OS
+"-- IF SO PUT BELOW
+let g:UltiSnipsExpandTrigger="<c-j>"  "ULTISNIPS
+let g:UltiSnipsJumpForwardTrigger="<c-j>" "ULTISNIPS
+
 let g:UltiSnipsJumpBackwardTrigger="<c-k>" "ULTISNIPS
 let delimitMate_expand_cr=1
 let g:emmet_completions_use_omnifunc=1 "vim-emmet-autocompleter
@@ -103,10 +107,10 @@ let g:apex_server=1 "force
 let g:apex_server_timeoutSec=60*30
 
 
-let g:apex_backup_folder="~/force/backup"
-let g:apex_temp_folder="~/force/temp"
-let g:apex_properties_folder="~/force"
-"let g:apex_tooling_force_dot_com_path=g:user_vim_dir.'\\dependencies\\windows\\force\\tooling-force.com-0.3.1.6.jar'
+let g:apex_backup_folder="/Users/tlovell/.force/backup"
+let g:apex_temp_folder="/Users/tlovell/.force/temp"
+let g:apex_properties_folder="/Users/tlovell/.force"
+let g:apex_tooling_force_dot_com_path=g:user_vim_dir.'/dependencies/shared/force/tooling-force.com-0.3.3.2.jar'
 "let g:apex_tooling_force_dot_com_path=g:user_vim_dir.'\\dependencies\\windows\\force\\tooling-force.com-0.3.1.6a.jar'
 "let g:apex_tooling_force_dot_com_path='C:/IDEXX/projects/git/tooling-force.com/target/scala-2.10/tooling-force.com-assembly-0.1-SNAPSHOT.jar'
 let g:ycm_semantic_triggers = {
@@ -115,7 +119,8 @@ let g:ycm_semantic_triggers = {
 \	'apex' : ['<','.'],
 \	'apexcode' : ['<','.'],
 \	'html' : ['<',']','}','>','^','[','+', ' '],
-\	'svg' : ['<',']','}','>','^','[','+', ' ']
+\	'svg' : ['<',']','}','>','^','[','+', ' '],
+\   'java' : ['.','<']
 \ }
 
 "\	'test' : ['<','>',':']
@@ -135,8 +140,9 @@ set tabstop=4
 set softtabstop=4
 set incsearch
 set hlsearch
-
-set cot=menu,longest,preview,menuone
+set smartindent
+set autoindent
+set cot=menu,longest,menuone
 set encoding=utf-8
 set anti
 
@@ -162,11 +168,23 @@ python << EOF
 import vim
 import os
 globals()["extpathloader"] = (__import__('imp')).load_source('extpathloader', os.path.realpath(vim.eval('g:user_vim_dir')+'custom/UltiSnips/extpathloader.py'))
+globals()["javahelpers"] = (__import__('imp')).load_source('javahelpers', os.path.realpath(vim.eval('g:user_vim_dir')+'custom/UltiSnips/javahelpers.py'))
 EOF
 
 
 silent execute '!mkdir "'.$VIMRUNTIME.'/temp"'
 silent execute '!del "'.$VIMRUNTIME.'/temp/*~"'
+
+autocmd FileType scss syn cluster sassCssAttributes add=@cssColors "VIM-CSS-COLOR
+
+"autocmd VimEnter * call VimEntered()
+"function! VimEntered ()
+    "NERDTree
+    "call feedkeys("\<s-b>")
+"endfunction
+
+let g:multi_cursor_normal_maps={'!':1, '@':1, '=':1, 'q':1, 'r':1, 't':1, 'T':1, 'y':1, '[':1, ']':1, '\':1, 'd':1, 'f':1, 'F':1, 'g':1, '"':1, 'z':1, 'c':1, 'm':1, '<':1, '>':1}
+let g:multi_cursor_visual_maps={'F':1,'f':1}
 
 "SPECIAL ECLIPSE COMMAND  -- open in eclipse
 command! -nargs=* EclipseOpen call EclipseOpen(<f-args>)
@@ -177,7 +195,105 @@ function! EclipseOpen (...)
     else
         let f=expand('%')
     endif
-    exec("!open -a Eclipse ".f)
+    exec("!open -a \"Eclipse\ Mars\" ".f)
+endfunction
+
+command! JavaBuffer call JavaBuffer()
+
+"function! JavaBuffer ()
+    "let f=expand('%')
+    "let pd = GetPackageDirectory(f)
+    "let cp = 'target/classes:'
+                "\'/Users/tlovell/.m2/repository/com/idexx/libs/core/SwingCore/1.1.21/SwingCore-1.1.21.jar:'
+                "\'/Users/tlovell/.m2/repository/log4j/log4j/1.2.16/log4j-1.2.16.jar:'
+                "\'/Users/tlovell/.m2/repository/com/inet/jortho/0.4/jortho-0.4.jar:'
+                "\'/Users/tlovell/.m2/repository/org/swinglabs/swingx/1.6/swingx-1.6.jar:'
+                "\'/Users/tlovell/.m2/repository/com/jidesoft/jide-jdaf/2.3.0/jide-jdaf-2.3.0.jar:'
+                "\'/Users/tlovell/.m2/repository/com/jidesoft/jlfgr/1.0/jlfgr-1.0.jar:'
+                "\'/Users/tlovell/.m2/repository/commons-lang/commons-lang/2.3/commons-lang-2.3.jar'
+
+    "exec('!rm target/classes/'.pd)
+    "exec('!javac -cp '.cp.' -d target/classes '.f)
+    "exec('!java -cp '.cp. ' '.pd)
+"endfunction
+
+"todo fix this
+"function! JavaBuffer ()
+    "let f=expand('%')
+    "let pd = GetPackageDirectory(f)
+    "let cp = 'target/classes:/Users/tlovell/.m2/repository/com/jidesoft/jide-oss/3.6.12/jide-oss-3.6.12.jar:/Users/tlovell/.m2/repository/com/idexx/libs/core/SwingCore/1.1.21/SwingCore-1.1.21.jar:/Users/tlovell/.m2/repository/log4j/log4j/1.2.16/log4j-1.2.16.jar:/Users/tlovell/.m2/repository/com/inet/jortho/0.4/jortho-0.4.jar:/Users/tlovell/.m2/repository/org/swinglabs/swingx/1.6/swingx-1.6.jar:/Users/tlovell/.m2/repository/com/jidesoft/jide-jdaf/2.3.0/jide-jdaf-2.3.0.jar:/Users/tlovell/.m2/repository/com/jidesoft/jlfgr/1.0/jlfgr-1.0.jar:/Users/tlovell/.m2/repository/commons-lang/commons-lang/2.3/commons-lang-2.3.jar:/Users/tlovell/.m2/repository/com/jidesoft/jide/jide-grids/2.8.7/jide-grids-2.8.7.jar:/Users/tlovell/.m2/repository/com/jidesoft/jide/jide-common/2.8.7/jide-common-2.8.7.jar'
+    "exec('!rm target/classes/'.pd)
+    "exec('!javac -cp '.cp.' -d target/classes '.f)
+    "exec('!java -cp '.cp. ' '.pd)
+"endfunction
+
+
+function! JavaBuffer ()
+    let f=expand('%')
+    let pd = GetPackageDirectory(f)
+    let cp = 'target/classes:
+\/Users/tlovell/.m2/repository/com/idexx/applications/lynxx/dataservices/LYNXXDataServicesSDO/3.7.1.1-SNAPSHOT/LYNXXDataServicesSDO-3.7.1.1-SNAPSHOT.jar:
+\/Users/tlovell/.m2/repository/com/idexx/applications/lynxx/schemas/LYNXXSchemas/3.7.1.0-SNAPSHOT/LYNXXSchemas-3.7.1.0-SNAPSHOT.jar:
+\/Users/tlovell/.m2/repository/com/jidesoft/jide-oss/3.6.12/jide-oss-3.6.12.jar:
+\/Users/tlovell/.m2/repository/com/idexx/libs/core/SwingCore/1.1.21/SwingCore-1.1.21.jar:
+\/Users/tlovell/.m2/repository/log4j/log4j/1.2.16/log4j-1.2.16.jar:
+\/Users/tlovell/.m2/repository/com/inet/jortho/0.4/jortho-0.4.jar:
+\/Users/tlovell/.m2/repository/org/swinglabs/swingx/1.6/swingx-1.6.jar:
+\/Users/tlovell/.m2/repository/com/jidesoft/jide-jdaf/2.3.0/jide-jdaf-2.3.0.jar:
+\/Users/tlovell/.m2/repository/com/jidesoft/jlfgr/1.0/jlfgr-1.0.jar:
+\/Users/tlovell/.m2/repository/commons-lang/commons-lang/2.3/commons-lang-2.3.jar:
+\/Users/tlovell/.m2/repository/com/jidesoft/jide/jide-grids/2.8.7/jide-grids-2.8.7.jar:
+\/Users/tlovell/.m2/repository/com/jidesoft/jide/jide-common/2.8.7/jide-common-2.8.7.jar:
+\/Users/tlovell/.m2/repository/jgoodies/forms/1.0.4/forms-1.0.4.jar:
+\/Users/tlovell/.m2/repository/org/swinglabs/jxlayer/3.0.3/jxlayer-3.0.3.jar:
+\/Users/tlovell/.m2/repository/com/idexx/libs/core/I18NCore/1.0.12/I18NCore-1.0.12.jar:
+\/Users/tlovell/Documents/workspaces/LYNXX/LYNXXTransfersMicroServicesAPI/target/classes:
+\/Users/tlovell/Documents/workspaces/LYNXX/LYNXXTransfersLibraries/target/classes:
+\/Users/tlovell/.m2/repository/com/sun/jersey/jersey-bundle/1.17.1/jersey-bundle-1.17.1.jar:
+\/Users/tlovell/.m2/repository/com/sun/jersey/jersey-core/1.17.1/jersey-core-1.17.1.jar:
+\/Users/tlovell/.m2/repository/org/codehaus/jackson/jackson-core-asl/1.9.2/jackson-core-asl-1.9.2.jar:
+\/Users/tlovell/.m2/repository/org/codehaus/jackson/jackson-mapper-asl/1.9.2/jackson-mapper-asl-1.9.2.jar:
+\/Users/tlovell/.m2/repository/org/codehaus/jackson/jackson-jaxrs/1.9.2/jackson-jaxrs-1.9.2.jar:
+\/Users/tlovell/.m2/repository/org/codehaus/jackson/jackson-xc/1.9.2/jackson-xc-1.9.2.jar:
+\/Users/tlovell/.m2/repository/com/sun/jersey/jersey-multipart/1.17.1/jersey-multipart-1.17.1.jar:
+\/Users/tlovell/.m2/repository/org/eclipse/persistence/javax.persistence/2.1.1/javax.persistence-2.1.1.jar:
+\/Users/tlovell/.m2/repository/log4j/log4j/1.2.16/log4j-1.2.16.jar:
+\/Users/tlovell/.m2/repository/com/oracle/ojdbc6/11.1.0.7.0/ojdbc6-11.1.0.7.0.jar:
+\/Users/tlovell/.m2/repository/org/eclipse/persistence/eclipselink/2.3.1/eclipselink-2.3.1.jar:
+\/Users/tlovell/.m2/repository/javax/xml/ws/jaxws-api/2.2.8/jaxws-api-2.2.8.jar:
+\/Users/tlovell/.m2/repository/javax/xml/bind/jaxb-api/2.2.4/jaxb-api-2.2.4.jar:
+\/Users/tlovell/.m2/repository/javax/xml/stream/stax-api/1.0-2/stax-api-1.0-2.jar:
+\/Users/tlovell/.m2/repository/javax/activation/activation/1.1/activation-1.1.jar:
+\/Users/tlovell/.m2/repository/javax/xml/soap/saaj-api/1.3.4/saaj-api-1.3.4.jar:
+\/Users/tlovell/.m2/repository/org/glassfish/javax.annotation/3.1.1/javax.annotation-3.1.1.jar:
+\/Users/tlovell/.m2/repository/javax/jws/jsr181-api/1.0-MR1/jsr181-api-1.0-MR1.jar:
+\/Users/tlovell/.m2/repository/javax/mail/mail/1.4/mail-1.4.jar:
+\/Users/tlovell/.m2/repository/javax/javaee-web-api/6.0/javaee-web-api-6.0.jar:
+\/Users/tlovell/.m2/repository/junit/junit/4.8.1/junit-4.8.1.jar'
+    exec('!rm target/classes/'.pd)
+    exec('!javac -cp '.cp.' -d target/classes '.f)
+    exec('!java -cp '.cp. ' '.pd)
+endfunction
+
+function! GetPackageDirectory (f)
+    return split(split(a:f,"src/main/java/")[-1],'\.')[0]
+endfunction
+
+command! -nargs=* GruntApexSave call GruntApexSave()
+
+function! GruntApexSave () 
+    if exists(":ApexSave") == 0
+        let f = &ft
+        set ft=apexcode
+        let &ft=f
+    endif
+    exec("!grunt")
+    let old_bufnum = bufnr('')
+    execute 'hide view src/package.xml'
+    let del_bufnum = bufnr('')
+    execute 'ApexSave'
+    execute 'buffer '.old_bufnum
+    execute 'bdelete '.del_bufnum
 endfunction
 
 

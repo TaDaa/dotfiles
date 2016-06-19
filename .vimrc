@@ -1,4 +1,5 @@
 
+
 let g:arr_esc="\<c-[>"
 set nocompatible
 source $VIMRUNTIME/vimrc_example.vim
