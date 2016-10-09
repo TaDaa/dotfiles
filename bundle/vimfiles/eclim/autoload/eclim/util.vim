@@ -2,7 +2,7 @@
 "
 " License: {{{
 "
-" Copyright (C) 2005 - 2014  Eric Van Dewoestine
+" Copyright (C) 2005 - 2015  Eric Van Dewoestine
 "
 " This program is free software: you can redistribute it and/or modify
 " it under the terms of the GNU General Public License as published by
@@ -685,6 +685,16 @@ function! eclim#util#Make(bang, args) " {{{
     return
   endif
 
+  " don't break fugitive when dispatch is not installed
+  if exists('b:current_compiler') && b:current_compiler == 'git' &&
+   \ exists('*fugitive#cwindow')
+    " straight copy out of fugitive s:Dispatch(...)
+    silent noautocmd make!
+    redraw!
+    call fugitive#cwindow()
+    return
+  endif
+
   let makefile = findfile('makefile', '.;')
   let makefile2 = findfile('Makefile', '.;')
   if len(makefile2) > len(makefile)
@@ -1075,7 +1085,7 @@ function! eclim#util#PromptList(prompt, list, ...)
       echo prompt . "\n"
       let response = input(a:prompt . ": ")
     endtry
-    while response !~ '\(^$\|^[0-9]\+$\)' ||
+    while response !~ '^\d*$' ||
         \ response < g:EclimPromptListStartIndex ||
         \ response > maxindex
       let response = input("You must choose a value between " .

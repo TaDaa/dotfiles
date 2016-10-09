@@ -148,3 +148,7 @@ url = https://github.com/TaDaa/vim-emmet-autocompleter
 path = bundle/vim-emmet-visualforce-autocompleter
 url = https://github.com/TaDaa/vim-emmet-visualforce-autocompleter
 
+[submodule "bundle/vim-emmet-android-autocompleter"]
+path = bundle/vim-emmet-android-autocompleter
+url = https://github.com/TaDaa/vim-emmet-android-autocompleter
+

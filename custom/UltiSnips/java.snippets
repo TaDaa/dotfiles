@@ -31,10 +31,17 @@ if (result != ""):
 	original = result
 	part = result.split("<",1)
 	part0 = part[0]
-	if  part0 == "ArrayList":
-		result =  "List"
-	elif part0 == "HashMap":
-		result =  "Map"
+	tests = [
+	("List","ArrayList"),
+	("Map","HashMap")
+	]
+	for i in range(0,len(tests)):
+		if (part0 == tests[i][0]):
+			result = tests[i][1]
+			break
+		elif (part0 == tests[i][1]):
+			result = tests[i][0]
+			break
 	if len(part) > 1 and result != original:
 		result += '<' + part[1]
 if type_var != "" and type_var != t[1]:
@@ -920,12 +927,19 @@ else:
 `$1
 endsnippet
 
-snippet pu "public" w
+global !p
+def expand (snip, jump_pos=1):
+	vim.eval('feedkeys("\<C-R>=UltiSnips#ExpandSnippet()\<CR>")')
+endglobal
+post_jump "expand(snip)"
+snippet "\bpu\b(.*)" "public" rw
 public`!p
 if t[1] != "" and t[1].find(" ") != 0:
 	snip.rv = " "
 else:
 	snip.rv=""
+if match.group(1) != None:
+	snip.rv += match.group(1)
 `$1
 endsnippet
 
@@ -1013,6 +1027,7 @@ else:
 endsnippet
 
 
+
 snippet "\bnu\b" "super" r
 null$1
 endsnippet
@@ -1020,6 +1035,165 @@ endsnippet
 snippet "\bsu\b" "super" r
 super$1
 endsnippet
+
+
+
+global !p
+def expand (snap,jump_pos=1):
+	if snip.tabstop != jump_pos:
+		return
+	vim.eval('feedkeys("\<C-R>=UltiSnips#ExpandSnippet()\<CR>")')
+def asyncCallSnip(snip):
+	vim.snip.indent = vim.snip._initial_indent = ''
+	asyncCall(vim.snip,1,vim.match.group(1))
+	snip.expand_anon(vim.snip.rv)
+def asyncCall(snip,tabstop,type):
+	snip.rv += ".call(new Async.AsyncCallable"
+	if  type == None:
+		type = '<$1>'
+	snip.rv +=  type + ' () {'
+	snip >> 1
+	snip += ""
+	snip.rv += "public "
+	snip.rv += type[1:-1]
+	snip.rv += " call () {"
+	snip >> 1
+	tabstop+=1
+	snip += "$"+str(tabstop)
+	snip << 1
+	snip += "}"
+	snip << 1
+	snip += "})"
+	return tabstop
+def asyncConvertSnip(snip):
+	vim.snip.indent = vim.snip._initial_indent = ''
+	asyncConvert(vim.snip,1,vim.match.group(1))
+	snip.expand_anon(vim.snip.rv)
+def asyncConvert(snip,tabstop,type=None,fromType=None):
+	snip.rv += '.convert(new Async.AsyncConvert'
+	fromT = ''
+	toT = ''
+	if type == None:
+		if fromType != None:
+			fromT = fromType
+	else:
+		javahelpers = __import__('javahelpers')
+		args = javahelpers.getArgs(type[1:-1])
+		if (len(args)) > 0:
+			fromT = str(args[0][1])
+			if len(args) > 1:
+				toT = str(args[1][1])
+	if fromT == '':
+		fromT = '$' + str(tabstop)
+		tabstop+=1
+	if toT == '':
+		toT = '$' + str(tabstop)
+		tabstop+=1
+	type = '<'+fromT +','+ toT+'>'
+	snip.rv += type
+	snip.rv += ' () {'
+	snip >> 1
+	snip += ''
+	snip.rv += 'public '+toT+' convert (Async.AsyncContext<' + fromT + '> async) {'
+	snip >> 1
+	snip += '$'+str(tabstop)
+	snip << 1
+	snip += '}'
+	snip << 1
+	snip += '})'
+	return tabstop
+def asyncThenSnip(snip):
+	vim.snip.indent = vim.snip._initial_indent = ''
+	asyncThen(vim.snip,1,vim.match.group(1))
+	snip.expand_anon(vim.snip.rv)
+def asyncThen(snip,tabstop,type):
+	snip.rv += ".then(new Async.AsyncCallback"
+	if (type == None):
+		type = '<$'+str(tabstop)+'>'
+	snip.rv +=  type
+	snip.rv += " () {"
+	snip >> 1
+	snip += ""
+	snip.rv += "public void done (Async.AsyncContext" + type + ' async) {'
+	snip >> 1
+	tabstop += 1
+	snip += "$"+str(tabstop)
+	snip << 1
+	snip += "}"
+	snip << 1
+	snip += "})"
+	return tabstop
+def asyncSnip(snap):
+	vim = __import__('vim')
+	match = vim.match
+	snip = vim.snip
+	type = match.group(1)
+	if (type == None or type == '$1'):
+		type = '<$1>'
+	#type = match.group(1)
+	context = match.group(2)
+	tabstop = 2;
+	methods = re.findall('\.([^\.]*)',match.group(3))
+	snip.rv = "Async."
+	if type != None:
+		snip.rv += type
+	snip.rv += "context("
+	if context == None:
+		snip.rv += '$'+str(tabstop)
+		tabstop += 1
+	else:
+		context = context[1:-1]
+		snip.rv += context
+	snip.rv += ")"
+	snip << 0
+	snip >> 1
+	tabstop = 2
+	for i in range(0,len(methods)):
+		method = methods[i]
+		if method == "call":
+			snip += ''
+			tabstop = asyncCall(snip,tabstop,type) + 1
+		elif method == "then":
+			snip += ''
+			tabstop = asyncThen(snip,tabstop,type) + 1
+		elif method == 'conv':
+			snip += ''
+			tabstop = asyncConvert(snip,tabstop,None,type[1:-1]) + 1
+		else:
+			snip += "." + method + "()"
+	snap.expand_anon(snip.rv)
+endglobal
+post_jump "asyncSnip(snip)"
+snippet "\basync(\<.*\>){0,1}(\(.*\)){0,1}(\.[^\b^\(^\)]+)$\b" "test" r
+`!p
+vim.match = match
+vim.snip = snip
+`
+endsnippet
+post_jump "asyncCallSnip(snip)"
+snippet "\.acall(<.*>){0,1}" "test" r
+`!p
+vim.snip=snip
+vim.match = match
+`
+endsnippet
+post_jump "asyncThenSnip(snip)"
+snippet "\.athen(<.*>){0,1}" "test" r
+`!p
+vim.snip=snip
+vim.match = match
+`
+endsnippet
+post_jump "asyncConvertSnip(snip)"
+snippet "\.aconv(<.*>){0,1}" "test" r
+`!p
+vim.snip=snip
+vim.match = match
+`
+endsnippet
+
+snippet "\b"
+
 
 #snippet wh "while" b
 #while ($1)`!p nl(snip)`{

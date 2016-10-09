@@ -1,4 +1,4 @@
-*vim-java-inspection*
+*vim-java-inspection.html*
 
 Java Code Inspection
 ********************
@@ -82,6 +82,17 @@ by invoking the command with a !:
 >
 
    :JavaCallHierarchy!
+
+<
+
+
+By default the call hierarchy (caller and callee) will search across
+your entire workspace. If you want to limit the search to just the
+current project you can use the scope (-s) option:
+
+>
+
+   :JavaCallHierarchy -s project
 
 <
 

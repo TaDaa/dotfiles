@@ -13,6 +13,18 @@
 #${1}
 #endsnippet
 
+#null
+snippet "\b[,]{0,1}(nu)\b" "window" r
+null
+endsnippet
+#anew
+snippet "\b[,]{0,1}(an[e]{0,1}w)\b" "window" r
+$1 = new 
+endsnippet
+#new
+snippet "\b[,]{0,1}(nw)\b" "window" r
+new 
+endsnippet
 #window
 snippet "\b[,]{0,1}(win)\b" "window" r
 window
@@ -53,22 +65,22 @@ document.createElement('${1}')
 endsnippet
 
 #setAttribute
-snippet "\bsa\b" "setAttribute" r
+snippet "\bsta\b" "setAttribute" r
 setAttribute('${2}','${3}')
 endsnippet
 
 #removeAttribute
-snippet "\bra\b" "removeAttribute" r
+snippet "\brma\b" "removeAttribute" r
 removeAttribute('${2}')
 endsnippet
 
 #stProperty
-snippet "\bsp\b" "setProperty" r
+snippet "\bstp\b" "setProperty" r
 setProperty('${1}','${2}')
 endsnippet
 
 #removeProperty
-snippet "\brp\b" "removeProperty" r
+snippet "\brmp\b" "removeProperty" r
 removeProperty('${1}')
 endsnippet
 
@@ -79,7 +91,7 @@ endsnippet
 
 #style.propertyValue
 snippet "\bspv\b" "style set property value" r
-style.${1} = ${2}
+style.${1} = 
 endsnippet
 
 #style.setProperty
@@ -129,13 +141,13 @@ endsnippet
 snippet "\barop\b" "array containing object" r
 [{
 	'${1}' : ${2}
-}]${3}
+}]
 endsnippet
 #op {}
 snippet "{}p|\bop\b" "object key" r
 {
 	'${1}' : ${2}
-}${3}
+}
 endsnippet
 #snippet "([^\{o\}]{1})p\b" "property in object" r
 #`!p
@@ -157,66 +169,66 @@ endsnippet
 
 #setget
 snippet "\bsetget\b" "setter/getter" r
-${1} = function (v) {
+function (v) {
 	if (arguments.length) {
-		${2:$1} = v; 
+		$1 = v; 
 		return this;
 	}
-	return $2;
-};
+	return $1;
+}
 endsnippet
 
 #proto
 snippet pr "prototype" w
-${1}.prototype.${2} = ${3};${4}
+${1}.prototype.${2} = ${3};
 endsnippet
 
 #forEach
 snippet "\.fe\b" "forEach..." r
-.forEach(${1})${2}
+.forEach(${1})
 endsnippet
 
 #pop
 snippet "\.po|\.p\b" "pop..." r
-.pop()${1}
+.pop()
 endsnippet
 
 #shift
 snippet "\.sh\b" "shift..." r
-.shift()${1}
+.shift()
 endsnippet
 
 #unshift
 snippet "\.us|\.ush\b" "unshift..." r
-.unshift(${1})${2}
+.unshift(${1})
 endsnippet
 
 #push
 snippet "\.pu\b" "push..." r
-.push(${1})${2}
+.push(${1})
 endsnippet
 
 #map
 snippet "\.ma\b" "map..." r
-.map(${1})${2}
+.map(${1})
 endsnippet
 
 #slice
 snippet "\.sl\b" "slice..." r
-.slice(${1})${2}
+.slice(${1})
 endsnippet
 
 #splice
 snippet "\.sp\b" "splice..." r
-.splice(${1})${2}
+.splice(${1})
 endsnippet
 
 #v
-snippet "([^\(]{1})v|^v\b" "var" r
+snippet "([^\(]{1})\bv|^v\b" "var" r
 `!p
 res = match.group(0) if match.group(0) is not None else ''
 res += "ar"
-` ${1};${2}
+` ${1};
 endsnippet
 
 #wh 
@@ -232,7 +244,7 @@ if (t[2] and t[2].find('\n') != 0):
 	snip += '}'
 else:
 	res = '}'
-`${3}
+`
 endsnippet
 
 #try
@@ -250,7 +262,7 @@ if (t[3] and t[3].find('\n') != 0):
 	snip += '}'
 else:
 	res = '}'
-`${4}
+`
 endsnippet
 
 #do
@@ -266,7 +278,7 @@ if (t[1] and t[1].find('\n') != 0):
 	snip += '}'
 else:
 	res="}"
-` while (${2})${3}
+` while (${2})
 endsnippet
 #fp
 snippet fp "for property" w
@@ -279,7 +291,7 @@ else:
 if (t[4] and t[4].find('\n') != 0):
 	snip += '}'
 else:
-	res = '}'`${5}
+	res = '}'`
 endsnippet
 	
 	#fl
@@ -293,7 +305,7 @@ else:
 if (t[4] and t[4].find('\n') != 0):
 	snip += '}'
 else:
-	res = '}'`${5}
+	res = '}'`
 endsnippet
 #flu
 snippet flu "for loop - increment up and cached length (incrementer then length then ln)" w
@@ -306,7 +318,7 @@ else:
 if (t[2] and t[2].find('\n') != 0):
 	snip += '}'
 else:
-	res = '}'`${3}
+	res = '}'`
 endsnippet
 #fld
 snippet fld "for loop - increment down and cached length (decrementer, assume 0)" w
@@ -319,27 +331,27 @@ else:
 if (t[2] and t[2].find('\n') != 0):
 	snip += '}'
 else:
-	res = '}'`${3}
+	res = '}'`
 endsnippet
 
 #"alert
 snippet al "alert" w
-alert(${1});${2}
+alert(${1});
 endsnippet
 
 #"console.log"
 snippet cl "console.log" w
-console.log(${1});${2}
+console.log(${1});
 endsnippet
 
 #"console.warn"
 snippet cw "console.warn" w
-console.warn(${1});${2}
+console.warn(${1});
 endsnippet
 
 #"console.error"
 snippet ce "console.error" w
-console.error(${1});${2}
+console.error(${1});
 endsnippet
 
 
@@ -358,7 +370,9 @@ if (t[2]):
 	snip += ''
 else:	
 	res = ' '
-`return ${3:fn};`!p
+`return ${3:fn };`!p
+if (t[3] != 'fn '):
+	t[3] = t[3].strip()
 if (t[2]):
 	snip.rv += '\n'
 	snip.rv += snip.mkline('')
@@ -376,14 +390,18 @@ if (t[2] and t[2].find('\n') != 0):
 else:
 	res = ''
 `${2:case }`!p
-if (t[3] and t[3].find('\n') != 0):
-	snip >> 1
+if ((t[2] != '' and t[2].find('\n') != 0) ):
+	if (t[2] != 'case '):
+		t[2] = t[2].strip()
+	snip>> 1
 	snip += ''
 else:
 	res = ''
-`${3:default }
+`${3:default }`!p
+if (t[3] != 'default '):
+	t[3] = t[3].strip()
+`
 }
-${4}
 endsnippet
 
 #STRING -single
@@ -394,22 +412,28 @@ endsnippet
 #STRING -single
 snippet "''p\b" "single quote" r
 '${1}'+
-'${2}'${3}
+'${2}'
 endsnippet
 #STRING -double
 snippet "(?<!\")(?![.])+\"p" "single quote" r
 "+
-"${1}"${2}
+"${1}"
 endsnippet
 #STRING -double
 snippet "\"\"p\b" "double quote" r
 "${1}"+
-"${2}"${3}
+"${2}"
 endsnippet
 
 #CASE
-snippet "\bcase|ca\b" "case..." r
-case ${1}:${2}`!p
+snippet "\bcase\b|\bca\b" "case..." r
+case ${1}:`!p
+if (t[2]):
+	snip >> 1
+	snip += ''
+`${2}`!p
+if (t[2] == '' and t[3]):
+	snip.rv += ' '
 if (t[2] and t[3] and t[2].find('\n') != 0):
 	snip >> 1
 	snip += ''
@@ -418,11 +442,17 @@ else:
 `${3:break;}
 endsnippet
 #DEFAULT
-snippet "\bdefault|\bdf\b" "default..." r
-default: ${1}`!p
+snippet "\bdefault\b|\bdf\b" "default..." r
+default:`!p
+if (t[1]):
+	snip >> 1
+	snip += ''
+`${1}`!p
+if (t[1] == '' and t[2]):
+	snip.rv += ' '
 if (t[1] and t[2] and t[1].find('\n') != 0):
 	snip >> 1
-	snip += ' '
+	snip += ''
 else:
 	res = ''
 `${2:break;}
@@ -430,12 +460,12 @@ endsnippet
 
 #BREAK
 snippet br "break;" w
-break;${1}
+break;
 endsnippet
 
 #CONTINUE
 snippet "\bcn\b|\bco\b" "continue;" r
-continue;${1}
+continue;
 endsnippet
 
 #RETURN
@@ -472,7 +502,7 @@ if (t[3] and t[3].find('\n') != 0):
 	snip += '}'
 else:
 	res='}'
-`${4}
+`
 endsnippet
 
 
