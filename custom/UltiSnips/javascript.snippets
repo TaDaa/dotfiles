@@ -13,6 +13,193 @@
 #${1}
 #endsnippet
 
+global !p
+def expand (snip, jump_pos=1):
+	vim.eval('feedkeys("\<C-R>=UltiSnips#ExpandSnippet()\<CR>")')
+endglobal
+
+#DEFAULT
+snippet "\bde\b" "default..." r
+default`!p
+if t[1] and t[1][0] == ":":
+	t[1]=t[1][1:len(t[1])]
+	snip.swapped = True
+	snip.rv = ":"
+	snip >> 1
+	snip += ""
+elif not hasattr(snip,'swapped') and t[1] and t[1][0]:
+	snip.rv = " "
+`$1
+endsnippet
+
+#EXTEND
+snippet "\bex\b" "extend" r
+extends`!p
+if t[1] and t[1][0] != " ":
+	snip.rv += " "
+`$1
+endsnippet
+#IMPORT
+snippet "\bimp\b" "import" r
+import`!p
+if t[1] and t[1][0] != " ":
+	snip.rv += " "
+`$1
+endsnippet
+#EXPORT
+snippet "\bexp\b" "export" r
+export`!p
+if t[1] and t[1][0] != " ":
+	snip.rv += " "
+`$1
+endsnippet
+#CONST
+snippet "\bco\b" "const" r
+const`!p
+if t[1] and t[1][0] != " ":
+	snip.rv += " "
+`$1
+endsnippet
+
+#CONST
+snippet "\bl\b" "let" r
+let`!p
+if t[1] and t[1][0] != " ":
+	snip.rv += " "
+`$1;
+endsnippet
+
+#CONST
+snippet "\bcls\b" "cl" r
+class`!p
+if t[1] and t[1][0] != " ":
+	snip.rv += " "
+`$1
+endsnippet
+
+#MODULE
+snippet "\bmod\b" "module" r
+module
+endsnippet
+
+
+#EXPORTS
+snippet "\breq\b" "exports" r
+require
+endsnippet
+
+#EXPORTS
+snippet "\bexps\b" "exports" r
+exports
+endsnippet
+
+snippet "\bsu\b" "super" r
+super
+endsnippet
+
+snippet "\bsy\b" "Symbol" r
+Symbol
+endsnippet
+
+#EXPORTS
+snippet "\bfa\b" "arrow function" r
+($1) => 
+endsnippet
+
+
+snippet "\bfg\b" "function generator" r
+$1 *($2) {`!p
+if (t[3] and t[3].find('\n') != 0):
+	snip >> 1
+	snip += ''
+else:
+	res = ''`${3}`!p
+if (t[3] and t[3].find('\n') != 0):
+	snip += '}'
+else:
+	res = '}'`
+endsnippet
+snippet "\bfc\b" "function class es6" r
+$1 ($2) {`!p
+if (t[3] and t[3].find('\n') != 0):
+	snip >> 1
+	snip += ''
+else:
+	res = ''`${3}`!p
+if (t[3] and t[3].find('\n') != 0):
+	snip += '}'
+else:
+	res = '}'`
+endsnippet
+
+snippet "\bcons\b" "constructor" r
+constructor ($1) {`!p
+if (t[2] and t[2].find('\n') != 0):
+	snip >> 1
+	snip += ''
+else:
+	res = ''`${2}`!p
+if (t[2] and t[2].find('\n') != 0):
+	snip += '}'
+else:
+	res = '}'`
+endsnippet
+#body result
+#body
+snippet "\bo\b" "body" r
+{`!p
+if (t[1] and t[1].find('\n') != 0):
+	snip >> 1
+	snip += ''
+else:
+	res = ''`${1}`!p
+if (t[1] and t[1].find('\n') != 0):
+	snip += '}'
+else:
+	res = '}'`
+endsnippet
+#EXPORTS
+snippet "\bke\b" "object key" r
+'$1' : $2
+endsnippet
+
+
+#for of
+snippet fo "for object" w
+for (${1} of ${2}) {`!p
+if (t[4] and t[4].find('\n') != 0):
+	snip >> 1
+	snip += ''
+else:
+	res = ''`${4}`!p
+if (t[4] and t[4].find('\n') != 0):
+	snip += '}'
+else:
+	res = '}'`
+endsnippet
+
+#promise
+snippet "\bpe\b" "promise" r
+Promise
+endsnippet
+
+#then
+snippet "\bthe\b" "then" r
+then($1)
+endsnippet
+
+#then
+snippet "\brej\b" "reject" r
+reject($1)
+endsnippet
+#then
+snippet "\bres\b" "resolve" r
+resolve($1)
+endsnippet
+snippet "\bcat\b" "catch" r
+catch($1)
+endsnippet
+
 #null
 snippet "\b[,]{0,1}(nu)\b" "window" r
 null
@@ -140,13 +327,13 @@ endsnippet
 #arop
 snippet "\barop\b" "array containing object" r
 [{
-	'${1}' : ${2}
+	${1} : ${2}
 }]
 endsnippet
 #op {}
 snippet "{}p|\bop\b" "object key" r
 {
-	'${1}' : ${2}
+	${1} : ${2}
 }
 endsnippet
 #snippet "([^\{o\}]{1})p\b" "property in object" r
@@ -156,7 +343,7 @@ endsnippet
 #endsnippet
 snippet "(\{p)(})?" "object key" r
 {
-	'${1}' : ${2}
+	${1} : ${2}
 `!p
 res = '\n}' if match.group(2) is not None else ''
 `
@@ -164,11 +351,21 @@ endsnippet
 #,
 snippet "," "object key" r
 ,
-'${1}' : ${2}
+${1} : ${2}
 endsnippet
 
 #setget
-snippet "\bsetget\b" "setter/getter" r
+snippet "\bsgc\b|\bsetgetc\b" "setter/getter" r
+$1 (v) {
+	if (arguments.length) {
+		$2 = v; 
+		return this;
+	}
+	return $2;
+}
+endsnippet
+#setget
+snippet "\bsg\b|\bsetget\b" "setter/getter" r
 function (v) {
 	if (arguments.length) {
 		$1 = v; 
@@ -426,7 +623,7 @@ snippet "\"\"p\b" "double quote" r
 endsnippet
 
 #CASE
-snippet "\bcase\b|\bca\b" "case..." r
+snippet "\bcase\b" "case..." r
 case ${1}:`!p
 if (t[2]):
 	snip >> 1
@@ -441,22 +638,8 @@ else:
 	res = ''
 `${3:break;}
 endsnippet
-#DEFAULT
-snippet "\bdefault\b|\bdf\b" "default..." r
-default:`!p
-if (t[1]):
-	snip >> 1
-	snip += ''
-`${1}`!p
-if (t[1] == '' and t[2]):
-	snip.rv += ' '
-if (t[1] and t[2] and t[1].find('\n') != 0):
-	snip >> 1
-	snip += ''
-else:
-	res = ''
-`${2:break;}
-endsnippet
+
+
 
 #BREAK
 snippet br "break;" w
@@ -464,7 +647,7 @@ break;
 endsnippet
 
 #CONTINUE
-snippet "\bcn\b|\bco\b" "continue;" r
+snippet "\bcon\b" "continue;" r
 continue;
 endsnippet
 
@@ -575,22 +758,22 @@ snippet ne "Not equals" w
 endsnippet
 
 #l 
-snippet l "less than" w
+snippet lt "less than" w
 < 
 endsnippet
 
 #le 
-snippet le "less than equal" w
+snippet lte "less than equal" w
 <= 
 endsnippet
 
 #g
-snippet g "greater than" w
+snippet gt "greater than" w
 > 
 endsnippet
 
 #ge
-snippet ge "greater than equals" w
+snippet gte "greater than equals" w
 >= 
 endsnippet
 
