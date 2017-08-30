@@ -7,6 +7,23 @@ path = bundle/ctrlp.vim
 url = https://github.com/kien/ctrlp.vim
 
 
+[submodule "bundle/vc.vim"]
+path = bundle/vc.vim
+url = https://github.com/juneedahamed/vc.vim
+
+[submodule "bundle/vcscommand"]
+path = bundle/vcscommand
+url = https://github.com/vim-scripts/vcscommand.vim
+
+[submodule "bundle/vcscommand4"]
+path = bundle/vcscommand4
+url = https://github.com/vim-scripts/vcscommand.vim
+
+
+[submodule "bundle/vim-jsbeautify"]
+path = bundle/vim-jsbeautify
+url = https://github.com/maksimr/vim-jsbeautify
+
 [submodule "bundle/ir_black"]
 path = bundle/ir_black
 url = https://github.com/twerth/ir_black
