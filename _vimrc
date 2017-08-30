@@ -53,6 +53,7 @@ Bundle 'vim-scripts/moria'
 Bundle 'vim-scripts/ironman.vim'
 Bundle 'vim-scripts/louver.vim'
 Bundle 'tpope/vim-repeat'
+Bundle 'tpope/vim-fugitive'
 Bundle 'SirVer/ultisnips'
 Bundle 'git://repo.or.cz/vcscommand'
 "Bundle 'juneedahamed/vc.vim'
@@ -66,6 +67,10 @@ Bundle 'TaDaa/vim-emmet-visualforce-autocompleter'
 Bundle 'TaDaa/vim-emmet-android-autocompleter'
 Bundle 'juneedahamed/vc.vim'
 Bundle 'pangloss/vim-javascript'
+Bundle 'oplatek/Conque-Shell'
+Bundle 'greyblake/vim-preview'
+Bundle 'leafgarland/typescript-vim'
+
 "Bundle 'emmet-completions'
 "Bundle 'emmet-completions-visualforce'
 "Bundle 'tadaa'
@@ -80,6 +85,18 @@ filetype indent on
 "cd /IDEXX/projects/ForceTadaa "current working directory
 
 
+autocmd FileType scss syn cluster sassCssAttributes add=@cssColors "VIM-CSS-COLOR
+autocmd VimEnter * NERDTree
+autocmd BufEnter * NERDTreeMirror
+autocmd BufEnter * call BuffEnter()
+autocmd FileType javascript,js,jsx call BuffEnter()
+autocmd VimEnter * wincmd w
+
+function BuffEnter ()
+    set smarttab
+    set smartindent
+endfunction
+
 let g:NERDTreeChDirMode=2 "NERDTree
 let g:NERDTreeMapOpen='<CR>' "NERDTree
 let g:NERDTreeMapPreview='<S-CR>' "NERDTree
@@ -89,7 +106,7 @@ let g:NERDTreeMapOpenVSplit='<C-v>' "NERDTree
 let g:NERDTreeMapPreviewVSplit='pv' "NERDTree
 let g:ctrlp_working_path_mode = '0' "CTRLP
 let g:ctrlp_custom_ignore = { 
-	\ 'dir' : '\v[\/](LYNXXLogs|target|\.DS_STORE|\.settings|\.svn|\.git|\.hg|\.sencha|\.sass-cache|build|fa|webapp/ext|webapp/touch|images|icons|docs|deft|fonts|assembly|test|classes|debug)$',
+	\ 'dir' : '\v[\/](LYNXXLogs|target|\.DS_STORE|\.settings|\.svn|\.git|\.hg|\.sencha|\.sass-cache|build|fa|webapp/ext|webapp/touch|images|icons|docs|deft|fonts|assembly|test|classes|debug|node_modules)$',
 \ } "CTRLP
 let g:aghighlight=1 "AG
 let g:agformat="%f:%l:%c:%m" "AG
@@ -100,8 +117,8 @@ let g:EclimCompletionMethod = 'omnifunc' "YCM
 let g:EclimJavascriptLintConf=g:user_vim_dir.'custom/Eclim/jslint.conf' "ECLIM validation
 "THESE TWO WERE CHANGED FROM NUL -- MIGHT NEED TO CHANGE BACK DEPENDING ON OS
 "-- IF SO PUT BELOW
-let g:UltiSnipsExpandTrigger="<c-j>"  "ULTISNIPS
-let g:UltiSnipsJumpForwardTrigger="<c-j>" "ULTISNIPS
+"let g:UltiSnipsExpandTrigger="/"  "ULTISNIPS
+"let g:UltiSnipsJumpForwardTrigger="/" "ULTISNIPS
 
 let g:UltiSnipsJumpBackwardTrigger="<c-k>" "ULTISNIPS
 let delimitMate_expand_cr=1
@@ -116,15 +133,20 @@ let g:apex_properties_folder="/Users/tlovell/.force"
 let g:apex_tooling_force_dot_com_path=g:user_vim_dir.'/dependencies/shared/force/tooling-force.com-0.3.3.2.jar'
 "let g:apex_tooling_force_dot_com_path=g:user_vim_dir.'\\dependencies\\windows\\force\\tooling-force.com-0.3.1.6a.jar'
 "let g:apex_tooling_force_dot_com_path='C:/IDEXX/projects/git/tooling-force.com/target/scala-2.10/tooling-force.com-assembly-0.1-SNAPSHOT.jar'
-let g:ycm_semantic_triggers = {
-\	'visualforce' : ['<',':',']','}','>','^',' ','','['],
-\	'vfp' : ['<',']','}','>','^','[','+', ' '],
-\	'apex' : ['<','.'],
-\	'apexcode' : ['<','.'],
-\	'html' : ['<',']','}','>','^','[','+', ' '],
-\	'svg' : ['<',']','}','>','^','[','+', ' '],
-\   'java' : ['.','<']
-\ }
+let g:ycm_semantic_triggers =  {
+  \   'c' : ['->', '.'],
+  \   'objc' : ['->', '.', 're!\[[_a-zA-Z]+\w*\s', 're!^\s*[^\W\d]\w*\s',
+  \             're!\[.*\]\s'],
+  \   'ocaml' : ['.', '#'],
+  \   'cpp,objcpp' : ['->', '.', '::'],
+  \   'perl' : ['->'],
+  \   'php' : ['->', '::'],
+  \   'java,javascript,typescript,d,python,perl6,scala,vb,elixir,go' : ['.'],
+  \   'cs' : ['.'],
+  \   'ruby' : ['.', '::'],
+  \   'lua' : ['.', ':'],
+  \   'erlang' : [':'],
+  \ }
 
 "\	'test' : ['<','>',':']
 
@@ -187,7 +209,7 @@ EOF
 silent execute '!mkdir "'.$VIMRUNTIME.'/temp"'
 silent execute '!del "'.$VIMRUNTIME.'/temp/*~"'
 
-autocmd FileType scss syn cluster sassCssAttributes add=@cssColors "VIM-CSS-COLOR
+"autocmd FileType scss syn cluster sassCssAttributes add=@cssColors "VIM-CSS-COLOR
 
 "autocmd VimEnter * call VimEntered()
 "function! VimEntered ()
@@ -241,6 +263,76 @@ endfunction
 
 command! -nargs=* GruntApexSave call GruntApexSave()
 
+
+
+
+python << EOF
+def do_move(match,col):
+    if match and match.group(0):
+        vim.current.window.cursor = (vim.current.window.cursor[0],col+1+len(match.group(0)))
+        
+def check_move ():
+    import re
+    cursor = vim.current.window.cursor
+    col = cursor[1]-1
+    row = cursor[0]-1
+    line = vim.current.buffer[row][col+1:]
+    match = re.match("([\W]+)",line)
+    if match == None:
+        match = re.match("([\w]*)",line)
+    if match:
+        do_move(match,col)
+EOF
+
+function! Expand (var)
+    call UltiSnips#ExpandSnippet()
+    if g:ulti_expand_res == 0
+        return a:var
+    endif
+    return ''
+endfunction
+
+function! ExpandOrJump ()
+    let g:tadaa_end_of_line=0
+python << EOF
+if UltiSnips_Manager._csnippets:
+    #store start_cursor
+    cursor = vim.start_cursor = vim.current.window.cursor
+    end = UltiSnips_Manager._csnippets[-1]._end
+    #add additional condition to check if cursor is outside of snippet end -- this allows to kill the current snippet
+    if cursor[0]-1 >= end[0] and cursor[1] >= end[1]:
+        UltiSnips_Manager._current_snippet_is_done()
+EOF
+    call UltiSnips#ExpandSnippetOrJump()
+python << EOF
+
+#prefer _csnippets if possible - lets us skip the final c-j of a snippet
+
+if not UltiSnips_Manager._csnippets:
+    if vim.current.window.cursor[1] == len(vim.current.buffer[vim.current.window.cursor[0]-1]) :
+        vim.vars['tadaa_end_of_line']=1
+    else:
+        cursor = vim.current.window.cursor
+        check_move()
+else:
+    cursor = vim.current.window.cursor
+    end = UltiSnips_Manager._csnippets[-1]._end
+    #check if cursor has not moved -- if not we shouldnt stick in the same spot!
+    if cursor[0]-1 >= end[0] and cursor[1]-1 >= end[1] and vim.start_cursor[0] == cursor[0] and vim.start_cursor[1] == cursor[1]:
+        UltiSnips_Manager._current_snippet_is_done()
+        if vim.current.window.cursor[1] == len(vim.current.buffer[vim.current.window.cursor[0]-1]) :
+            vim.vars['tadaa_end_of_line']=1
+        else:
+            check_move()
+EOF
+    if g:tadaa_end_of_line == 1
+        return  " "
+    endif
+    return  ""
+endfunction
+
+
+
 function! GruntApexSave () 
     if exists(":ApexSave") == 0
         let f = &ft
@@ -256,7 +348,6 @@ function! GruntApexSave ()
     execute 'bdelete '.del_bufnum
 endfunction
 
-
 if has("gui_running")
   if has("win32")
       Bundle 'YouCompleteMe_Win32'
@@ -271,7 +362,16 @@ if has("gui_running")
       " Open the folder containing the currently open file. Double <CR> at end
       " is so you don't have to hit return after command. Double quotes are
       " not necessary in the 'explorer.exe %:p:h' section.
-      imap <C-j> <C-R>=UltiSnips#ExpandSnippetOrJump()<CR><C-space>
+      "imap <C-j> <C-R>=UltiSnips#ExpandSnippetOrJump()<CR><C-space>
+      inoremap <silent> / <C-R>=ExpandOrJump()<cr>
+      xnoremap <silent> / :call UltiSnips#SaveLastVisualSelection()<cr>gvs
+      vnoremap <silent> / <ESC>:call UltiSnips#ExpandSnippetOrJump()<CR><c-space>
+      inoremap <silent> <c-j> <C-R>=ExpandOrJump()<cr>
+      xnoremap <silent> <c-J> :call UltiSnips#SaveLastVisualSelection()<cr>gvs
+      imap 0 <C-R>=Expand(0)<CR><C-space>
+      imap 1 <C-R>=Expand(1)<CR><C-space>
+      imap 9 <C-R>=Expand(9)<CR><C-space>
+
       :map <silent> <C-F5> :if expand("%:p:h") != ""<CR>:!start explorer.exe %:p:h<CR>:endif<CR><CR>
   else
       Bundle 'Valloric/YouCompleteMe'
@@ -280,6 +380,17 @@ if has("gui_running")
       let &directory=g:user_vim_dir.'swap'
       set guifont=anonymous\ pro:h12
       set lsp=3
-      imap <C-j> <C-R>=UltiSnips#ExpandSnippetOrJump()<CR><C-space>
+      imap <silent> / <C-R>=ExpandOrJump()<cr>
+      "smap <silent> / <Esc>:call ExpandOrJump()<cr>
+      xnoremap <silent> / :call UltiSnips#SaveLastVisualSelection()<cr>gvs
+      vnoremap <silent> / <ESC>:call UltiSnips#ExpandSnippetOrJump()<CR><c-space>
+      inoremap <silent> <c-j> <C-R>=ExpandOrJump()<cr>
+      xnoremap <silent> <c-J> :call UltiSnips#SaveLastVisualSelection()<cr>gvs
+      "imap / <c-j>
+      "imap <c-j> <C-R>=ExpandOrJump()<CR><C-space>
+      imap 0 <C-R>=Expand(0)<CR><C-space>
+      imap 1 <C-R>=Expand(1)<CR><C-space>
+      imap 9 <C-R>=Expand(9)<CR><C-space>
   endif
 endif
+:bd

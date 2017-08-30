@@ -152,3 +152,27 @@ url = https://github.com/TaDaa/vim-emmet-visualforce-autocompleter
 path = bundle/vim-emmet-android-autocompleter
 url = https://github.com/TaDaa/vim-emmet-android-autocompleter
 
+[submodule "bundle/Conque-Shell"]
+path = bundle/Conque-Shell
+url = https://github.com/oplatek/Conque-Shell
+
+[submodule "bundle/typescript-vim"]
+path = bundle/typescript-vim
+url = https://github.com/leafgarland/typescript-vim
+
+[submodule "bundle/vc.vim"]
+path = bundle/vc.vim
+url = https://github.com/juneedahamed/vc.vim
+
+[submodule "bundle/vcscommand"]
+path = bundle/vcscommand.vim
+url = git://repo.or.cz/vcscommand
+
+[submodule "bundle/vim-fugitive"]
+path = bundle/vim-fugitive
+url = https://github.com/tpope/vim-fugitive
+
+
+[submodule "bundle/vim-jsbeautify"]
+path = bundle/vim-jsbeautify
+url = https://github.com/maksimr/vim-jsbeautify.git

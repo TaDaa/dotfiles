@@ -14,13 +14,9 @@
 #${1}
 #endsnippet
 
-#DEFAULT
-snippet ",," "regex" rA
-	
-endsnippet
 
 #DEFAULT
-snippet "\bdf|\bde\b|\bdef" "default..." r
+snippet "\bde\b|\bdef\b" "default..." r
 default`!p
 if t[1] and t[1][0] == ":":
 	t[1]=t[1][1:len(t[1])]
@@ -34,40 +30,31 @@ elif not hasattr(snip,'swapped') and t[1] and t[1][0]:
 endsnippet
 
 #EXTEND
-snippet "\b([,]{0,1})xt\b|\b([,]{0,1})ex\b" "extend" r
-`!p
-if match.group(1):
-	snip.rv = ' '
-`extends`!p
+snippet "\bex\b" "extend" r
+extends`!p
 if t[1] and t[1][0] != " ":
 	snip.rv += " "
 `$1
 endsnippet
 
 #FROM
-snippet "([,]{0,1})fr\b" "from" r
-`!p
-if match.group(1):
-	snip.rv = ' '
-`from`!p
+snippet "\bfr\b" "from" r
+from`!p
 if t[1] and t[1][0] != " ":
 	snip.rv += " "
 `$1
 endsnippet
 
 #IMPORT
-snippet "([,]{0,1})im\b" "import" r
-`!p
-if match.group(1):
-	snip.rv= ' '
-`import`!p
+snippet "\bim\b|\bimp\b" "import" r
+import`!p
 if t[1] and t[1][0] != " ":
 	snip.rv += " "
 `$1
 endsnippet
 
 #EXPORT
-snippet "\bxp[01]|\bexp\b" "export" r
+snippet "\bexp\b" "export" r
 export`!p
 if t[1] and t[1][0] != " ":
 	snip.rv += " "
@@ -75,11 +62,11 @@ if t[1] and t[1][0] != " ":
 endsnippet
 
 #CONST
-snippet "\bc\b|\bco\b" "const" r
+snippet "\bco\b" "const" r
 const`!p
 if t[1] and t[1][0] != " ":
 	snip.rv += " "
-`$1;
+`$1
 endsnippet
 
 #CONST
@@ -93,8 +80,11 @@ endsnippet
 
 
 #class block
-snippet "\bcl\b|\bcls\b" "cl" r
-class`!p
+snippet "\bcl\b|\bcls(\s\b){1,}" "cl" r
+`!p
+#if match.group(1) == ",":
+	#snip.rv = " "
+`class`!p
 if t[1] and t[1][0] != " ":
 	snip.rv += " "
 `$1
@@ -106,22 +96,22 @@ number
 endsnippet
 
 #MODULE
-snippet "\bmod\b|\bmo\b" "module" r
+snippet "\bmod\b" "module" r
 module
 endsnippet
 
 #MODULE.EXPORTS
-snippet "\bmoxps\b|\bmodexps\b" "module.exports" r
+snippet "\bmodexp\b|\bmodexps\b" "module" r
 module.exports
 endsnippet
 
 #EXPORTS
-snippet "\brq\b|\breq\b" "require" r
+snippet "\breq\b" "exports" r
 require($1)
 endsnippet
 
 #EXPORTS
-snippet "\bxps\b|\bexps\b" "exports" r
+snippet "\bexps\b" "exports" r
 exports
 endsnippet
 
@@ -129,7 +119,7 @@ snippet "\bsu\b" "super" r
 super
 endsnippet
 
-snippet "\bsy\b|\bsym\b" "Symbol" r
+snippet "\bsy\b" "Symbol" r
 Symbol
 endsnippet
 
@@ -165,7 +155,7 @@ else:
 	res = '}'`
 endsnippet
 
-snippet "\bfgc\b" "function generator class" r
+snippet "\bfcg\b" "function generator class" r
 *$1 ($2) {`!p
 if (t[3] and t[3].find('\n') != 0):
 	snip >> 1
@@ -222,14 +212,14 @@ snippet "\bio\b" "inline body" r
 {$1}
 endsnippet
 
-#Object KEY
+#EXPORTS
 snippet "\bke\b" "object key" r
 '$1' : $2
 endsnippet
 
 
 #for of
-snippet "\bfo\b" "for object" r
+snippet fo "for object" w
 for (${1} of ${2}) {`!p
 if (t[4] and t[4].find('\n') != 0):
 	snip >> 1
@@ -243,45 +233,45 @@ else:
 endsnippet
 
 #promise
-snippet "\bpro\b" "promise" r
+snippet "\bpe\b" "promise" r
 Promise
 endsnippet
 
 #then
-snippet "\.the\b" "then" r
+snippet "\bthe\b" "then" r
 then($1)
 endsnippet
 
 #then
-snippet "\.rej\b" "reject" r
+snippet "\brej\b" "reject" r
 reject($1)
 endsnippet
 #then
-snippet "\.res\b" "resolve" r
+snippet "\bres\b" "resolve" r
 resolve($1)
 endsnippet
-snippet "\.cat\b" "catch" r
+snippet "\bcat\b" "catch" r
 catch($1)
 endsnippet
 
 #null
-snippet "\b(nu)\b" "null" r
+snippet "\b[,]{0,1}(nu)\b" "window" r
 null
 endsnippet
 #anew
-snippet "\b(an[e]{0,1}w)\b" "new" r
+snippet "\b[,]{0,1}(an[e]{0,1}w)\b" "window" r
 $1 = new 
 endsnippet
 #new
-snippet "\bnw\b" "new" r
+snippet "\b[,]{0,1}(nw)\b" "window" r
 new 
 endsnippet
 #window
-snippet "\bwin\b" "window" r
+snippet "\b[,]{0,1}(win)\b" "window" r
 window
 endsnippet
 #document
-snippet "\bdoc\b" "document" r
+snippet "\b[,]{0,1}(doc)\b" "document" r
 document
 endsnippet
 
@@ -296,29 +286,34 @@ snippet "\.ael\b" "addEventListener" r
 endsnippet
 
 #createElement
-snippet "\.cel\b" "createElement" r
-.createElement(${1})
+snippet "\bcel\b" "createElement" r
+createElement(${1})
 endsnippet
 
 #querySelector
-snippet "\.qs\b" "querySelector" r
-.querySelector(${1})
+snippet "\bqs\b" "createElement" r
+querySelector(${1})
 endsnippet
 
 #querySelectorAll
-snippet "\.qsa\b" "querySelectorAll" r
-.querySelectorAll(${1})
+snippet "\bqsa\b" "createElement" r
+querySelectorAll(${1})
 endsnippet
 
-#getBoundingClentRect
-snippet "\.gbr\b" "getBoundingClientRect" r
-.getBoundingClientRect(${1})
+#me
+snippet "\bm\b|\bme\b" "me" r
+me = this
+endsnippet
+
+#this
+snippet "[^\,]{1}\bt\b|\bth\b" "this" r
+this
 endsnippet
 
 
 #appendChild
-snippet "\.ac\b" "appendChild" r
-.appendChild(${1})
+snippet "\bac\b" "appendChild" r
+appendChild(${1})
 endsnippet
 
 #document.createElement
@@ -327,33 +322,28 @@ document.createElement('${1}')
 endsnippet
 
 #setAttribute
-snippet "\.sta\b" "setAttribute" r
-.setAttribute('${2}','${3}')
+snippet "\bsta\b" "setAttribute" r
+setAttribute('${2}','${3}')
 endsnippet
 
 #removeAttribute
-snippet "\.rma\b" "removeAttribute" r
-.removeAttribute('${2}')
+snippet "\brma\b" "removeAttribute" r
+removeAttribute('${2}')
 endsnippet
 
 #stProperty
-snippet "\.sp\b" "setProperty" r
-.setProperty('${1}','${2}')
+snippet "\bstp\b" "setProperty" r
+setProperty('${1}','${2}')
 endsnippet
 
 #removeProperty
-snippet "\.rmp\b" "removeProperty" r
-.removeProperty('${1}')
+snippet "\brmp\b" "removeProperty" r
+removeProperty('${1}')
 endsnippet
 
-#me
-snippet "\bm\b" "me" r
-me = this
-endsnippet
-
-#this
-snippet "\bt\b" "this" r
-this
+#removeProperty
+snippet "\bto|typeof\b" "typeof" r
+typeof ${1} === '${2}'
 endsnippet
 
 #style.propertyValue
@@ -372,28 +362,15 @@ style.removeProperty('${1}')
 endsnippet
 
 
-#removeProperty
-snippet "\bto\b|typeof\b" "typeof" r
-typeof ${1} === '${2}'
-endsnippet
-
-
-
 
 
 #and &&
-snippet "\b([,]{0,1})aa\b" "and &&" r
-`!p
-if match.group(1):
-	snip.rv = ' '
-`&& 
+snippet "\b[,]{0,1}aa\b" "and &&" r
+&& 
 endsnippet
 #or ||
-snippet "\b([,]{0,1})oo\b" "or ||" r
-`!p
-if match.group(1):
-	snip.rv = ' '
-`|| 
+snippet "\b[,]{0,1}oo\b" "or ||" r
+|| 
 endsnippet
 #p ()
 snippet "\b[,]{0,1}pa\b" "parenthesis" r
@@ -401,7 +378,7 @@ snippet "\b[,]{0,1}pa\b" "parenthesis" r
 endsnippet
 
 #pop ({})
-snippet "\b[,]{0,1}pfa\b" "parenthesis with function arrow" r
+snippet "\b[,]{0,1}pfa\b" "parenthesis with object" r
 (($1) => $2)
 endsnippet
 #pop ({})
@@ -434,7 +411,7 @@ endsnippet
 
 
 #ar []
-snippet "\b[\,]{0,1}ar\b" "array" r
+snippet "\b[\,]{0,1}ar\b$" "array" r
 [${1}]
 endsnippet
 #arop
@@ -444,7 +421,7 @@ snippet "\barop\b" "array containing object" r
 }]
 endsnippet
 #op {}
-snippet "{}p\b|\bop\b" "object key" r
+snippet "{}p|\bop\b" "object key" r
 {
 	${1} : ${2}
 }
@@ -454,7 +431,7 @@ endsnippet
 #res = match.group(1) if match.group(1) is not None else ''
 #`'${1}' : ${2}
 #endsnippet
-snippet "(\{p)(})?\b" "object key" r
+snippet "(\{p)(})?" "object key" r
 {
 	${1} : ${2}
 `!p
@@ -462,9 +439,9 @@ res = '\n}' if match.group(2) is not None else ''
 `
 endsnippet 
 #,
-snippet "(\:[^,]*),(\b)" "object key" r
+snippet "(\:[^,]*)," "object key" r
 `!p
-snip.rv=match.group(0)[:-1]
+snip.rv=match.group(0)
 `
 ${1} : ${2}
 endsnippet
@@ -501,7 +478,7 @@ snippet "\.fe\b" "forEach..." r
 endsnippet
 
 #pop
-snippet "\.po\b|\.p\b" "pop..." r
+snippet "\.po|\.p\b" "pop..." r
 .pop()
 endsnippet
 
@@ -511,7 +488,7 @@ snippet "\.sh\b" "shift..." r
 endsnippet
 
 #unshift
-snippet "\.us\b|\.ush\b" "unshift..." r
+snippet "\.us|\.ush\b" "unshift..." r
 .unshift(${1})
 endsnippet
 
@@ -531,12 +508,12 @@ snippet "\.sl\b" "slice..." r
 endsnippet
 
 #splice
-snippet "\.spl\b" "splice..." r
+snippet "\.sp\b" "splice..." r
 .splice(${1})
 endsnippet
 
 #v
-snippet "([^\(]{1})\bv|^v" "var" r
+snippet "([^\(]{1})\bv|^v\b" "var" r
 `!p
 res = match.group(0) if match.group(0) is not None else ''
 res += "ar"
@@ -544,7 +521,7 @@ res += "ar"
 endsnippet
 
 #wh 
-snippet "\bwh\b" "while" r
+snippet wh "while" w
 while (${1}) {`!p
 if (t[2] and t[2].find('\n') != 0):
 	snip >> 1
@@ -560,7 +537,7 @@ else:
 endsnippet
 
 #try
-snippet "\btry\b|\btr\b" "try...catch" r
+snippet try "try...catch" w
 try {
 	${1}
 } catch (${2:e}) {`!p
@@ -578,7 +555,7 @@ else:
 endsnippet
 
 #do
-snippet "\bdw\b" "do while" r
+snippet dw "do while" w
 do {`!p
 if (t[1] and t[1].find('\n') != 0):
 	snip >> 1
@@ -593,7 +570,7 @@ else:
 ` while (${2})
 endsnippet
 #fp
-snippet "\bfp\b" "for property" r
+snippet fp "for property" w
 for (${1} in ${2}) {`!p
 if (t[4] and t[4].find('\n') != 0):
 	snip >> 1
@@ -607,7 +584,7 @@ else:
 endsnippet
 	
 	#fl
-snippet "\bfl\b" "for loop - no vars" r
+snippet fl "for loop - no vars" w
 for (${1};${2};${3}) {`!p
 if (t[4] and t[4].find('\n') != 0):
 	snip >> 1
@@ -620,7 +597,7 @@ else:
 	res = '}'`
 endsnippet
 #flu
-snippet "\bflu\b" "for loop - increment up and cached length (incrementer then length then ln)" r
+snippet flu "for loop - increment up and cached length (incrementer then length then ln)" w
 for (${1};${1/((var|let)[\s\t]*)|((=|,).*)//g}<${1/(.*,)|(=.*)|((var|let)[\s\t]*.*)//g)/};${1/((var|let)[\s\t]*)|((=|,).*)//g}++) {`!p
 if (t[2] and t[2].find('\n') != 0):
 	snip >> 1
@@ -633,7 +610,7 @@ else:
 	res = '}'`
 endsnippet
 #fld
-snippet "\bfld\b" "for loop - increment down and cached length (decrementer, assume 0)" r
+snippet fld "for loop - increment down and cached length (decrementer, assume 0)" w
 for (${1};${1/((var|let)[\s\t]*)|((=|,).*)//g}>=0;${1/((var|let)[\s\t]*)|((=|,).*)//g}--) {`!p
 if (t[2] and t[2].find('\n') != 0):
 	snip >> 1
@@ -647,32 +624,32 @@ else:
 endsnippet
 
 #"alert
-snippet "\bal\b" "alert" r
+snippet al "alert" w
 alert(${1});
 endsnippet
 
 #"console.log"
-snippet "\bcg\b" "console.log" r
+snippet cg "console.log" w
 console.log(${1});
 endsnippet
 
 #"console.warn"
-snippet "\bcw\b" "console.warn" r
+snippet cw "console.warn" w
 console.warn(${1});
 endsnippet
 
 #"console.error"
-snippet "\bce\b" "console.error" r
+snippet ce "console.error" w
 console.error(${1});
 endsnippet
 
 #CLOSURE
-snippet "\bcla\b" "closure.. arrow." r
+snippet "\bcla\b" "closure..." r
 (($1) => $2)($3)
 endsnippet
 
 #CLOSURE
-snippet "\bclo\b" "closure..." r
+snippet "\bclo|close|closure\b" "closure..." r
 (function (${1}) `!p 
 if (t[2] and t[2].find('\n') != 0):
 	snip += '{'
@@ -698,7 +675,7 @@ else:
 endsnippet
 	
 #SWITCH
-snippet "\bsw\b" "switch..." r
+snippet "\bsw|switch\b" "switch..." r
 switch (${1}) {`!p
 if (t[2] and t[2].find('\n') != 0):
 	snip >> 1
@@ -721,35 +698,28 @@ if (t[3] != 'default '):
 endsnippet
 
 #STRING -single
-snippet "'([^']*)'\b" "single quote" r
-'`!p
-snip.rv = match.group(1)
-`'+
+snippet "(?<!')(?![.])+'p" "single quote" r
+'+
 '${1}'${2}
 endsnippet
-
-##STRING -single
-#snippet "''[01]" "single quote" r
-#'${1}'+
-#'${2}'
-#endsnippet
-
+#STRING -single
+snippet "''p\b" "single quote" r
+'${1}'+
+'${2}'
+endsnippet
 #STRING -double
-snippet ""([^"]*)"\b" "double quote" r
-"`!p
-snip.rv = match.group(1)
-`"+
+snippet "(?<!\")(?![.])+\"p" "single quote" r
+"+
 "${1}"
 endsnippet
-
-##STRING -double
-#snippet "\"\"p\b" "double quote" r
-#"${1}"+
-#"${2}"
-#endsnippet
+#STRING -double
+snippet "\"\"p\b" "double quote" r
+"${1}"+
+"${2}"
+endsnippet
 
 #CASE
-snippet "\bca\b|\bcase\b" "case..." r
+snippet "\bcase\b" "case..." r
 case ${1}:`!p
 if (t[2]):
 	snip >> 1
@@ -768,7 +738,7 @@ endsnippet
 
 
 #BREAK
-snippet "\bbr\b" "break;" r
+snippet br "break;" w
 break;
 endsnippet
 
@@ -778,7 +748,7 @@ continue;
 endsnippet
 
 #RETURN
-snippet "\bre\b|\bret\b" "return" r
+snippet "\bre|ret\b" "return" r
 return${1/.+/ /}`!p
 if (t[1] and t[2] and t[1].find(' ') != 0):
 	snip >> 1
@@ -794,12 +764,12 @@ delete${1/.+/ /}${1:pointer};
 endsnippet
 
 #arguments
-snippet "\ba\b|\barg\b|\bargs\b" "arguments" r
+snippet "\ba|arg|args\b" "arguments" r
 arguments
 endsnippet
 				
 #FUNCTION
-snippet "\bfn\b|\bfun\b" "function () {}" r
+snippet "\bfn|fun\b" "function () {}" r
 function${1/.+/ /}${1} (${2}) {`!p
 if (t[3] and t[3].find('\n') != 0):
 	snip >> 1
@@ -816,46 +786,33 @@ endsnippet
 
 
 #IF
-snippet "\bif\b" "if..." r
+snippet "\bif\b" "if..." rA
 if (${1}) {
 	${2}
 }${3/.+/ /}${3}
 endsnippet
 
 #ELSE IF
-snippet "\bei\b|\belseif\b" "else if..." r
+snippet "\bei|elseif\b" "else if..." rA
 else if (${1}) {
 	${2}
 }${3/.+/ /}${3}
 endsnippet
 
-#divide
-snippet "\bas\b" "else..." r
-async`!p
-if t[1]:
-	snip.rv = ' '
-`$1
-endsnippet
-
-#divide
-snippet "[\.]{2}" "backslash" Ar
-/
-endsnippet
-
 #ELSE
-snippet "\bel\b|\belse\b" "else..." r
+snippet "\bel\b|\belse\b" "else..." rA
 else {
 	${1}
 }${2}
 endsnippet
 
 #setTimeout
-snippet "\bst\b" "setTimeout..." r
+snippet st "setTimeout..." w
 setTimeout(${1})${2}
 endsnippet
 
 #setTimeoutClears
-snippet "\bstc\b" "setTimeout Cleared..." r
+snippet stc "setTimeout Cleared..." w
 ${1:if ($2) {
 	clearTimeout($2);
 }}
@@ -869,56 +826,53 @@ snippet "\bu\b|\bun\b" "undefined" r
 undefined
 endsnippet
 
-snippet "\b([,]{0,1})e\b" "assignment" r
-`!p
-if match.group(1):
-	snip.rv = ' '
-`= 
+snippet "\b[,]{0,1}e\b" "assignment" r
+= 
 endsnippet
 #e 
 
 #n
-snippet "\bn\b" "not" r
+snippet n "not" w
 !
 endsnippet
 
 #se
-snippet "\beee\b" "Strict Equality..." r
+snippet eee "Strict Equality..." w
 === 
 endsnippet
 
 #ee
-snippet "\bee\b" "Equality" r
+snippet ee "Equality" w
 == 
 endsnippet
 
 #nee
-snippet "\bnee\b" "Strict not equals..." r
+snippet nee "Strict not equals..." w
 !== 
 endsnippet
 
 #ne
-snippet "\bne\b" "Not equals" r
+snippet ne "Not equals" w
 != 
 endsnippet
 
 #l 
-snippet "\blt\b" "less than" r
+snippet lt "less than" w
 < 
 endsnippet
 
 #le 
-snippet "\blte\b" "less than equal" r
+snippet lte "less than equal" w
 <= 
 endsnippet
 
 #g
-snippet "\bgt\b" "greater than" r
+snippet gt "greater than" w
 > 
 endsnippet
 
 #ge
-snippet "\bgte\b" "greater than equals" r
+snippet gte "greater than equals" w
 >= 
 endsnippet
 
@@ -932,7 +886,7 @@ endsnippet
 #
 
 #edefine
-snippet "\bedef\b" "Ext.define... " r
+snippet edef "Ext.define... " w
 Ext.define('${1:`!p res = __import__('extpathloader').namify(path)`}',{
 	'extend' : '${2:Ext.Base}'${3/.+/,
 	/}${3:'requires' : [${4}]}${5/.+/,
@@ -944,7 +898,7 @@ Ext.define('${1:`!p res = __import__('extpathloader').namify(path)`}',{
 /}${12});${13}
 endsnippet
 
-snippet "\bemodel\b" "Ext.define..." r
+snippet emodel "Ext.define..." w
 Ext.define('${1:`!p res = __import__('extpathloader').namify(path)`}',{
 	'extend' : '${2:Ext.data.Model}'${3/.+/,
 	/}${3:'requires' : [${4}]}${5/.+/,
@@ -960,7 +914,7 @@ Ext.define('${1:`!p res = __import__('extpathloader').namify(path)`}',{
 /}${17});${18}
 endsnippet
 #econtroller
-snippet "\becontroller\b" "Ext.define... controller" r
+snippet econtroller "Ext.define... controller" w
 Ext.define('${1:`!p res = __import__('extpathloader').namify(path)`}',{
 	'extend' : '${2:Ext.app.Controller}'${3/.+/,
 	/}${3:'requires' : [${4}]}${5/.+/,
@@ -976,7 +930,7 @@ Ext.define('${1:`!p res = __import__('extpathloader').namify(path)`}',{
 /}${17});${18}
 endsnippet
 #estore
-snippet "\bestore\b" "Ext.define... store" r
+snippet estore "Ext.define... store" w
 Ext.define('${1:`!p res = __import__('extpathloader').namify(path)`}',{
 	'extend' : '${2:Ext.data.Store}'${3/.+/,
 	/}${3:'requires' : [${4}]}${5/.+/,
@@ -992,7 +946,7 @@ Ext.define('${1:`!p res = __import__('extpathloader').namify(path)`}',{
 }${19/.+/,
 /}${19});${20}
 endsnippet
-snippet "\beview\b" "Ext.define... view" r
+snippet eview "Ext.define... view" w
 Ext.define('${1:`!p res = __import__('extpathloader').namify(path)`}',{
 	'extend' : '${2:Ext.Container}'${3/.+/,
 	/}${3:'requires' : [${4}]}${5/.+/,
@@ -1011,7 +965,7 @@ endsnippet
 
 
 ##testing
-snippet "\bdes\b" "describe" wr
+snippet des "describe" w 
 describe('$1',function ($2) {`!p
 if (t[3] and t[3].find('\n') != 0):
 	snip >> 1
@@ -1024,7 +978,7 @@ else:
 	res = '}'`);
 endsnippet
 
-snippet "\bit\b" "it" wr
+snippet it "it" w 
 it('$1',function ($2) {`!p
 if (t[3] and t[3].find('\n') != 0):
 	snip >> 1
@@ -1036,4 +990,306 @@ if (t[3] and t[3].find('\n') != 0):
 else:
 	res = '}'`);
 endsnippet
+
+post_jump "post_expand(snip);" 
+post_jump "expand(snip);" 
+priority 1
+#TODO this worked__
+#snippet "(^[^,]*|,[^,]*),(.*)" "tset" r
+snippet "adksljfas" "tset" r
+`!p
+split = match.group(2).split(",")
+snip.rv = match.group(1);
+if vim.cnt != 0 and vim.rest and vim.snip and vim.at==None:
+	vim.at=split
+else:
+	vim.cnt=0
+if vim.cnt != 0 and vim.rest and vim.snip and vim.at != None:
+	vim.snip.buffer[vim.snip.line]+=" " + ",".join(vim.at)
+	split = None
+if snip.c == "":
+	vim.rest = split
+	vim.at = None
+`$1
+endsnippet
+
+
+#TODO this worked__
+post_expand "expansion(snip)"
+#snip.cursor.set(snip.line,len(snip.buffer[snip.line]))
+post_jump "post_jump(snip)"
+#TODO GOLD
+#snippet "(^[^\,]*|\/[^\,]*)\,(.*)" "tset" r
+snippet "NONE" "tset" r
+`!p
+vim.match = match
+snip.rv=match.group(1)+","+match.group(2)
+`$1
+endsnippet
+
+global !p
+def do_rest3(snip,jump):
+	if jump and vim.current.window.cursor[1] == snip.snippet_start[1]+1 and snip.buffer[snip.line][snip.snippet_start[1]-1] == " ":
+		o = vim.current.window.cursor[1]-1
+		snip.buffer[snip.line] = snip.buffer[snip.line][0:snip.snippet_start[1]-1]+snip.buffer[snip.line][snip.snippet_start[1]:]
+		snip.cursor.set(snip.tabstops[snip.tabstop].start[0],snip.tabstops[snip.tabstop].start[1]) 
+	elif vim.current.window.cursor[1] == snip.snippet_end[1]:
+		cursor = vim.current.window.cursor
+		vim.current.window.cursor = (snip.line+1,len(snip.buffer[snip.line]))
+		result = get_open_ch(snip)
+		ln = ln=len(result['comma_locs'])
+		vim.current.window.cursor = cursor
+		if len(result['open_locs'])==0 and ln>0:
+			snip.cursor.set(snip.line,result['comma_locs'][ln-1]['col']+1)
+			vim.eval('feedkeys("\<C-R>=UltiSnips#ExpandSnippet()\<CR>")')
+		else:
+			snip.cursor.set(snip.line,len(snip.buffer[snip.line]))
+vim.do_rest3= do_rest3
+
+
+def get_open_ch(snip,multiLine=False):
+	buffer = snip.buffer
+	col = vim.current.window.cursor[1]-1
+	row = vim.current.window.cursor[0]-1
+	cnt_bl = 0
+	cnt_ar = 0
+	cnt_pa = 0
+	dist = row-1
+	comma_found = False
+	opens=[]
+	commas=[]
+	if multiLine:
+		dist=0
+	for y in range(row,dist,-1):
+		line = buffer[y]
+		if col == None:
+			col = len(line)-1
+		for x in range(col,0,-1):
+			ch = line[x]
+			if ch == ')':
+				cnt_pa+=1
+			elif ch == '(':
+				cnt_pa-=1
+				if cnt_pa < 0:
+					opens.append({ch:'(',"col":col,"row":row})
+					#return '('
+			elif ch == ']':
+				cnt_ar+=1
+			elif ch == '[':
+				cnt_ar-=1
+				if cnt_ar < 0:
+					opens.append({ch:'[',"col":col,"row":row})
+			elif ch == '}':
+				cnt_bl+=1
+			elif ch == '{':
+				cnt_bl-=1
+				if cnt_bl < 0:
+					opens.append({ch:'{',"col":col,"row":row})
+					#return '{'
+			elif ch == ',' and cnt_bl == 0 and cnt_ar == 0 and cnt_pa == 0:
+				vim.eval("execute('let g:test="+str(col)+"')")
+				commas.append({'col':x,"row":y})
+		col = None
+	return {"open_locs":opens,"comma_locs":commas}
+def post_jump2(snip):
+	vim.snip = snip
+	if vim.match == None:
+		y = len(snip.buffer[snip.line])
+		snip.cursor.set(snip.line,y)
+		#asdflj
+		cursor = vim.current.window.cursor
+		vim.current.window.cursor = (snip.line+1,len(snip.buffer[snip.line]))
+		result = get_open_ch(snip)
+		ln = ln=len(result['comma_locs'])
+		vim.current.window.cursor = cursor
+		vim.rest= None
+		if len(result['open_locs'])==0 and ln>0:
+			col = result['comma_locs'][ln-1]['col']
+			snip.buffer[snip.line] = snip.buffer[snip.line][:col]+' ' +snip.buffer[snip.line][col+1:]
+			snip.cursor.set(snip.line,result['comma_locs'][ln-1]['col'])
+
+			#vim.eval('feedkeys("\<C-R>=UltiSnips#ExpandSnippet()\<CR>")')
+		return
+
+	snip.cursor.set(snip.line,len(snip.buffer[snip.line]));
+	y = len(snip.buffer[snip.line])
+	vim.r = y
+	snip.buffer[snip.line]+=' ' +vim.rest#+vim.match.group(2);
+	vim.rest = None
+	snip.cursor.set(snip.line,y)
+	#vim.current.window.cursor = (snip.line+1,len(snip.buffer[snip.line]))
+	#result = get_open_ch(snip)
+	#ln = ln=len(result['comma_locs'])
+	#if len(result['open_locs'])==0 and ln>0:
+		#snip.cursor.set(snip.line,result['comma_locs'][ln-1]['col']+1)
+		#vim.eval('feedkeys("\<C-R>=UltiSnips#ExpandSnippet()\<CR>")')
+	vim.match = None
+	vim.do_rest_called = False
+def expansion2(snip):
+	vim.snip = snip
+	#buffer = snip.buffer
+	#split = vim.match.group(2).split(",")
+	#match = vim.match
+	#num=0
+	#past = ""
+	ln = len(vim.comma_locs)-1
+	vim.rest = snip.buffer[snip.line][vim.comma_locs[ln]['col']+1:]
+	snip.buffer[snip.line] = snip.buffer[snip.line][0:vim.comma_locs[ln]['col']]
+	#snip.buffer[snip.line] = str(vim.comma_locs[ln]['col'])
+	#vim.rest=''
+	#snip.cursor.set(snip.line,len(snip.buffer[snip.line])/)
+def test2(snip):
+	cursor = vim.current.window.cursor
+	#vim.current.window.cursor = (snip.line+1,len(snip.buffer[snip.line])+1)
+	result = get_open_ch(snip)
+	#vim.current.window.cursor = cursor
+	if (len(result['open_locs'])==0 and len(result['comma_locs'])):
+		#snip.buffer[snip.line]=str(result['comma_locs'])
+		vim.comma_locs = result['comma_locs']
+		return True
+	#elif re.match("[\)\}\]\;]",snip.buffer[snip.line][snip.cursor[1]-1]) and snip.buffer[snip.line][snip.cursor[1]-1] != ',':
+		#snip.buffer[snip.line]+=','
+		##snip.cursor.set(snip.line,len(snip.buffer[snip.line]))
+		#cursor = vim.current.window.cursor
+		#vim.current.window.cursor = (snip.line+1,len(snip.buffer[snip.line]))
+		#result = get_open_ch(snip)
+		#vim.comma_locs = result['comma_locs']
+		#return True
+	return False
+
+
+	#line = snip.line
+	#row = snip.buffer[line]
+	#col = vim.current.window.cursor[1]
+	#comma_found = False
+	#for x in range(col-1,0,-1):
+		#ch = row[x]
+		#if ch == '(' or ch == ')' or ch == '{' or ch == '}' or ch == '[' or ch ==']':
+			#comma_found = False
+			#break
+		#elif ch == ',':
+			#comma_found = True
+	#return comma_found
+endglobal
+
+#snippet ".*" "test2" "test2(snip)" re
+priority 0
+post_expand "expansion2(snip)"
+#snip.cursor.set(snip.line,len(snip.buffer[snip.line]))
+post_jump "post_jump2(snip)"
+#snippet "(^[^\,]*|\/[^\,]*)\,(.*)" "tset" "test2(snip)" re
+#snippet "(.*)" "tset" "test2(snip)" re
+snippet "LAST_WORKING" "test" r
+`!p
+vim.match = match
+snip.rv=match.group(1)
+#snip.rv=match.group(1)+","+match.group(2)
+`$1
+endsnippet
+
+global !p
+def test3 (snip,jump=1):
+	col = snip.cursor[1]
+	row = snip.cursor[0]
+	#buffer = snip.buffer
+	line = snip.buffer[row][col:]
+	test = re.match("([\\W]+)",line)
+	if test == None:
+		test = re.match("([\\w]+)",line)
+	#if test == None:
+		#test = re.match("([\\s]+)",line)
+	if test:
+		if col == 0:
+			col += 1
+		vim.m = test
+		vim.c = col
+		return True
+	return False
+def post_expand4 (snip,jump=1):
+	print ("post_expadn")
+	if vim.m:
+		if vim.m.group(0):
+			#snip.cursor.set(snip.line,len(snip.buffer[snip.line]))
+			snip.cursor.set(snip.line,vim.c +  len(vim.m.group(0)))
+		vim.m = None
+	#snip.buffer[snip.line]+=''
+	#snip.cursor.set(snip.line,len(snip.buffer[snip.line])+1)
+endglobal
+
+
+
+#ALMOST
+#priority -1
+#post_jump "post_expand4(snip)"
+#snippet "(.*)" "test" "test3(snip)" re
+#`!p
+#snip.rv = match.group(1)
+#`$1
+#endsnippet
+
+
+global !p
+from UltiSnips import UltiSnips_Manager
+def do_rest2(snip,jump):
+	#if vim.r:
+		#snip.buffer[snip.line] = snip.buffer[snip.line][0:vim.r]+snip.buffer[snip.line][vim.r+1:]
+		#vim.r=None
+	if jump:
+		start = snip.snippet_end
+		snip.cursor.set(snip.tabstops[snip.tabstop].start[0],snip.tabstops[snip.tabstop].start[1]) 
+	else:
+		snip.cursor.set(snip.tabstops[snip.tabstop].start[0],snip.tabstops[snip.tabstop].start[1]) 
+	if jump and vim.current.window.cursor[1] == snip.snippet_start[1]+1 and snip.buffer[snip.line][snip.snippet_start[1]-1] == " ":
+		o = vim.current.window.cursor[1]-1
+		snip.buffer[snip.line] = snip.buffer[snip.line][0:snip.snippet_start[1]-1]+snip.buffer[snip.line][snip.snippet_start[1]:]
+		snip.cursor.set(snip.line,o)
+		#b = vim.eval('feedkeys("\<C-R>=UltiSnips#ExpandSnippet()\<CR>")')
+		#UltiSnips_Manager.expand()
+	#elif vim.current.window.cursor[1] == snip.snippet_end[1]:
+	if vim.current.window.cursor[1] == snip.snippet_end[1]:
+		o = vim.current.window.cursor[1]-2
+		snip.cursor.set(snip.line,len(snip.buffer[snip.line]))
+		#if snip.buffer[snip.line].find(',') !=-1:
+			#b = vim.eval('feedkeys("\<C-R>=UltiSnips#ExpandSnippet()\<CR>")')
+	vim.snip = snip
+def post_jump(snip):
+	vim.snip = snip
+	if vim.match == None:
+		y = len(snip.buffer[snip.line])
+		snip.cursor.set(snip.line,y)
+		return
+
+	snip.cursor.set(snip.line,len(snip.buffer[snip.line]));
+	y = len(snip.buffer[snip.line])
+	vim.r = y
+	snip.buffer[snip.line]+=' '+vim.match.group(2);
+	snip.cursor.set(snip.line,y)
+	vim.match = None
+	vim.do_rest_called = False
+def expansion(snip):
+	vim.snip = snip
+	#buffer = snip.buffer
+	#split = vim.match.group(2).split(",")
+	#match = vim.match
+	#num=0
+	#past = ""
+	snip.buffer[snip.line] = vim.match.group(1)
+	#snip.cursor.set(snip.line,len(snip.buffer[snip.line]))
+endglobal
+
+priority 1
+post_jump "expansion(snip)"
+#snippet "(^[^,]*|,[^,]*),(.*)" "tset" r
+snippet "adslkfjaf" "tset" r
+`!p
+vim.match = match;
+snip.rv=match.group(1) +","+ match.group(2)
+#split = match.group(2).split(",")
+#snip.rv=split[0]
+#snip.rv=""
+#snip.rv = split[0]
+`
+endsnippet
+
+# vim:ft=snippets:
 

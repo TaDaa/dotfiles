@@ -10,14 +10,14 @@
 # @Test annotation from the method
 
 
-snippet "\bsleep\b" "try sleep catch" r
+snippet sleep "try sleep catch" b
 try {
 	Thread.sleep(${1:1000});
 } catch (InterruptedException e){ ${:\n\te.printStackTrace();}\n
 }
 endsnippet
 
-snippet "\bnwa\b" "new Object or variable" !r
+snippet /nwa/ "new Object or variable" !r
 `!p 
 #test if there is a space in t[1]
 javahelpers = __import__('javahelpers')
@@ -167,27 +167,18 @@ endsnippet
 #endsnippet
 
 #aa &&
-snippet "\b([,]{0,1})aa\b" "and &&" r
-`!p
-if match.group(1):
-	snip.rv = ' '
-`&& 
+snippet "\b[,]{0,1}aa\b" "and &&" r
+&& 
 endsnippet
 
 #oo ||
 snippet "\b[,]{0,1}oo\b" "or ||" r
-`!p
-if match.group(1):
-	snip.rv = ' '
-`|| 
+|| 
 endsnippet
 
 #p ()
-snippet "\b([,]{0,1})pa\b" "parenthesis" r
-`!p
-if match.group(1):
-	snip.rv=' '
-`($1)
+snippet "\b[,]{0,1}pa\b" "parenthesis" r
+($1)
 endsnippet
 
 #par ([])
@@ -203,7 +194,7 @@ snippet "\b[,]{0,1}arl\b" "array" r
 []
 endsnippet
 
-snippet "\bwh\b" "while" r
+snippet wh "while" w
 while ($1) {`!p
 if (t[2] and t[2].find('\n') != 0):
 	snip >> 1
@@ -219,7 +210,7 @@ else:
 endsnippet
 
 #do
-snippet "\bdw\b" "do while" r
+snippet dw "do while" w
 do {`!p
 if (t[1] and t[1].find('\n') != 0):
 	snip >> 1
@@ -234,7 +225,7 @@ else:
 ` while (${2});
 endsnippet
 
-snippet "\bfor\b" "for loop - no vars" r
+snippet for "for loop - no vars" w
 for (${1};${2};${3}) {`!p
 if (t[4] and t[4].find('\n') != 0):
 	snip >> 1
@@ -248,7 +239,7 @@ else:
 endsnippet
 
 #flu
-snippet "\bflu\b" "for loop - increment up and cached length (incrementer then length then ln)" r
+snippet flu "for loop - increment up and cached length (incrementer then length then ln)" w
 for (${1};${1/(int[\s\t]*)|((=|,).*)//g}<${1/(.*,)|(=.*)|(int[\s\t]*.*)//g)/};${1/(int[\s\t]*)|((=|,).*)//g}++) {`!p
 if (t[2] and t[2].find('\n') != 0):
 	snip >> 1
@@ -262,7 +253,7 @@ else:
 endsnippet
 
 #fld
-snippet "\bfld\b" "for loop - increment down and cached length (decrementer, assume 0)" r
+snippet fld "for loop - increment down and cached length (decrementer, assume 0)" w
 for (${1};${1/(int[\s\t]*)|((=|,).*)//g}>=0;${1/(int[\s\t]*)|((=|,).*)//g}--) {`!p
 if (t[2] and t[2].find('\n') != 0):
 	snip >> 1
@@ -275,7 +266,7 @@ else:
 	res = '}'`
 endsnippet
 
-snippet "\bsw\b" "switch..." r
+snippet "\bsw\b|\bswitch\b" "switch..." r
 switch (${1}) {`!p
 if (t[2] and t[2].find('\n') != 0):
 	snip >> 1
@@ -293,24 +284,20 @@ else:
 endsnippet
 
 #STRING -single
-snippet "'([^']*)'\b" "single quote" r
-'`!p
-snip.rv = match.group(1)
-`'+
-'${1}'${2}
+snippet "(?<!')(?![.])+'p" "single quote" r
+'+
+'${1}'
 endsnippet
 
 #STRING -single
-#snippet "''p\b" "single quote" r
-#'${1}'+
-#'${2}'
-#endsnippet
+snippet "''p\b" "single quote" r
+'${1}'+
+'${2}'
+endsnippet
 
 #STRING -double
-snippet ""([^"]*)"\b" "double quote" r
-"`!p
-snip.rv = match.group(1)
-`"+
+snippet "(?<!\")(?![.])+\"p" "single quote" r
+"+
 "${1}"
 endsnippet
 
@@ -332,7 +319,7 @@ else:
 endsnippet
 
 #DEFAULT
-snippet "\bdf\b|\bdef\b" "default..." r
+snippet "\bdf\b|\bdef\b|\bdefault\b" "default..." r
 default: ${1}`!p
 if (t[1] and t[2] and t[1].find('\n') != 0):
 	snip >> 1
@@ -343,17 +330,17 @@ else:
 endsnippet
 
 #BREAK
-snippet "\bbr\b" "break;" r
+snippet br "break;" w
 break;
 endsnippet
 
 #CONTINUE
-snippet "\bcon\b|\bco\b" "continue;" r
+snippet "\bcn|\bco\b" "continue;" r
 continue;
 endsnippet
 
 #RETURN
-snippet "\bre\b|\bret\b" "return" r
+snippet "\bre\b|\bret\b|\breturn\b" "return" r
 return`!p
 if t[1] != "" and t[1].find(" ") != 0:
 	snip.rv += ' '
@@ -383,45 +370,42 @@ else {
 }${2}
 endsnippet
 
-snippet "\b([,]{0,1})e\b" "assignment" r
-`!p
-if match.group(1):
-	snip.rv = ' '
-`= 
+snippet "\b[,]{0,1}e\b" "assignment" r
+= 
 endsnippet
 
 #n
-snippet "\bn\b" "not" r
+snippet n "not" w
 !
 endsnippet
 
 #ee
-snippet "\bee\b" "Equality" r
+snippet ee "Equality" w
 == 
 endsnippet
 
 #ne
-snippet "\bne\b" "Not equals" r
+snippet ne "Not equals" w
 != 
 endsnippet
 
 #l 
-snippet "\bl\b" "less than" r
+snippet l "less than" w
 < 
 endsnippet
 
 #le 
-snippet "\ble\b" "less than equal" r
+snippet le "less than equal" w
 <= 
 endsnippet
 
 #g
-snippet "\bg\b" "greater than" r
+snippet g "greater than" w
 > 
 endsnippet
 
 #ge
-snippet "\bge\b" "greater than equals" r
+snippet ge "greater than equals" w
 >= 
 endsnippet
 
@@ -432,19 +416,19 @@ endsnippet
 #endsnippet
 
 
-snippet "\bas\b" "assert" r
+snippet as "assert" b
 assert ${1:test}${2/(.+)/(?1: \: ")/}${2:Failure message}${2/(.+)/(?1:")/};$0
 endsnippet
 
-snippet "\bat\b" "assert true" r
+snippet at "assert true" !b
 assertTrue(${1:actual});
 endsnippet
 
-snippet "\baf\b" "assert false" r
+snippet af "assert false" !b
 assertFalse(${1:actual});$0
 endsnippet
 
-snippet "\bae\b" "assert equals" r
+snippet ae "assert equals" !b
 assertEquals(${1:expected}, ${2:actual});
 endsnippet
 
@@ -531,7 +515,7 @@ snippet "\bimp\b|\bimpl\b" "implements" r
 implements`!p res = ' ' if t[3] != '' else '' `${3} $4
 endsnippet
 
-snippet "\bex\b|\bxt\b" "extends" r
+snippet "\bex\b|\bext\b" "extends" r
 extends`!p res = ' ' if t[3] != '' else '' `${3} $4
 endsnippet
 
@@ -629,7 +613,7 @@ endsnippet
 #endsnippet
 
 
-snippet "\bfp\b" "for (each)" r
+snippet fp "for (each)" w
 for (${1}:${2}) {`!p
 if (t[3] and t[3].find('\n') != 0):
 	snip >> 1
@@ -660,30 +644,30 @@ endsnippet
 #}
 #endsnippet
 
-snippet "\bim\b" "import"  r
+snippet im "import"  b
 import ${1};
 endsnippet
 
-#snippet "\bina\b" "interface" r
-#class ${1} ${2}{
-	#${3}
-#}
-#endsnippet
+snippet ina "interface" b
+class ${1} ${2}{
+	${3}
+}
+endsnippet
 
-snippet "\binaf\b" "interface" r
+snippet inaf "interface" b
 interface ${1:`!p snip.rv=snip.basename or "untitled"`} ${2}{
 	${3}
 }
 endsnippet
 
-snippet "\bimt\b" "import junit_framework_TestCase;"  r
+snippet imt "import junit_framework_TestCase;"  b
 import junit.framework.TestCase;
 $0
 endsnippet
 
 
-snippet "\bcc\b" "constructor call or setter body" r
-this.$1 = ${2:$1};
+snippet cc "constructor call or setter body"
+this.${1:var} = $1;
 endsnippet
 
 #snippet "\bnwaal\b" "Collections ArrayList" r
@@ -732,20 +716,23 @@ endsnippet
 
 
 #TODO
-snippet "\bcons\b" "Constructor" r
+snippet cons "Constructor" b
 public ${1:`!p snip.rv = snip.basename or "untitled"`} (${2}) {
 	$3
 }
 endsnippet
 
-snippet "\bov\b" "Override" r
+snippet @ov "Override" b
+@Override$1
+endsnippet
+snippet ov "Override" b
 @Override`!p
 if t[1] != "" and t[1].find("\n") == -1:
 	snip += ""
 `$1
 endsnippet
 
-snippet "\bconsa\b" "constructor, \w fields + assigments" r
+snippet consa "constructor, \w fields + assigments" b
  `!p
 args = __import__('javahelpers').getArgs(t[2])
 if len(args) > 0:
@@ -767,7 +754,7 @@ if t[3] != "":
 endsnippet
 
 
-snippet "\bconsags\b" "constructor, \w fields + assigments" r
+snippet consags "constructor, \w fields + assigments" b
  `!p
 args = __import__('javahelpers').getArgs(t[2])
 if len(args) > 0:
@@ -801,33 +788,33 @@ endsnippet
 
 
 
-snippet "\bj.b\b" "java_beans_" r
+snippet j.b "java_beans_" i
 java.beans.
 endsnippet
 
-snippet "\bj.i\b" "java_io" r
+snippet j.i "java_io" i
 java.io.
 endsnippet
 
-snippet "\bj.m\b" "java_math" r
+snippet j.m "java_math" i
 java.math.
 endsnippet
 
-snippet "\bj.n\b" "java_net_" r
+snippet j.n "java_net_" i
 java.net.
 endsnippet
 
-snippet "\bj.u\b" "java_util_"  r
+snippet j.u "java_util_"  i
 java.util.
 endsnippet
 
-snippet "\bmain\b" "method (main)" r
+snippet main "method (main)" b
 public static void main(String[] args) {
 	$0
 }
 endsnippet
 
-snippet "\btry\b|\btr\b" "try...catch" r
+snippet try "try...catch" w
 try {
 	${1}
 } catch (${2:Exception} ${3:ex}) {`!p if (t[4] and t[4].find('\n') != 0):
@@ -858,7 +845,7 @@ endsnippet
 #}
 #endsnippet
 
-snippet "\bmd\b" "Method With javadoc" r
+snippet md "Method With javadoc" !b
 /**
  * ${7:Short Description}`!p
 for i in getArgs(t[4]):
@@ -948,14 +935,14 @@ endsnippet
 #System.out.print($1);$0
 #endsnippet
 
-snippet "\bpst\b" "printStackTrace"  r
+snippet pst "printStackTrace"  w
 printStackTrack();
 endsnippet
-snippet "\bsop\b" "println"  r
+snippet sop "println"  w
 System.out.println($1);$0
 endsnippet
 
-snippet "\bpr\b" "private" r
+snippet pr "private" w
 private`!p
 if t[1] != "" and t[1].find(" ") != 0:
 	snip.rv = " "
@@ -973,7 +960,7 @@ else:
 `$1
 endsnippet
 
-snippet "\bth\b" "throws" r
+snippet th "throws" w
 throws`!p
 if t[1] != "" and t[1].find(" ") != 0:
 	snip.rv = " "
@@ -987,8 +974,7 @@ def expand (snip, jump_pos=1):
 	vim.eval('feedkeys("\<C-R>=UltiSnips#ExpandSnippet()\<CR>")')
 endglobal
 post_jump "expand(snip)"
-
-snippet "\bpu\b(.*)" "public" r
+snippet "\bpu\b(.*)" "public" rw
 public`!p
 if t[1] != "" and t[1].find(" ") != 0:
 	snip.rv = " "
@@ -999,7 +985,7 @@ if match.group(1) != None:
 `$1
 endsnippet
 
-snippet "\bab\b" "abstract" r
+snippet ab "abstract" w
 abstract`!p
 if t[1] != "" and t[1].find(" ") != 0:
 	snip.rv = " "
@@ -1018,7 +1004,7 @@ endsnippet
 #}
 #endsnippet
 
-snippet "\bsy\b" "synchronized" r
+snippet sy "synchronized"
 synchronized`!p res = ' ' if t[3] != '' else '' `${3}
 endsnippet
 
@@ -1030,25 +1016,25 @@ endsnippet
 
 
 
-snippet "\btc\b" "test case" r
+snippet tc "test case"
 public class ${1:`!p snip.rv = snip.basename or "untitled"`} extends ${2:TestCase}`!p nl(snip)`{
 	$0
 }
 endsnippet
 
-snippet "\bte\b" "test" r
+snippet te "test" b
 `!p junit(snip)`public void test${1:Name}() {
 	$0
 }
 endsnippet
 
-snippet "\btt\b" "test throws" r
+snippet tt "test throws" b
 `!p junit(snip)`public void test${1:Name}() ${2:throws Exception }{
 	$0
 }
 endsnippet
 
-snippet "\bthn\b" "throw" r
+snippet thn "throw" b
 throw new $0
 endsnippet
 snippet "\bfn\b" "function" r
@@ -1084,7 +1070,7 @@ endsnippet
 
 
 
-snippet "\bnu\b" "null" r
+snippet "\bnu\b" "super" r
 null$1
 endsnippet
 
@@ -1220,38 +1206,37 @@ def asyncSnip(snap):
 	snap.expand_anon(snip.rv)
 endglobal
 post_jump "asyncSnip(snip)"
-snippet "\basync(\<.*\>){0,1}(\(.*\)){0,1}(\.[^\b^\(^\)]+)\b" "test" r
+snippet "\basync(\<.*\>){0,1}(\(.*\)){0,1}(\.[^\b^\(^\)]+)$\b" "test" r
 `!p
 vim.match = match
 vim.snip = snip
 `
 endsnippet
-
 post_jump "asyncCallSnip(snip)"
-snippet "\.acall(<.*>){0,1}\b" "test" r
+snippet "\.acall(<.*>){0,1}" "test" r
 `!p
 vim.snip=snip
 vim.match = match
 `
 endsnippet
-
 post_jump "asyncThenSnip(snip)"
-snippet "\.athen(<.*>){0,1}\b" "test" r
+snippet "\.athen(<.*>){0,1}" "test" r
 `!p
 vim.snip=snip
 vim.match = match
 `
 endsnippet
-
 post_jump "asyncConvertSnip(snip)"
-snippet "\.aconv(<.*>){0,1}\b" "test" r
+snippet "\.aconv(<.*>){0,1}" "test" r
 `!p
 vim.snip=snip
 vim.match = match
 `
 endsnippet
 
-#snippet "\b"
+snippet "\b"
+
+
 #snippet wh "while" b
 #while ($1)`!p nl(snip)`{
 #	$0
@@ -1279,11 +1264,9 @@ endsnippet
 snippet "\b\.sps\b" "setPreferredSize" r
 .setPreferredSize($1)$2
 endsnippet
-
 snippet "\b\.a\b" "add" r
 .add($1)$2
 endsnippet
-
 snippet "\b\.rm\b" "remove" r
 .remove($1)$2
 endsnippet
