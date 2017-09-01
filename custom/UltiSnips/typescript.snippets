@@ -7,7 +7,10 @@ snippet ",t\b" "type" r
 endsnippet
 
 snippet "\bfn\b" "function class es6" r
-function $1 ($2) : ${3:void} {`!p
+function`!p
+if t[1] and t[1][0] != ' ':
+	snip.rv= ' '
+`$1 ($2) : ${3:void} {`!p
 if (t[4] and t[4].find('\n') != 0):
 	snip >> 1
 	snip += ''

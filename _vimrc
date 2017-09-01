@@ -117,8 +117,8 @@ let g:EclimCompletionMethod = 'omnifunc' "YCM
 let g:EclimJavascriptLintConf=g:user_vim_dir.'custom/Eclim/jslint.conf' "ECLIM validation
 "THESE TWO WERE CHANGED FROM NUL -- MIGHT NEED TO CHANGE BACK DEPENDING ON OS
 "-- IF SO PUT BELOW
-"let g:UltiSnipsExpandTrigger="/"  "ULTISNIPS
-"let g:UltiSnipsJumpForwardTrigger="/" "ULTISNIPS
+let g:UltiSnipsExpandTrigger="<c-j>"  "ULTISNIPS
+let g:UltiSnipsJumpForwardTrigger="<c-j>" "ULTISNIPS
 
 let g:UltiSnipsJumpBackwardTrigger="<c-k>" "ULTISNIPS
 let delimitMate_expand_cr=1
@@ -267,21 +267,39 @@ command! -nargs=* GruntApexSave call GruntApexSave()
 
 
 python << EOF
-def do_move(match,col):
-    if match and match.group(0):
-        vim.current.window.cursor = (vim.current.window.cursor[0],col+1+len(match.group(0)))
-        
-def check_move ():
+def hook(row,col):
+    snippet = None
+    #unravel snips w same end
+    while UltiSnips_Manager._cs and UltiSnips_Manager._cs != snippet:
+        snippet = UltiSnips_Manager._cs
+        UltiSnips_Manager.expand_or_jump()
+        if UltiSnips_Manager._cs:
+            end = snippet.end
+            if vim.current.window.cursor[0] == end[0] + 1 and vim.current.window.cursor[1] == end[1] and UltiSnips_Manager._cs != snippet:
+                continue
+    return ''
+def check_move():
     import re
     cursor = vim.current.window.cursor
     col = cursor[1]-1
     row = cursor[0]-1
-    line = vim.current.buffer[row][col+1:]
-    match = re.match("([\W]+)",line)
-    if match == None:
-        match = re.match("([\w]*)",line)
-    if match:
-        do_move(match,col)
+
+    UltiSnips_Manager.expand()
+    if vim.vars['ulti_expand_res'] == 0:
+        line = vim.current.buffer[row][col:]
+        if len(line) == 0 or line[0] == ' ':
+            if len(line):
+                #vim.vars['tadaa_feed']='\'feedkeys("\<c-j>")\''
+                #vim.vars['tadaa_feeda']='"\<c-j>"'
+                #vim.vars['tadaa_feedb']='"\<BS>"'
+                #vim.vars['test']='pyeval("hook('+str(row)+','+str(col)+')")'
+                vim.eval('feedkeys("\<bs>")')
+                vim.eval('feedkeys("\<space>\<bs>\<right>\<C-R>=pyeval(\'hook('+str(row)+','+str(col)+')\')\<CR>")')
+            else:
+                UltiSnips_Manager.expand_or_jump()
+        else:
+            vim.current.window.cursor = (row+1,col+1)
+            vim.eval('feedkeys("\<space>")')
 EOF
 
 function! Expand (var)
@@ -292,45 +310,33 @@ function! Expand (var)
     return ''
 endfunction
 
+
+
+
 function! ExpandOrJump ()
-    let g:tadaa_end_of_line=0
 python << EOF
-if UltiSnips_Manager._csnippets:
-    #store start_cursor
-    cursor = vim.start_cursor = vim.current.window.cursor
-    end = UltiSnips_Manager._csnippets[-1]._end
-    #add additional condition to check if cursor is outside of snippet end -- this allows to kill the current snippet
-    if cursor[0]-1 >= end[0] and cursor[1] >= end[1]:
-        UltiSnips_Manager._current_snippet_is_done()
+check_move()
 EOF
-    call UltiSnips#ExpandSnippetOrJump()
-python << EOF
-
-#prefer _csnippets if possible - lets us skip the final c-j of a snippet
-
-if not UltiSnips_Manager._csnippets:
-    if vim.current.window.cursor[1] == len(vim.current.buffer[vim.current.window.cursor[0]-1]) :
-        vim.vars['tadaa_end_of_line']=1
-    else:
-        cursor = vim.current.window.cursor
-        check_move()
-else:
-    cursor = vim.current.window.cursor
-    end = UltiSnips_Manager._csnippets[-1]._end
-    #check if cursor has not moved -- if not we shouldnt stick in the same spot!
-    if cursor[0]-1 >= end[0] and cursor[1]-1 >= end[1] and vim.start_cursor[0] == cursor[0] and vim.start_cursor[1] == cursor[1]:
-        UltiSnips_Manager._current_snippet_is_done()
-        if vim.current.window.cursor[1] == len(vim.current.buffer[vim.current.window.cursor[0]-1]) :
-            vim.vars['tadaa_end_of_line']=1
-        else:
-            check_move()
-EOF
-    if g:tadaa_end_of_line == 1
-        return  " "
-    endif
-    return  ""
+return ''
 endfunction
 
+function! CommaSnip ()
+python << EOF
+cursor = vim.current.window.cursor
+col = cursor[1]-1
+row = cursor[0]-1
+buffer = vim.current.window.buffer[row]
+if len(buffer) > 0 and buffer[col] == ',':
+    vim.current.window.buffer[row]=buffer[:col] + buffer[col+1:]
+    vim.vars['tadaa_regex_res']=1
+else:
+    vim.vars['tadaa_regex_res']=0
+EOF
+if g:tadaa_regex_res
+    return '/'
+endif
+return ','
+endfunction
 
 
 function! GruntApexSave () 
@@ -364,10 +370,11 @@ if has("gui_running")
       " not necessary in the 'explorer.exe %:p:h' section.
       "imap <C-j> <C-R>=UltiSnips#ExpandSnippetOrJump()<CR><C-space>
       inoremap <silent> / <C-R>=ExpandOrJump()<cr>
+      inoremap <silent> , <C-R>=CommaSnip()<CR>
       xnoremap <silent> / :call UltiSnips#SaveLastVisualSelection()<cr>gvs
       vnoremap <silent> / <ESC>:call UltiSnips#ExpandSnippetOrJump()<CR><c-space>
-      inoremap <silent> <c-j> <C-R>=ExpandOrJump()<cr>
-      xnoremap <silent> <c-J> :call UltiSnips#SaveLastVisualSelection()<cr>gvs
+      "inoremap <silent> <c-j> <C-R>=ExpandOrJump()<cr>
+      "xnoremap <silent> <c-J> :call UltiSnips#SaveLastVisualSelection()<cr>gvs
       imap 0 <C-R>=Expand(0)<CR><C-space>
       imap 1 <C-R>=Expand(1)<CR><C-space>
       imap 9 <C-R>=Expand(9)<CR><C-space>
@@ -380,12 +387,12 @@ if has("gui_running")
       let &directory=g:user_vim_dir.'swap'
       set guifont=anonymous\ pro:h12
       set lsp=3
-      imap <silent> / <C-R>=ExpandOrJump()<cr>
-      "smap <silent> / <Esc>:call ExpandOrJump()<cr>
+      inoremap <silent> / <C-R>=ExpandOrJump()<CR>
+      inoremap <silent> , <C-R>=CommaSnip()<CR>
       xnoremap <silent> / :call UltiSnips#SaveLastVisualSelection()<cr>gvs
       vnoremap <silent> / <ESC>:call UltiSnips#ExpandSnippetOrJump()<CR><c-space>
-      inoremap <silent> <c-j> <C-R>=ExpandOrJump()<cr>
-      xnoremap <silent> <c-J> :call UltiSnips#SaveLastVisualSelection()<cr>gvs
+      "inoremap <silent> <c-j> <C-R>=ExpandOrJump()<cr>
+      "xnoremap <silent> <c-J> :call UltiSnips#SaveLastVisualSelection()<cr>gvs
       "imap / <c-j>
       "imap <c-j> <C-R>=ExpandOrJump()<CR><C-space>
       imap 0 <C-R>=Expand(0)<CR><C-space>
@@ -393,4 +400,3 @@ if has("gui_running")
       imap 9 <C-R>=Expand(9)<CR><C-space>
   endif
 endif
-:bd

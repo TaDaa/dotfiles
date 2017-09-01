@@ -16,7 +16,13 @@
 
 #DEFAULT
 snippet ",," "regex" rA
-	
+/$1
+endsnippet
+
+
+#DEFAULT
+snippet "\br\b" "regex" r
+/$1/
 endsnippet
 
 #DEFAULT
@@ -79,15 +85,15 @@ snippet "\bc\b|\bco\b" "const" r
 const`!p
 if t[1] and t[1][0] != " ":
 	snip.rv += " "
-`$1;
+`$1
 endsnippet
 
 #CONST
-snippet "\bl\b" "let" r
+snippet "\bl(\b[\s]{0,1})" "let" r
 let`!p
 if t[1] and t[1][0] != " ":
 	snip.rv += " "
-`$1;
+`$1
 endsnippet
 
 
@@ -266,38 +272,38 @@ endsnippet
 
 #null
 snippet "\b(nu)\b" "null" r
-null
+null$1
 endsnippet
 #anew
 snippet "\b(an[e]{0,1}w)\b" "new" r
-$1 = new 
+$1 = new $2
 endsnippet
 #new
 snippet "\bnw\b" "new" r
-new 
+new $1
 endsnippet
 #window
 snippet "\bwin\b" "window" r
-window
+window$1
 endsnippet
 #document
 snippet "\bdoc\b" "document" r
-document
+document$1
 endsnippet
 
 #removeEventListener
 snippet "\.rel\b" "removeEventListener" r
-.removeEventListener(${1})
+.removeEventListener(${1})$2
 endsnippet
 
 #addEventListener
 snippet "\.ael\b" "addEventListener" r
-.addEventListener(${1})
+.addEventListener(${1})$2
 endsnippet
 
 #createElement
 snippet "\.cel\b" "createElement" r
-.createElement(${1})
+.createElement(${1})$2
 endsnippet
 
 #querySelector
@@ -406,7 +412,10 @@ snippet "\b[,]{0,1}pfa\b" "parenthesis with function arrow" r
 endsnippet
 #pop ({})
 snippet "\b[,]{0,1}pfn\b" "parenthesis with object" r
-(function${1/.+/ /}${1} (${2}) {`!p
+(function`!p
+if t[1] and t[1][0] != ' ':
+	snip.rv = ' '
+`${1} (${2}) {`!p
 if (t[3] and t[3].find('\n') != 0):
 	snip >> 1
 	snip += ''
@@ -435,7 +444,7 @@ endsnippet
 
 #ar []
 snippet "\b[\,]{0,1}ar\b" "array" r
-[${1}]
+[${1}]$2
 endsnippet
 #arop
 snippet "\barop\b" "array containing object" r
@@ -462,9 +471,9 @@ res = '\n}' if match.group(2) is not None else ''
 `
 endsnippet 
 #,
-snippet "(\:[^,]*),(\b)" "object key" r
+snippet "(\:[^,]*,)" "object key" r
 `!p
-snip.rv=match.group(0)[:-1]
+snip.rv=match.group(0)
 `
 ${1} : ${2}
 endsnippet
@@ -536,11 +545,11 @@ snippet "\.spl\b" "splice..." r
 endsnippet
 
 #v
-snippet "([^\(]{1})\bv|^v" "var" r
+snippet "\bv|^v" "var" r
 `!p
 res = match.group(0) if match.group(0) is not None else ''
 res += "ar"
-` ${1};
+` $1
 endsnippet
 
 #wh 
@@ -619,6 +628,7 @@ if (t[4] and t[4].find('\n') != 0):
 else:
 	res = '}'`
 endsnippet
+
 #flu
 snippet "\bflu\b" "for loop - increment up and cached length (incrementer then length then ln)" r
 for (${1};${1/((var|let)[\s\t]*)|((=|,).*)//g}<${1/(.*,)|(=.*)|((var|let)[\s\t]*.*)//g)/};${1/((var|let)[\s\t]*)|((=|,).*)//g}++) {`!p
@@ -687,8 +697,6 @@ if (t[2]):
 else:	
 	res = ' '
 `return $3;`!p
-if (t[3] != 'fn '):
-	t[3] = t[3].strip()
 if (t[2]):
 	snip.rv += '\n'
 	snip.rv += snip.mkline('')
@@ -800,7 +808,10 @@ endsnippet
 				
 #FUNCTION
 snippet "\bfn\b|\bfun\b" "function () {}" r
-function${1/.+/ /}${1} (${2}) {`!p
+function`!p
+if t[1] and t[1][0] != ' ':
+	snip.rv= ' '
+`${1} (${2}) {`!p
 if (t[3] and t[3].find('\n') != 0):
 	snip >> 1
 	snip += ''
@@ -819,11 +830,14 @@ endsnippet
 snippet "\bif\b" "if..." r
 if (${1}) {
 	${2}
-}${3/.+/ /}${3}
+}`!p
+if t[3] and t[3][0] != ' ':
+	snip.rv = ' '
+`$3
 endsnippet
 
 #ELSE IF
-snippet "\bei\b|\belseif\b" "else if..." r
+snippet "\bei\b|\belseif\b" "else i.." r
 else if (${1}) {
 	${2}
 }${3/.+/ /}${3}
@@ -837,10 +851,6 @@ if t[1]:
 `$1
 endsnippet
 
-#divide
-snippet "[\.]{2}" "backslash" Ar
-/
-endsnippet
 
 #ELSE
 snippet "\bel\b|\belse\b" "else..." r
@@ -873,7 +883,7 @@ snippet "\b([,]{0,1})e\b" "assignment" r
 `!p
 if match.group(1):
 	snip.rv = ' '
-`= 
+`= $1
 endsnippet
 #e 
 
