@@ -21,6 +21,7 @@ filetype off
 let &runtimepath.=",".g:user_vim_dir."bundle/vundle"
 call vundle#rc()
 
+let g:tsuquyomi_use_vimproc=1
 
 "preload eclim
 "Bundle 'vimfiles/eclim'
@@ -70,6 +71,14 @@ Bundle 'pangloss/vim-javascript'
 Bundle 'oplatek/Conque-Shell'
 Bundle 'greyblake/vim-preview'
 Bundle 'leafgarland/typescript-vim'
+Bundle 'vim-syntastic/syntastic'
+Bundle 'Shougo/vimproc.vim'
+Bundle 'Quramy/tsuquyomi'
+
+
+
+
+"Bundle 'jiangmiao/auto-pairs'
 
 "Bundle 'emmet-completions'
 "Bundle 'emmet-completions-visualforce'
@@ -97,6 +106,18 @@ function BuffEnter ()
     set smartindent
 endfunction
 
+
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+
+let g:syntastic_always_populate_loc_list = 0
+let g:syntastic_auto_loc_list = 0
+let g:syntastic_check_on_open = 0
+let g:syntastic_check_on_wq = 0
+let g:syntastic_typescript_checkers = ['tslint']
+
+
 let g:NERDTreeChDirMode=2 "NERDTree
 let g:NERDTreeMapOpen='<CR>' "NERDTree
 let g:NERDTreeMapPreview='<S-CR>' "NERDTree
@@ -119,8 +140,10 @@ let g:EclimJavascriptLintConf=g:user_vim_dir.'custom/Eclim/jslint.conf' "ECLIM v
 "-- IF SO PUT BELOW
 let g:UltiSnipsExpandTrigger="<c-j>"  "ULTISNIPS
 let g:UltiSnipsJumpForwardTrigger="<c-j>" "ULTISNIPS
-
 let g:UltiSnipsJumpBackwardTrigger="<c-k>" "ULTISNIPS
+let g:UltiSnipsMappingsToIgnore=['/']
+
+
 let delimitMate_expand_cr=1
 let g:emmet_completions_use_omnifunc=1 "vim-emmet-autocompleter
 let g:apex_server=1 "force
@@ -169,7 +192,7 @@ set smartindent
 set autoindent
 set cot=menu,longest,menuone
 set encoding=utf-8
-set anti
+"set anti
 
 colorscheme hemisu
 hi LineNr guifg=#555555
@@ -245,6 +268,18 @@ function! JavaBuffer (...)
 endfunction
 
 
+function! LintFix ()
+    if &ft == "typescript"
+        execute("!tslint --fix ".@%)
+        :SyntasticCheck
+    elseif &ft == "javascript"
+        execute("!eslint --fix ".@%)
+        :SyntasticCheck
+    endif
+endfunction
+command! LintFix call LintFix()
+
+
 function! JavaCompileAndRunBuffer (java_home)
     let f=expand('%')
     let pd = GetPackageDirectory(f)
@@ -267,8 +302,10 @@ command! -nargs=* GruntApexSave call GruntApexSave()
 
 
 python << EOF
+from UltiSnips import UltiSnips_Manager
 def hook(row,col):
     snippet = None
+    start_cursor = vim.current.window.cursor
     #unravel snips w same end
     while UltiSnips_Manager._cs and UltiSnips_Manager._cs != snippet:
         snippet = UltiSnips_Manager._cs
@@ -277,6 +314,8 @@ def hook(row,col):
             end = snippet.end
             if vim.current.window.cursor[0] == end[0] + 1 and vim.current.window.cursor[1] == end[1] and UltiSnips_Manager._cs != snippet:
                 continue
+    if start_cursor[0] > vim.current.window.cursor[0] or (start_cursor[0] == vim.current.window.cursor[0] and start_cursor[1] > vim.current.window.cursor[1]):
+        vim.current.window.cursor = (start_cursor[0],start_cursor[1])
     return ''
 def check_move():
     import re
@@ -285,6 +324,7 @@ def check_move():
     row = cursor[0]-1
 
     UltiSnips_Manager.expand()
+    vim.vars['tadaa_check_move_res'] = ""
     if vim.vars['ulti_expand_res'] == 0:
         line = vim.current.buffer[row][col:]
         if len(line) == 0 or line[0] == ' ':
@@ -293,13 +333,17 @@ def check_move():
                 #vim.vars['tadaa_feeda']='"\<c-j>"'
                 #vim.vars['tadaa_feedb']='"\<BS>"'
                 #vim.vars['test']='pyeval("hook('+str(row)+','+str(col)+')")'
-                vim.eval('feedkeys("\<bs>")')
-                vim.eval('feedkeys("\<space>\<bs>\<right>\<C-R>=pyeval(\'hook('+str(row)+','+str(col)+')\')\<CR>")')
+                #vim.eval('feedkeys("\<bs>")')
+                #vim.eval('feedkeys("\<space>\<bs>\<right>\<C-R>=pyeval(\'hook('+str(row)+','+str(col)+')\')\<CR>")')
+
+                vim.vars['tadaa_check_move_res']=" "
+                vim.eval('feedkeys("\<bs>\<bs>\<C-R>=pyeval(\'hook('+str(row)+','+str(col)+')\')\<CR>")')
             else:
                 UltiSnips_Manager.expand_or_jump()
         else:
             vim.current.window.cursor = (row+1,col+1)
-            vim.eval('feedkeys("\<space>")')
+            #vim.eval('feedkeys("\<space>")')
+            vim.vars['tadaa_check_move_res']=" "
 EOF
 
 function! Expand (var)
@@ -317,7 +361,7 @@ function! ExpandOrJump ()
 python << EOF
 check_move()
 EOF
-return ''
+return g:tadaa_check_move_res
 endfunction
 
 function! CommaSnip ()
@@ -328,6 +372,7 @@ row = cursor[0]-1
 buffer = vim.current.window.buffer[row]
 if len(buffer) > 0 and buffer[col] == ',':
     vim.current.window.buffer[row]=buffer[:col] + buffer[col+1:]
+    vim.current.window.cursor = (row+1,col)
     vim.vars['tadaa_regex_res']=1
 else:
     vim.vars['tadaa_regex_res']=0
@@ -369,15 +414,15 @@ if has("gui_running")
       " is so you don't have to hit return after command. Double quotes are
       " not necessary in the 'explorer.exe %:p:h' section.
       "imap <C-j> <C-R>=UltiSnips#ExpandSnippetOrJump()<CR><C-space>
-      inoremap <silent> / <C-R>=ExpandOrJump()<cr>
+      inoremap <silent> / <C-R>=ExpandOrJump()<CR>
       inoremap <silent> , <C-R>=CommaSnip()<CR>
-      xnoremap <silent> / :call UltiSnips#SaveLastVisualSelection()<cr>gvs
-      vnoremap <silent> / <ESC>:call UltiSnips#ExpandSnippetOrJump()<CR><c-space>
+      "xnoremap <silent> / :call UltiSnips#SaveLastVisualSelection()<cr>gvs
+      snoremap / <ESC>:call UltiSnips#ExpandSnippetOrJump()<CR>
       "inoremap <silent> <c-j> <C-R>=ExpandOrJump()<cr>
       "xnoremap <silent> <c-J> :call UltiSnips#SaveLastVisualSelection()<cr>gvs
-      imap 0 <C-R>=Expand(0)<CR><C-space>
-      imap 1 <C-R>=Expand(1)<CR><C-space>
-      imap 9 <C-R>=Expand(9)<CR><C-space>
+      "imap 0 <C-R>=Expand(0)<CR><C-space>
+      "imap 1 <C-R>=Expand(1)<CR><C-space>
+      "imap 9 <C-R>=Expand(9)<CR><C-space>
 
       :map <silent> <C-F5> :if expand("%:p:h") != ""<CR>:!start explorer.exe %:p:h<CR>:endif<CR><CR>
   else
@@ -389,14 +434,14 @@ if has("gui_running")
       set lsp=3
       inoremap <silent> / <C-R>=ExpandOrJump()<CR>
       inoremap <silent> , <C-R>=CommaSnip()<CR>
-      xnoremap <silent> / :call UltiSnips#SaveLastVisualSelection()<cr>gvs
-      vnoremap <silent> / <ESC>:call UltiSnips#ExpandSnippetOrJump()<CR><c-space>
+      "xnoremap <silent> / :call UltiSnips#SaveLastVisualSelection()<cr>gvs
+      snoremap / <ESC>:call UltiSnips#ExpandSnippetOrJump()<CR>
       "inoremap <silent> <c-j> <C-R>=ExpandOrJump()<cr>
       "xnoremap <silent> <c-J> :call UltiSnips#SaveLastVisualSelection()<cr>gvs
       "imap / <c-j>
       "imap <c-j> <C-R>=ExpandOrJump()<CR><C-space>
-      imap 0 <C-R>=Expand(0)<CR><C-space>
-      imap 1 <C-R>=Expand(1)<CR><C-space>
-      imap 9 <C-R>=Expand(9)<CR><C-space>
+      "imap 0 <C-R>=Expand(0)<CR><C-space>
+      "imap 1 <C-R>=Expand(1)<CR><C-space>
+      "imap 9 <C-R>=Expand(9)<CR><C-space>
   endif
 endif
