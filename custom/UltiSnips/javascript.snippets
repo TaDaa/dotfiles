@@ -13,7 +13,6 @@
 #)
 #${1}
 #endsnippet
-
 #DEFAULT
 snippet ",," "regex" rA
 /$1
@@ -73,7 +72,7 @@ if t[1] and t[1][0] != " ":
 endsnippet
 
 #EXPORT
-snippet "\bxp[01]|\bexp\b" "export" r
+snippet "\bxp\b|\bexp\b" "export" r
 export`!p
 if t[1] and t[1][0] != " ":
 	snip.rv += " "
@@ -141,7 +140,7 @@ endsnippet
 
 #EXPORTS
 snippet "\bfa\b" "arrow function" r
-($1) => 
+($1) => $2
 endsnippet
 
 #EXPORTS
@@ -220,7 +219,7 @@ else:
 if (t[1] and t[1].find('\n') != 0):
 	snip += '}'
 else:
-	res = '}'`
+	res = '}'`$2
 endsnippet
 
 
@@ -471,10 +470,8 @@ res = '\n}' if match.group(2) is not None else ''
 `
 endsnippet 
 #,
-snippet "(\:[^,]*,)" "object key" r
-`!p
-snip.rv=match.group(0)
-`
+snippet "\,$" "object key" r
+,
 ${1} : ${2}
 endsnippet
 
@@ -1047,3 +1044,32 @@ else:
 	res = '}'`);
 endsnippet
 
+
+
+
+#angular
+snippet "\@in\b" "@input" r
+@Input($1) $2;
+endsnippet
+
+snippet "\@ou\b|\@out\b" "@Output" r
+@Output($1) $2;
+endsnippet
+
+snippet "\@vc\b" "@ViewChild" r
+@ViewChild('$1') ${2:$1};
+endsnippet
+
+snippet "\@cm\b|\@cmp\b" "@Component" r
+@Component({
+	selector: '$1',
+	templateUrl: '$2.html',
+	styleUrls: ['${3:$2}.scss']
+}) $4;
+endsnippet
+
+
+snippet "\@di\b|\@dir\b" "@Component" r
+@Directive($1) $2;
+endsnippet
+#end angular

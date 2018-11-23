@@ -19,7 +19,7 @@ else:
 if (t[4] and t[4].find('\n') != 0):
 	snip += '}'
 else:
-	res = '}'`
+	res = '}'`$5
 endsnippet
 
 snippet "\bfc\b" "function class es6" r
@@ -32,12 +32,12 @@ else:
 if (t[4] and t[4].find('\n') != 0):
 	snip += '}'
 else:
-	res = '}'`
+	res = '}'`$5
 endsnippet
 
 
 snippet "\bfa\b" "arrow function" r
-($1) : ${2:void} => 
+($1) : ${2:void} => $3
 endsnippet
 
 snippet "\bfao\b" "arrow function" r
@@ -50,7 +50,7 @@ else:
 if (t[3] and t[3].find('\n') != 0):
 	snip += '}'
 else:
-	res = '}'`
+	res = '}'`$4
 endsnippet
 
 snippet "\bfg\b" "function generator" r
@@ -63,7 +63,7 @@ else:
 if (t[4] and t[4].find('\n') != 0):
 	snip += '}'
 else:
-	res = '}'`
+	res = '}'`$5
 endsnippet
 
 snippet "\bfgc\b" "function generator class" r
@@ -76,7 +76,7 @@ else:
 if (t[4] and t[4].find('\n') != 0):
 	snip += '}'
 else:
-	res = '}'`
+	res = '}'`$5
 endsnippet
 
 snippet "\bimp\b|\bimpl\b" "implements" r
@@ -85,7 +85,7 @@ endsnippet
 
 #CLOSURE
 snippet "\bcla\b" "closure..." r
-((${1}) : ${2:void} => $3)($4)
+((${1}) : ${2:void} => $3)($4)$5
 endsnippet
 
 #CLOSURE
@@ -111,11 +111,11 @@ if (t[3]):
 	snip.rv += snip.mkline('')
 else:	
 	res = ''
-`})(${5})
+`})(${5})$6
 endsnippet
 
 snippet "\bpr\b" "private" r
-private $1;
+private $1
 endsnippet
 
 snippet "\b([\,]{0,1})ta\b" "type annotation" r
@@ -130,8 +130,10 @@ abstract $1
 endsnippet
 
 
-snippet "\bin\b" "interface" r
-interface`!p
+snippet "([^@]|^)\bin\b" "interface" r
+`!p
+snip.rv=match.group(1)
+`interface`!p
 if t[1] and t[1][0] != " ":
 	snip.rv += " "
 `$1 {`!p
@@ -143,5 +145,5 @@ else:
 if (t[2] and t[2].find('\n') != 0):
 	snip += '}'
 else:
-	res = '}'`
+	res = '}'`$3
 endsnippet

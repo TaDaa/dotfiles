@@ -1,3 +1,9 @@
+"force py3
+py3 ""
+let g:py_cmd = "py"
+if has('python3')
+    let g:py_cmd = "py3"
+endif
 let g:arr_esc="\<c-[>"
 
 set nocompatible
@@ -56,8 +62,7 @@ Bundle 'vim-scripts/louver.vim'
 Bundle 'tpope/vim-repeat'
 Bundle 'tpope/vim-fugitive'
 Bundle 'SirVer/ultisnips'
-Bundle 'git://repo.or.cz/vcscommand'
-"Bundle 'juneedahamed/vc.vim'
+Bundle 'nixprime/cpsm'
 Bundle 'neowit/vim-force.com'
 Bundle 'ciaranm/detectindent'
 Bundle 'cocopon/iceberg.vim'
@@ -75,16 +80,6 @@ Bundle 'vim-syntastic/syntastic'
 Bundle 'Shougo/vimproc.vim'
 Bundle 'Quramy/tsuquyomi'
 
-
-
-
-"Bundle 'jiangmiao/auto-pairs'
-
-"Bundle 'emmet-completions'
-"Bundle 'emmet-completions-visualforce'
-"Bundle 'tadaa'
-"Bundle 'async-complete'
-
 filetype on
 filetype plugin on 
 filetype indent on
@@ -95,13 +90,29 @@ filetype indent on
 
 
 autocmd FileType scss syn cluster sassCssAttributes add=@cssColors "VIM-CSS-COLOR
-autocmd VimEnter * NERDTree
+"autocmd VimEnter * NERDTree
 autocmd BufEnter * NERDTreeMirror
 autocmd BufEnter * call BuffEnter()
 autocmd FileType javascript,js,jsx call BuffEnter()
-autocmd VimEnter * wincmd w
+"autocmd VimEnter * wincmd w
+"autocmd VimEnter * call VimEnter()
 
+function VimEnter ()
+endfunction
+
+let g:tadaa_started = 0
 function BuffEnter ()
+    if g:tadaa_started == 0
+        let g:tadaa_started = 1
+        :wincmd w
+        "NERDTree
+        "NERDTreeMirror
+        call feedkeys("<c-w>l")
+        vert sp
+        enew
+        bd 1
+    endif
+
     set smarttab
     set smartindent
 endfunction
@@ -125,9 +136,11 @@ let g:NERDTreeMapOpenSplit='<C-x>' "NERDTree
 let g:NERDTreeMapPreviewSplit='px' "NERDTree
 let g:NERDTreeMapOpenVSplit='<C-v>' "NERDTree
 let g:NERDTreeMapPreviewVSplit='pv' "NERDTree
+let g:ctrlp_match_func = {'match': 'cpsm#CtrlPMatch'}
+let g:ctrlp_funky_syntax_highlight = 1
 let g:ctrlp_working_path_mode = '0' "CTRLP
 let g:ctrlp_custom_ignore = { 
-	\ 'dir' : '\v[\/](LYNXXLogs|target|\.DS_STORE|\.settings|\.svn|\.git|\.hg|\.sencha|\.sass-cache|build|fa|webapp/ext|webapp/touch|images|icons|docs|deft|fonts|assembly|test|classes|debug|node_modules)$',
+	\ 'dir' : '\v[\/](LYNXXLogs|target|bin|\.DS_STORE|\.settings|\.svn|\.git|\.hg|\.sencha|\.sass-cache|build|fa|webapp/ext|webapp/touch|images|icons|docs|deft|fonts|assembly|test|classes|debug|node_modules)$'
 \ } "CTRLP
 let g:aghighlight=1 "AG
 let g:agformat="%f:%l:%c:%m" "AG
@@ -165,10 +178,13 @@ let g:ycm_semantic_triggers =  {
   \   'perl' : ['->'],
   \   'php' : ['->', '::'],
   \   'java,javascript,typescript,d,python,perl6,scala,vb,elixir,go' : ['.'],
+  \   'groovy' : ['.'],
   \   'cs' : ['.'],
   \   'ruby' : ['.', '::'],
   \   'lua' : ['.', ':'],
   \   'erlang' : [':'],
+  \   'html' : ['[', ' ', '<','>', '+', '*', ']', '^'],
+  \   'svg' : ['[', ' ', '<', '>', '+', '*', ']', '^']
   \ }
 
 "\	'test' : ['<','>',':']
@@ -220,13 +236,7 @@ imap <c-h> <left>
 
 
 
-
-python << EOF
-import vim
-import os
-globals()["extpathloader"] = (__import__('imp')).load_source('extpathloader', os.path.realpath(vim.eval('g:user_vim_dir')+'custom/UltiSnips/extpathloader.py'))
-globals()["javahelpers"] = (__import__('imp')).load_source('javahelpers', os.path.realpath(vim.eval('g:user_vim_dir')+'custom/UltiSnips/javahelpers.py'))
-EOF
+exec g:py_cmd join(readfile(expand('~/.vim/config.py')), "\r")
 
 
 silent execute '!mkdir "'.$VIMRUNTIME.'/temp"'
@@ -287,8 +297,6 @@ function! JavaCompileAndRunBuffer (java_home)
     let bin = a:java_home . "/bin/"
     exec('!rm target/classes/'.pd)
     exec('!'.bin.'javac -cp '.cp.' -d target/classes '.f)
-    "exec('R java -Dtangosol.coherence.log.level=-1 -cp '.cp. ' '.pd)
-    ":command! -nargs=* -complete=shellcmd R new | setlocal buftype=nofile bufhidden=hide noswapfile | r !<args>
     exec('!'.bin.'java -Dtangosol.coherence.log.level=-1 -cp '.cp. ' '.pd)
 endfunction
 
@@ -297,54 +305,6 @@ function! GetPackageDirectory (f)
 endfunction
 
 command! -nargs=* GruntApexSave call GruntApexSave()
-
-
-
-
-python << EOF
-from UltiSnips import UltiSnips_Manager
-def hook(row,col):
-    snippet = None
-    start_cursor = vim.current.window.cursor
-    #unravel snips w same end
-    while UltiSnips_Manager._cs and UltiSnips_Manager._cs != snippet:
-        snippet = UltiSnips_Manager._cs
-        UltiSnips_Manager.expand_or_jump()
-        if UltiSnips_Manager._cs:
-            end = snippet.end
-            if vim.current.window.cursor[0] == end[0] + 1 and vim.current.window.cursor[1] == end[1] and UltiSnips_Manager._cs != snippet:
-                continue
-    if start_cursor[0] > vim.current.window.cursor[0] or (start_cursor[0] == vim.current.window.cursor[0] and start_cursor[1] > vim.current.window.cursor[1]):
-        vim.current.window.cursor = (start_cursor[0],start_cursor[1])
-    return ''
-def check_move():
-    import re
-    cursor = vim.current.window.cursor
-    col = cursor[1]-1
-    row = cursor[0]-1
-
-    UltiSnips_Manager.expand()
-    vim.vars['tadaa_check_move_res'] = ""
-    if vim.vars['ulti_expand_res'] == 0:
-        line = vim.current.buffer[row][col:]
-        if len(line) == 0 or line[0] == ' ':
-            if len(line):
-                #vim.vars['tadaa_feed']='\'feedkeys("\<c-j>")\''
-                #vim.vars['tadaa_feeda']='"\<c-j>"'
-                #vim.vars['tadaa_feedb']='"\<BS>"'
-                #vim.vars['test']='pyeval("hook('+str(row)+','+str(col)+')")'
-                #vim.eval('feedkeys("\<bs>")')
-                #vim.eval('feedkeys("\<space>\<bs>\<right>\<C-R>=pyeval(\'hook('+str(row)+','+str(col)+')\')\<CR>")')
-
-                vim.vars['tadaa_check_move_res']=" "
-                vim.eval('feedkeys("\<bs>\<bs>\<C-R>=pyeval(\'hook('+str(row)+','+str(col)+')\')\<CR>")')
-            else:
-                UltiSnips_Manager.expand_or_jump()
-        else:
-            vim.current.window.cursor = (row+1,col+1)
-            #vim.eval('feedkeys("\<space>")')
-            vim.vars['tadaa_check_move_res']=" "
-EOF
 
 function! Expand (var)
     call UltiSnips#ExpandSnippet()
@@ -355,28 +315,13 @@ function! Expand (var)
 endfunction
 
 
-
-
 function! ExpandOrJump ()
-python << EOF
-check_move()
-EOF
+    exec g:py_cmd "check_move()"
 return g:tadaa_check_move_res
 endfunction
 
 function! CommaSnip ()
-python << EOF
-cursor = vim.current.window.cursor
-col = cursor[1]-1
-row = cursor[0]-1
-buffer = vim.current.window.buffer[row]
-if len(buffer) > 0 and buffer[col] == ',':
-    vim.current.window.buffer[row]=buffer[:col] + buffer[col+1:]
-    vim.current.window.cursor = (row+1,col)
-    vim.vars['tadaa_regex_res']=1
-else:
-    vim.vars['tadaa_regex_res']=0
-EOF
+    exec g:py_cmd "checkComma()"
 if g:tadaa_regex_res
     return '/'
 endif
@@ -416,13 +361,7 @@ if has("gui_running")
       "imap <C-j> <C-R>=UltiSnips#ExpandSnippetOrJump()<CR><C-space>
       inoremap <silent> / <C-R>=ExpandOrJump()<CR>
       inoremap <silent> , <C-R>=CommaSnip()<CR>
-      "xnoremap <silent> / :call UltiSnips#SaveLastVisualSelection()<cr>gvs
       snoremap / <ESC>:call UltiSnips#ExpandSnippetOrJump()<CR>
-      "inoremap <silent> <c-j> <C-R>=ExpandOrJump()<cr>
-      "xnoremap <silent> <c-J> :call UltiSnips#SaveLastVisualSelection()<cr>gvs
-      "imap 0 <C-R>=Expand(0)<CR><C-space>
-      "imap 1 <C-R>=Expand(1)<CR><C-space>
-      "imap 9 <C-R>=Expand(9)<CR><C-space>
 
       :map <silent> <C-F5> :if expand("%:p:h") != ""<CR>:!start explorer.exe %:p:h<CR>:endif<CR><CR>
   else
@@ -434,14 +373,6 @@ if has("gui_running")
       set lsp=3
       inoremap <silent> / <C-R>=ExpandOrJump()<CR>
       inoremap <silent> , <C-R>=CommaSnip()<CR>
-      "xnoremap <silent> / :call UltiSnips#SaveLastVisualSelection()<cr>gvs
       snoremap / <ESC>:call UltiSnips#ExpandSnippetOrJump()<CR>
-      "inoremap <silent> <c-j> <C-R>=ExpandOrJump()<cr>
-      "xnoremap <silent> <c-J> :call UltiSnips#SaveLastVisualSelection()<cr>gvs
-      "imap / <c-j>
-      "imap <c-j> <C-R>=ExpandOrJump()<CR><C-space>
-      "imap 0 <C-R>=Expand(0)<CR><C-space>
-      "imap 1 <C-R>=Expand(1)<CR><C-space>
-      "imap 9 <C-R>=Expand(9)<CR><C-space>
   endif
 endif
