@@ -56,14 +56,14 @@ Bundle 'tpope/vim-sleuth'
 Bundle 'TaDaa/vim-emmet-autocompleter'
 Bundle 'TaDaa/vim-emmet-visualforce-autocompleter'
 Bundle 'TaDaa/vim-emmet-android-autocompleter'
-Bundle 'TaDaa/vim-sourcekitten'
+"Bundle 'TaDaa/vim-sourcekitten'
 Bundle 'pangloss/vim-javascript'
-Bundle 'leafgarland/typescript-vim'
 Bundle 'w0rp/ale'
 Bundle 'mg979/vim-visual-multi'
 Bundle 'airblade/vim-gitgutter'
 Bundle 'itchyny/lightline.vim'
 Bundle 'posva/vim-vue'
+Bundle 'keith/swift.vim'
 "Bundle 'morhetz/gruvbox'
 "Bundle 'vim-scripts/candycode.vim'
 "Bundle 'vim-scripts/summerfruit256.vim'
@@ -102,15 +102,14 @@ Bundle 'posva/vim-vue'
 "Bundle 'jerrymarino/iCompleteMe' "requires compilationdatabase
 "Bundle 'jerrymarino/XcodeCompilationDatabase'
 "Bundle 'HerringtonDarkholme/yats.vim'
-"Bundle 'dsawardekar/portkey'
 
 
 "PLUGIN CONFIG
 "ALE -- disabled because I am manually triggering due to performance reasons
-ALEDisable 
+"ALEDisable 
 let g:ale_completion_enabled = 1
 let g:ale_linters = {
-  \ "sh": ["language_server"]
+  \ "sh": ["language_server"],
   \ }
 "lightline
 let g:lightline = {}
@@ -211,6 +210,7 @@ set cot=menu,longest,menuone
 set encoding=utf-8
 set laststatus=2                             " always show statusbar  
 set statusline=[%.n]%m\ %f%=%<%P
+set signcolumn=yes
 :command Bd bd
 
 if has ("nvim")
