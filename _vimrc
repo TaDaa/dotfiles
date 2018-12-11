@@ -62,7 +62,8 @@ Bundle 'w0rp/ale'
 Bundle 'mg979/vim-visual-multi'
 Bundle 'airblade/vim-gitgutter'
 Bundle 'itchyny/lightline.vim'
-Bundle 'posva/vim-vue'
+"Bundle 'posva/vim-vue'
+Bundle 'storyn26383/vim-vue'
 Bundle 'keith/swift.vim'
 "Bundle 'morhetz/gruvbox'
 "Bundle 'vim-scripts/candycode.vim'
@@ -106,7 +107,7 @@ Bundle 'keith/swift.vim'
 
 "PLUGIN CONFIG
 "ALE -- disabled because I am manually triggering due to performance reasons
-"ALEDisable 
+ALEDisable 
 let g:ale_completion_enabled = 1
 let g:ale_linters = {
   \ "sh": ["language_server"],
@@ -237,13 +238,14 @@ if has("win32")
   :map <silent> <C-F5> :if expand("%:p:h") != ""<CR>:!start explorer.exe %:p:h<CR>:endif<CR><CR>
 else
   Bundle 'Valloric/YouCompleteMe'
-  set shortmess+=c
+  "set shortmess+=c
+  set completeopt = menu,preview,noselect
   inoremap <c-c> <ESC>
   inoremap <expr> <CR> (pumvisible() ? "\<c-y>\<cr>" : "\<CR>")
 
   " Use <TAB> to select the popup menu:
-  inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
-  inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+  "inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
+  "inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 
   let g:UltiSnipsExpandSnippetOrJump = "UltiSnips#ExpandSnippetOrJump"
   let &backupdir=g:user_vim_dir.'backup'
@@ -310,6 +312,7 @@ function VimEnter ()
     hi DiffText guibg=#202087 guifg=NONE gui=NONE
     hi DiffAdd guibg=#105501 guifg=NONE gui=NONE
     hi DiffDelete guibg=#cd1010 guifg=#cd1010 gui=NONE
+    hi VertSplit guifg=#000000
     NERDTree
     wincmd w
 endfunction
