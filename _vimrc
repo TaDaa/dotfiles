@@ -11,6 +11,7 @@ if has('python3')
     let g:py_cmd = "py3"
 endif
 let g:arr_esc="\<c-[>"
+let g:loaded_commentary=1 "vim-vue wants this for comment strings
 let g:tsuquyomi_use_vimproc=1
 let g:tsuquyomi_disable_quickfix = 1
 let g:user_vim_dir=fnamemodify("~/.vim",":p") "full path to vim files
@@ -102,7 +103,7 @@ Bundle 'keith/swift.vim'
 "Bundle 'Quramy/tsuquyomi'
 "Bundle 'jerrymarino/iCompleteMe' "requires compilationdatabase
 "Bundle 'jerrymarino/XcodeCompilationDatabase'
-"Bundle 'HerringtonDarkholme/yats.vim'
+Bundle 'HerringtonDarkholme/yats.vim'
 
 
 "PLUGIN CONFIG
@@ -115,7 +116,7 @@ let g:ale_linters = {
 "lightline
 let g:lightline = {}
 let g:lightline.enable = {'statusline': 1, 'tabline': 1}
-let g:lightline.colorscheme = 'wombat'
+let g:lightline.colorscheme='solarized'
 "NERDTREE
 let g:NERDTreeChDirMode=2
 let g:NERDTreeMapOpen='<CR>'
@@ -229,7 +230,8 @@ if has("win32")
   let g:apex_binary_tee="C:/MinGW/msys/1.0/bin/touch.exe"
   let &backupdir=g:user_vim_dir.'backup'
   let &directory=g:user_vim_dir.'swap'
-  set guifont=anonymous\ pro:h10:w5.6
+  "set guifont=anonymous\ pro:h10:w5.6
+  set guifont=OperatorMono-XLight:h13
   "ExpandOrJump and CommaSnip below
   inoremap <silent> / <C-R>=ExpandOrJump()<CR>
   inoremap <silent> , <C-R>=CommaSnip()<CR>
@@ -239,19 +241,21 @@ if has("win32")
 else
   Bundle 'Valloric/YouCompleteMe'
   "set shortmess+=c
-  set completeopt = menu,preview,noselect
+  set completeopt=menu,preview,noselect
+  "set guifont=anonymous\ pro:h13
+  set guifont=OperatorMono-Light:h13
+  "set lsp=2
   inoremap <c-c> <ESC>
   inoremap <expr> <CR> (pumvisible() ? "\<c-y>\<cr>" : "\<CR>")
 
   " Use <TAB> to select the popup menu:
-  "inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
-  "inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+  "inoremap <expr> <Tab> pumvisible() ? '\<C-n>' : '\<Tab>'
+  "inoremap <expr> <S-Tab> pumvisible() ? '\<C-p>" : '\<S-Tab>'
 
   let g:UltiSnipsExpandSnippetOrJump = "UltiSnips#ExpandSnippetOrJump"
   let &backupdir=g:user_vim_dir.'backup'
   let &directory=g:user_vim_dir.'swap'
-  set guifont=anonymous\ pro:h13
-  set lsp=3
+  "set lsp=3
   "ExpandOrJump and CommaSnip below
   inoremap <silent> / <C-R>=ExpandOrJump()<CR>
   inoremap <silent> , <C-R>=CommaSnip()<CR>
@@ -285,9 +289,17 @@ endfunction
 vnoremap < <gv
 vnoremap > >gv
 "REMAP
+"nnoremap gcb :TCommentBlock<CR>
+"nnoremap gbb :TCommentBlock<CR>
+"vnoremap gb :TCommentBlock<CR>
+"vnoremap gi :call ContextualComment()<CR>
+
+"nnoremap <Leader>ct :call NERDComment(0,"toggle")<CR>
+"vnoremap <Leader>ct :call NERDComment(0,"toggle")<CR>
 nnoremap <Leader>n :NERDTreeToggle<CR>
-nnoremap <Leader>ct :call NERDComment(0,"toggle")<CR>
-vnoremap <Leader>ct :call NERDComment(0,"toggle")<CR>
+nnoremap <Leader>ci :call NERDComment(0,"toggle")<CR>
+vnoremap <Leader>ci :call NERDComment(0,"toggle")<CR>
+
 imap <c-l> <right>
 imap <c-h> <left>
 tnoremap <ESC> <C-W>N "rebind ESC to terminal-normal
@@ -295,6 +307,7 @@ tnoremap <ESC> <C-W>N "rebind ESC to terminal-normal
 
 "AUTOCMDS
 autocmd FileType scss syn cluster sassCssAttributes add=@cssColors "VIM-CSS-COLOR
+autocmd BufEnter,BufNew *.tsx set ft=typescript
 autocmd BufEnter * call BuffEnter()
 function BuffEnter ()
     set smarttab
@@ -303,7 +316,6 @@ function BuffEnter ()
 endfunction
 hi NonText guibg=#111122 guifg=#444466
 autocmd VimEnter * call VimEnter()
-let &ft=javascript
 function VimEnter ()
     colorscheme onedark
     hi SpellBad gui=undercurl
@@ -312,7 +324,8 @@ function VimEnter ()
     hi DiffText guibg=#202087 guifg=NONE gui=NONE
     hi DiffAdd guibg=#105501 guifg=NONE gui=NONE
     hi DiffDelete guibg=#cd1010 guifg=#cd1010 gui=NONE
-    hi VertSplit guifg=#000000
+    hi VertSplit guifg=#33ff33
+    filetype plugin on 
     NERDTree
     wincmd w
 endfunction

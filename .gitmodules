@@ -11,14 +11,6 @@ url = https://github.com/kien/ctrlp.vim
 path = bundle/vc.vim
 url = https://github.com/juneedahamed/vc.vim
 
-[submodule "bundle/vcscommand"]
-path = bundle/vcscommand
-url = https://github.com/vim-scripts/vcscommand.vim
-
-[submodule "bundle/vcscommand4"]
-path = bundle/vcscommand4
-url = https://github.com/vim-scripts/vcscommand.vim
-
 
 [submodule "bundle/vim-jsbeautify"]
 path = bundle/vim-jsbeautify
@@ -145,10 +137,6 @@ url = https://github.com/Valloric/YouCompleteMe
 path = bundle/detectindent
 url = https://github.com/ciaranm/detectindent
 
-[submodule "bundle/svnblame.vim"]
-path = bundle/svnblame.vim
-url = https://github.com/Jonty/svnblame.vim
-
 [submodule "bundle/iceberg.vim"]
 path = bundle/iceberg.vim
 url = https://github.com/cocopon/iceberg.vim
@@ -165,13 +153,109 @@ url = https://github.com/TaDaa/vim-emmet-autocompleter
 path = bundle/vim-emmet-visualforce-autocompleter
 url = https://github.com/TaDaa/vim-emmet-visualforce-autocompleter
 
+[submodule "bundle/ale"]
+path = bundle/ale
+url = https://github.com/w0rp/ale
+
+[submodule "bundle/ayu-vim"]
+path = bundle/ayu-vim
+url = https://github.com/ayu-theme/ayu-vim
+
+[submodule "bundle/badwolf"]
+path = bundle/badwolf
+url = https://github.com/sjl/badwolf
+
+[submodule "bundle/cpsm"]
+path = bundle/cpsm
+url = https://github.com/nixprime/cpsm
+
+[submodule "bundle/lightline.vim"]
+path = bundle/lightline.vim
+url = https://github.com/itchyny/lightline.vim
+
+[submodule "bundle/nvim-yarp"]
+path = bundle/nvim-yarp
+url = https://github.com/roxma/nvim-yarp
+
+[submodule "bundle/onedark.vim"]
+path = bundle/onedark.vim
+url = https://github.com/joshdick/onedark.vim
+
+[submodule "bundle/onehalf"]
+path = bundle/onehalf
+url = https://github.com/sonph/onehalf
+
+[submodule "bundle/palenight.vim"]
+path = bundle/palenight.vim
+url = https://github.com/drewtempelmeyer/palenight.vim
+
+[submodule "bundle/papercolor-theme"]
+path = bundle/papercolor-theme
+url = https://github.com/NLKNguyen/papercolor-theme
+
+[submodule "bundle/vimproc.vim"]
+path = bundle/vimproc.vim
+url = https://github.com/Shougo/vimproc.vim
+
+[submodule "bundle/tsuquyomi"]
+path = bundle/tsuquyomi
+url = https://github.com/Quramy/tsuquyomi
+
+[submodule "bundle/yats.vim"]
+path = bundle/yats.vim
+url = https://github.com/HerringtonDarkholme/yats.vim
+
+[submodule "bundle/vim-abolish"]
+path = bundle/vim-abolish
+url = https://github.com/tpope/vim-abolish
+
+[submodule "bundle/vim-afterglow"]
+path = bundle/vim-afterglow
+url = https://github.com/danilo-augusto/vim-afterglow
+
+[submodule "bundle/vim-dispatch"]
+path = bundle/vim-dispatch
+url = https://github.com/tpope/vim-dispatch
+
+[submodule "bundle/vim-eunuch"]
+path = bundle/vim-eunuch
+url = https://github.com/tpope/vim-eunuch
+
+[submodule "bundle/vim-gitgutter"]
+path = bundle/vim-gitgutter
+url = https://github.com/airblade/vim-gitgutter
+
+[submodule "bundle/vim-hug-neovim-rpc"]
+path = bundle/vim-hug-neovim-rpc
+url = https://github.com/roxma/vim-hug-neovim-rpc
+
+[submodule "bundle/vim-hybrid-material"]
+path = bundle/vim-hybrid-material
+url = https://github.com/kristijanhusak/vim-hybrid-material/
+
+[submodule "bundle/vim-one"]
+path = bundle/vim-one
+url = https://github.com/rakr/vim-one/
+
+[submodule "bundle/vim-projectionist"]
+path = bundle/vim-projectionist
+url = https://github.com/tpope/vim-projectionist/
+
+[submodule "bundle/vim-sleuth"]
+path = bundle/vim-sleuth
+url = https://github.com/tpope/vim-sleuth/
+
+[submodule "bundle/vim-visual-multi"]
+path = bundle/vim-visual-multi
+url = https://github.com/mg979/vim-visual-multi/
+
+[submodule "bundle/vim-vue"]
+path = bundle/vim-vue
+url = https://github.com/posva/vim-vue/
+
 [submodule "bundle/vim-emmet-android-autocompleter"]
 path = bundle/vim-emmet-android-autocompleter
 url = https://github.com/TaDaa/vim-emmet-android-autocompleter
-
-[submodule "bundle/Conque-Shell"]
-path = bundle/Conque-Shell
-url = https://github.com/oplatek/Conque-Shell
 
 [submodule "bundle/typescript-vim"]
 path = bundle/typescript-vim
@@ -181,14 +265,17 @@ url = https://github.com/leafgarland/typescript-vim
 path = bundle/vc.vim
 url = https://github.com/juneedahamed/vc.vim
 
-[submodule "bundle/vcscommand"]
-path = bundle/vcscommand.vim
-url = git://repo.or.cz/vcscommand
+[submodule "bundle/vim-preview"]
+path = bundle/vim-preview
+url = https://github.com/greyblade/vim-preview
 
 [submodule "bundle/vim-fugitive"]
 path = bundle/vim-fugitive
 url = https://github.com/tpope/vim-fugitive
 
+[submodule "bundle/vim-javascript"]
+path = bundle/vim-javascript
+url = https://github.com/pangloss/vim-javascript
 
 [submodule "bundle/vim-jsbeautify"]
 path = bundle/vim-jsbeautify
