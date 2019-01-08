@@ -20,25 +20,42 @@ if has("win32")
     syntax on
     let g:user_vim_dir=substitute(g:user_vim_dir,'/','\\','g')
 endif
+if has("gui")
+  set ambiwidth=single
+  if !has('nvim')
+    set transparency=1
+    autocmd BufEnter,BufLeave * call ForceRedraw()
+    function SetTransparency(a)
+      set transparency=1
+    endfunction
+    function ForceRedraw()
+      "TODO try to move this..some of the icons were bugging out
+      set guifont=OperatorMonoNerdFont-Light:h13
+      call timer_start(1, 'SetTransparency')
+    endfunction
+  endif
+endif
 set nocompatible
 behave mswin
 let &runtimepath.=",".g:user_vim_dir."custom"
 let &runtimepath.=",".g:user_vim_dir."dependencies"
 set rtp-='~/vimfiles'
 filetype off
-let &runtimepath.=",".g:user_vim_dir."bundle/vundle"
+let &runtimepath.=",".g:user_vim_dir."bundle/Vundle.vim"
 silent execute '!mkdir "'.$VIMRUNTIME.'/temp"'
 silent execute '!del "'.$VIMRUNTIME.'/temp/*~"'
 
 call vundle#rc()
 
 "preload eclim
-Bundle 'vimfiles/eclim'
-Bundle 'vimfiles'
-Bundle 'gmarik/vundle'
-Bundle 'ctrlpvim/ctrlp.vim'
+"Bundle 'vimfiles/eclim'
+"Bundle 'vimfiles'
+"
+Bundle 'VundleVim/Vundle.vim'
+"Bundle 'ctrlpvim/ctrlp.vim'
 Bundle 'scrooloose/nerdtree'
 Bundle 'scrooloose/nerdcommenter'
+"Bundle 'Xuyuanp/nerdtree-git-plugin'
 Bundle 'tpope/vim-surround'
 Bundle 'tpope/vim-projectionist'
 Bundle 'tpope/vim-eunuch'
@@ -57,6 +74,9 @@ Bundle 'tpope/vim-sleuth'
 Bundle 'TaDaa/vim-emmet-autocompleter'
 Bundle 'TaDaa/vim-emmet-visualforce-autocompleter'
 Bundle 'TaDaa/vim-emmet-android-autocompleter'
+Bundle 'TaDaa/vimade'
+Bundle 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+"Bundle 'blueyed/vim-diminactive'
 "Bundle 'TaDaa/vim-sourcekitten'
 Bundle 'pangloss/vim-javascript'
 Bundle 'w0rp/ale'
@@ -64,9 +84,9 @@ Bundle 'mg979/vim-visual-multi'
 Bundle 'airblade/vim-gitgutter'
 Bundle 'itchyny/lightline.vim'
 "Bundle 'posva/vim-vue'
-Bundle 'storyn26383/vim-vue'
+Bundle 'TaDaa/vim-vue-1'
 Bundle 'keith/swift.vim'
-"Bundle 'morhetz/gruvbox'
+Bundle 'morhetz/gruvbox'
 "Bundle 'vim-scripts/candycode.vim'
 "Bundle 'vim-scripts/summerfruit256.vim'
 "Bundle 'vim-scripts/pyte'
@@ -80,21 +100,22 @@ Bundle 'keith/swift.vim'
 "Bundle 'altercation/vim-colors-solarized'
 "Bundle 'gosukiwi/vim-atom-dark'
 "Bundle 'chriskempson/base16-vim'
-"Bundle 'tomasr/molokai'
+Bundle 'tomasr/molokai'
 "Bundle 'danilo-augusto/vim-afterglow'
 "Bundle 'nielsmadan/harlequin'
 "Bundle 'nanotech/jellybeans.vim'
 "Bundle 'twerth/ir_black'
-"Bundle 'w0ng/vim-hybrid'
+Bundle 'w0ng/vim-hybrid'
 "Bundle 'noahfrederick/vim-hemisu'
 "Bundle 'reedes/vim-colors-pencil'
 "Bundle 'sjl/badwolf'
-"Bundle 'rakr/vim-one'
-"Bundle 'ayu-theme/ayu-vim'
-"Bundle 'drewtempelmeyer/palenight.vim'
-"Bundle 'sonph/onehalf', {'rtp': 'vim/'}
+Bundle 'rakr/vim-one'
+Bundle 'ayu-theme/ayu-vim'
+Bundle 'drewtempelmeyer/palenight.vim'
+Bundle 'sonph/onehalf', {'rtp': 'vim/'}
+Bundle 'junegunn/limelight.vim'
 "Bundle 'neowit/vim-force.com'
-"Bundle 'maksimr/vim-jsbeautify'
+Bundle 'maksimr/vim-jsbeautify'
 "Bundle 'ciaranm/detectindent'
 "Bundle 'juneedahamed/vc.vim'
 "Bundle 'oplatek/Conque-Shell'
@@ -104,19 +125,37 @@ Bundle 'keith/swift.vim'
 "Bundle 'jerrymarino/iCompleteMe' "requires compilationdatabase
 "Bundle 'jerrymarino/XcodeCompilationDatabase'
 Bundle 'HerringtonDarkholme/yats.vim'
-
+Bundle 'mhinz/vim-startify'
+Bundle 'ryanoasis/vim-devicons'
+Bundle 'iamcco/markdown-preview.vim'
 
 "PLUGIN CONFIG
 "ALE -- disabled because I am manually triggering due to performance reasons
-ALEDisable 
+try
+  ALEDisable 
+catch
+  echo ''
+endtry  
+let g:NERDTreeUpdateOnCursorHold = 0
+let g:ale_php_langserver_executable = '/Users/tlovell/.composer/vendor/bin/php-language-server.php'
+let g:ale_php_langserver_use_global = 1
+let g:ale_history_log_output = 1
 let g:ale_completion_enabled = 1
 let g:ale_linters = {
   \ "sh": ["language_server"],
   \ }
 "lightline
 let g:lightline = {}
+let g:lightline.component_function = {'filetype': 'GetLightlineFileType', 'fileformat': 'GetLightlineFileFormat'}
+function! GetLightlineFileType()
+  return winwidth(0) > 70 ? (strlen(&filetype) ? &filetype . ' ' . WebDevIconsGetFileTypeSymbol() . '' : 'no ft') : ''
+endfunction
+
+function! GetLightlineFileFormat()
+  return winwidth(0) > 70 ? (&fileformat . ' ' . WebDevIconsGetFileFormatSymbol() . '') : ''
+endfunction
 let g:lightline.enable = {'statusline': 1, 'tabline': 1}
-let g:lightline.colorscheme='solarized'
+let g:lightline.colorscheme='wombat'
 "NERDTREE
 let g:NERDTreeChDirMode=2
 let g:NERDTreeMapOpen='<CR>'
@@ -125,14 +164,26 @@ let g:NERDTreeMapOpenSplit='<C-x>'
 let g:NERDTreeMapPreviewSplit='px'
 let g:NERDTreeMapOpenVSplit='<C-v>'
 let g:NERDTreeMapPreviewVSplit='pv'
+let g:NERDTreeIndicatorMapCustom = {
+    \ "Modified"  : "✹",
+    \ "Staged"    : "✚",
+    \ "Untracked" : "✭",
+    \ "Renamed"   : "➜",
+    \ "Unmerged"  : "═",
+    \ "Deleted"   : "✖",
+    \ "Dirty"     : "✹",
+    \ "Clean"     : "✔︎",
+    \ 'Ignored'   : '☒',
+    \ "Unknown"   : "?"
+    \ }
 "CTRLP
-let g:ctrlp_match_func = {'match': 'cpsm#CtrlPMatch'}
-let g:ctrlp_user_command = 'fd --type f --color=never "" %s'
-let g:ctrlp_use_caching = 0
-let g:ctrlp_working_path_mode = '0'
-let g:ctrlp_custom_ignore = { 
-	\ 'dir' : '\v[\/](LYNXXLogs|target|bin|\.DS_STORE|\.settings|\.svn|\.git|\.hg|\.sencha|\.sass-cache|build|fa|webapp/ext|webapp/touch|images|icons|docs|deft|fonts|assembly|test|classes|debug|node_modules)$'
-\ }
+"let g:ctrlp_match_func = {'match': 'cpsm#CtrlPMatch'}
+"let g:ctrlp_user_command = 'fd --type f --color=never "" %s'
+"let g:ctrlp_use_caching = 0
+"let g:ctrlp_working_path_mode = '0'
+"let g:ctrlp_custom_ignore = { 
+	"\ 'dir' : '\v[\/](LYNXXLogs|target|bin|\.DS_STORE|\.settings|\.svn|\.git|\.hg|\.sencha|\.sass-cache|build|fa|webapp/ext|webapp/touch|images|icons|docs|deft|fonts|assembly|test|classes|debug|node_modules)$'
+"\ }
 "AG
 let g:aghighlight=1
 let g:agformat="%f:%l:%c:%m"
@@ -164,6 +215,7 @@ let g:multi_cursor_normal_maps={'!':1, '@':1, '=':1, 'q':1, 'r':1, 't':1, 'T':1,
 let g:multi_cursor_visual_maps={'F':1,'f':1}
 "YOUCOMPLETEME
 let g:ycm_global_ycm_extra_conf= g:user_vim_dir.'custom/ycm/.ycm_extra_conf.py'
+"let g:ycm_min_num_of_chars_for_completion = 0
 let g:ycm_semantic_triggers =  {
   \   'c' : ['->', '.'],
   \   'objc' : ['->', '.', 're!\[[_a-zA-Z]+\w*\s', 're!^\s*[^\W\d]\w*\s',
@@ -185,6 +237,13 @@ let g:ycm_semantic_triggers =  {
 let g:vim_vue_indent_paths = {
   \ 'javascript': '../vim-javascript/indent/javascript.vim' 
   \ }
+"webicons
+let g:webdevicons_enable_nerdtree=1
+let g:webdevicons_conceal_nerdtree_brackets=1
+let g:WebDevIconsNerdTreeBeforeGlyphPadding=''
+let g:WebDevIconsNerdTreeAfterGlyphPadding=''
+let g:WebDevIconsUnicodeDecorateFolderNodes=1
+let g:DevIconsEnableFoldersOpenClose=1
 
 
 " USER SPECIFIED
@@ -215,7 +274,7 @@ set statusline=[%.n]%m\ %f%=%<%P
 set signcolumn=yes
 :command Bd bd
 
-if has ("nvim")
+if has("nvim")
     syntax on
 else
     Bundle 'roxma/nvim-yarp'
@@ -231,7 +290,6 @@ if has("win32")
   let &backupdir=g:user_vim_dir.'backup'
   let &directory=g:user_vim_dir.'swap'
   "set guifont=anonymous\ pro:h10:w5.6
-  set guifont=OperatorMono-XLight:h13
   "ExpandOrJump and CommaSnip below
   inoremap <silent> / <C-R>=ExpandOrJump()<CR>
   inoremap <silent> , <C-R>=CommaSnip()<CR>
@@ -243,8 +301,7 @@ else
   "set shortmess+=c
   set completeopt=menu,preview,noselect
   "set guifont=anonymous\ pro:h13
-  set guifont=OperatorMono-Light:h13
-  "set lsp=2
+  set lsp=1
   inoremap <c-c> <ESC>
   inoremap <expr> <CR> (pumvisible() ? "\<c-y>\<cr>" : "\<CR>")
 
@@ -286,8 +343,14 @@ endfunction
 
 "KEYBINDINGS
 "visual shifting (does not exit Visual mode)
+
 vnoremap < <gv
 vnoremap > >gv
+nnoremap <c-p> :call OpenFZF()<CR>
+function! OpenFZF()
+  call FZFWithDevIcons()
+  let b:FZF = 1
+endfunction
 "REMAP
 "nnoremap gcb :TCommentBlock<CR>
 "nnoremap gbb :TCommentBlock<CR>
@@ -300,33 +363,50 @@ nnoremap <Leader>n :NERDTreeToggle<CR>
 nnoremap <Leader>ci :call NERDComment(0,"toggle")<CR>
 vnoremap <Leader>ci :call NERDComment(0,"toggle")<CR>
 
+function! TerminalNormal()
+  if exists('b:FZF')
+    :q!
+  endif
+endfunction
+
 imap <c-l> <right>
 imap <c-h> <left>
-tnoremap <ESC> <C-W>N "rebind ESC to terminal-normal
+tnoremap <ESC> <C-W>N:call TerminalNormal()<CR>
+
 
 
 "AUTOCMDS
 autocmd FileType scss syn cluster sassCssAttributes add=@cssColors "VIM-CSS-COLOR
 autocmd BufEnter,BufNew *.tsx set ft=typescript
 autocmd BufEnter * call BuffEnter()
+
 function BuffEnter ()
     set smarttab
     set smartindent
-    NERDTreeMirror
+    "NERDTreeMirror
 endfunction
 hi NonText guibg=#111122 guifg=#444466
 autocmd VimEnter * call VimEnter()
 function VimEnter ()
     colorscheme onedark
-    hi SpellBad gui=undercurl
+    "colorscheme onehalfdark
+    hi SpellBad gui=undercurl guibg=NONE
+    hi ColorColumn guibg=NONE guifg=#555566
+    "hi SignColumn guibg=#222222
     hi Normal guibg=#171b23
+    hi NonText guifg=#171b23
     hi DiffChange guibg=#232c45 guifg=NONE gui=NONE
     hi DiffText guibg=#202087 guifg=NONE gui=NONE
     hi DiffAdd guibg=#105501 guifg=NONE gui=NONE
     hi DiffDelete guibg=#cd1010 guifg=#cd1010 gui=NONE
-    hi VertSplit guifg=#33ff33
+    "hi VertSplit guibg=#222233 guifg=#223322
+    hi VertSplit guifg=#223322
+   "this fixes status line icons not showing or cutoff
+    hi LightlineRight_active_2 guifg=#ABB2BF
+    "hi VertSplit guifg=#33ff33
     filetype plugin on 
     NERDTree
+    call webdevicons#refresh()
     wincmd w
 endfunction
 
@@ -421,4 +501,49 @@ function! GruntApexSave ()
     execute 'ApexSave'
     execute 'buffer '.old_bufnum
     execute 'bdelete '.del_bufnum
+endfunction
+
+"startify + devIcons
+function! StartifyEntryFormat()
+        return 'WebDevIconsGetFileTypeSymbol(absolute_path) ." ". entry_path'
+    endfunction
+
+"FZF + devicons
+function! FZFWithDevIcons()
+  function! s:files()
+    let files = split(system('fd --type f --exclude node_modules'), '\n')
+    call s:prepend_icon(files)
+    return l:files
+  endfunction
+
+  function! s:prepend_icon(candidates)
+    let result = a:candidates 
+    let i = 0
+    for candidate in result
+      "let filename = fnamemodify(candidate, ':p:t')
+      let icon = WebDevIconsGetFileTypeSymbol(fnamemodify(candidate, ':p:t'), 0)
+      let result[i] = icon . ' ' . candidate
+      let i = i + 1
+    endfor
+  endfunction
+
+  function! s:edit_file(items)
+    let items = a:items
+    let i = 1
+    let ln = len(items)
+    while i < ln
+      let item = items[i]
+      let parts = split(item, ' ')
+      let file_path = get(parts, 2, '')
+      let items[i] = file_path
+      let i += 1
+    endwhile
+    call s:Sink(items)
+  endfunction
+
+  let opts = fzf#wrap({})
+  let opts.source = <sid>files()
+  let s:Sink = opts['sink*']
+  let opts['sink*'] = function('s:edit_file')
+  call fzf#run(opts)
 endfunction
