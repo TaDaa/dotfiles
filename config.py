@@ -11,8 +11,12 @@ import importlib.util
 # importlib.util.spec_from_file_location('javahelpers', os.path.realpath(vim.eval('g:user_vim_dir')+'custom/UltiSnips/javahelpers.py')) 
 # module = importlib.util.module_from_spec(cfile)
 # globals()["javahelpers"] = module
-globals()["extpathloader"] = (__import__('imp')).load_source('extpathloader', os.path.realpath(vim.eval('g:user_vim_dir')+'custom/UltiSnips/extpathloader.py'))
-globals()["javahelpers"] = (__import__('imp')).load_source('javahelpers', os.path.realpath(vim.eval('g:user_vim_dir')+'custom/UltiSnips/javahelpers.py'))
+from importlib.machinery import SourceFileLoader
+globals()['extpathloader'] = SourceFileLoader('extpathloader', os.path.realpath(vim.eval('g:user_vim_dir')+'custom/UltiSnips/extpathloader.py')).load_module()
+globals()['javahelpers'] = SourceFileLoader('extpathloader', os.path.realpath(vim.eval('g:user_vim_dir')+'custom/UltiSnips/javahelpers.py')).load_module()
+
+# globals()["extpathloader"] = (__import__('imp')).load_source('extpathloader', os.path.realpath(vim.eval('g:user_vim_dir')+'custom/UltiSnips/extpathloader.py'))
+# globals()["javahelpers"] = (__import__('imp')).load_source('javahelpers', os.path.realpath(vim.eval('g:user_vim_dir')+'custom/UltiSnips/javahelpers.py'))
 from UltiSnips import UltiSnips_Manager
 
 def hook(row,col):
