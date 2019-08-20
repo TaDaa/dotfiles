@@ -3,3 +3,4 @@ swap/*.*
 plugged/
 old/
 bundle/
+__pycache__/
