@@ -1,17 +1,31 @@
+"
+"au TermResponse * echom v:termresponse
+"set t_RF=\033]11;?\007
+
+"set term="xterm"
+"set t_RF='\<Esc>]11;?\<Esc>'
+"set t_RF=]11;?
+
+"au! BufEnter * call OnStart()
+ 
+
 "NOTES 
+"TODO - need to update my code in here to work right with Vundle (missing - begining + end)
 "- tsserver installed global
 "- vue-language-server installed global ... make script
 "- python3 installed global
 "Ag The SilverSearcher installed global
 "fd installed global
 "force py3
-py3 ""
-let g:py_cmd = "py"
+
+let g:py_cmd = "py3"
+let g:IS_TERM = !has('gui_running')
+
 if has('python3')
     let g:py_cmd = "py3"
 endif
 let g:arr_esc="\<c-[>"
-let g:loaded_commentary=1 "vim-vue wants this for comment strings
+"let g:loaded_commentary=1 "vim-vue wants this for comment strings
 let g:tsuquyomi_use_vimproc=1
 let g:tsuquyomi_disable_quickfix = 1
 let g:user_vim_dir=fnamemodify("~/.vim",":p") "full path to vim files
@@ -22,13 +36,15 @@ if has("win32")
 endif
 if has("gui")
   set ambiwidth=single
+  set guifont=OperatorMonoNerdFont-Light:h13
   if !has('nvim')
-    set transparency=1
-    autocmd BufEnter,BufLeave * call ForceRedraw()
-    function SetTransparency(a)
+    "set transparency=1
+    "set transparency=1
+    "autocmd BufEnter,BufLeave * call ForceRedraw()
+    function! SetTransparency(a)
       set transparency=1
     endfunction
-    function ForceRedraw()
+    function! ForceRedraw()
       "TODO try to move this..some of the icons were bugging out
       set guifont=OperatorMonoNerdFont-Light:h13
       call timer_start(1, 'SetTransparency')
@@ -41,52 +57,67 @@ let &runtimepath.=",".g:user_vim_dir."custom"
 let &runtimepath.=",".g:user_vim_dir."dependencies"
 set rtp-='~/vimfiles'
 filetype off
-let &runtimepath.=",".g:user_vim_dir."bundle/Vundle.vim"
+"let &runtimepath.=",".g:user_vim_dir."bundle/Vundle.vim"
+let &runtimepath.=",".g:user_vim_dir."bundle/vim-plug"
 silent execute '!mkdir "'.$VIMRUNTIME.'/temp"'
 silent execute '!del "'.$VIMRUNTIME.'/temp/*~"'
 
-call vundle#rc()
+"call vundle#rc()
+"call vundle#begin()
+call plug#begin('~/.vim/plugged')
 
 "preload eclim
 "Bundle 'vimfiles/eclim'
 "Bundle 'vimfiles'
 "
-Bundle 'VundleVim/Vundle.vim'
+"Plug 'VundleVim/Vundle.vim'
+"Plugin 'ajh17/Spacegray.vim'
 "Bundle 'ctrlpvim/ctrlp.vim'
-Bundle 'scrooloose/nerdtree'
-Bundle 'scrooloose/nerdcommenter'
+Plug 'scrooloose/nerdtree'
+Plug 'scrooloose/nerdcommenter'
+"Plug 'tpope/vim-commentary'
+"Plug 'zsugabubus/vim-commentr'
 "Bundle 'Xuyuanp/nerdtree-git-plugin'
-Bundle 'tpope/vim-surround'
-Bundle 'tpope/vim-projectionist'
-Bundle 'tpope/vim-eunuch'
-Bundle 'tpope/vim-abolish'
-Bundle 'tpope/vim-dispatch'
-Bundle 'tpope/vim-repeat'
-Bundle 'tpope/vim-fugitive'
-Bundle 'Raimondi/delimitMate'
-Bundle 'mattn/emmet-vim'
-Bundle 'skammer/vim-css-color'
-Bundle 'rking/ag.vim'
-Bundle 'joshdick/onedark.vim'
-Bundle 'SirVer/ultisnips'
-Bundle 'nixprime/cpsm'
-Bundle 'tpope/vim-sleuth'
-Bundle 'TaDaa/vim-emmet-autocompleter'
-Bundle 'TaDaa/vim-emmet-visualforce-autocompleter'
-Bundle 'TaDaa/vim-emmet-android-autocompleter'
-Bundle 'TaDaa/vimade'
-Bundle 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'tpope/vim-surround'
+Plug 'tpope/vim-projectionist'
+Plug 'tpope/vim-eunuch'
+Plug 'tpope/vim-abolish'
+"Bundle 'tpope/vim-dispatch'
+Plug 'tpope/vim-repeat'
+Plug 'tpope/vim-fugitive'
+"Plugin 'alvan/vim-closetag'
+"Plugin 'tpope/vim-endwise'
+"Bundle 'jiangmiao/auto-pairs'
+"Plugin 'Raimondi/delimitMate'
+Plug 'tmsvg/pear-tree'
+Plug 'mattn/emmet-vim'
+
+"Bundle 'skammer/vim-css-color'
+"
+Plug 'rking/ag.vim'
+Plug 'joshdick/onedark.vim'
+Plug 'rakr/vim-one'
+Plug 'SirVer/ultisnips'
+"Bundle 'nixprime/cpsm'
+Plug 'tpope/vim-sleuth'
+"Bundle 'TaDaa/vim-emmet-autocompleter'
+"Bundle 'TaDaa/vim-emmet-visualforce-autocompleter'
+"Bundle 'TaDaa/vim-emmet-android-autocompleter'
+Plug 'TaDaa/vimade'
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 "Bundle 'blueyed/vim-diminactive'
 "Bundle 'TaDaa/vim-sourcekitten'
-Bundle 'pangloss/vim-javascript'
-Bundle 'w0rp/ale'
-Bundle 'mg979/vim-visual-multi'
-Bundle 'airblade/vim-gitgutter'
-Bundle 'itchyny/lightline.vim'
+Plug 'pangloss/vim-javascript'
+Plug 'w0rp/ale'
+"let g:ale_cache_executable_check_failures = 1
+"let g:ale_lint_on_text_changed=0
+Plug 'mg979/vim-visual-multi'
+Plug 'airblade/vim-gitgutter'
+Plug 'itchyny/lightline.vim'
 "Bundle 'posva/vim-vue'
-Bundle 'TaDaa/vim-vue-1'
-Bundle 'keith/swift.vim'
-Bundle 'morhetz/gruvbox'
+"Bundle 'TaDaa/vim-vue-1'
+"Bundle 'keith/swift.vim'
+Plug 'morhetz/gruvbox'
 "Bundle 'vim-scripts/candycode.vim'
 "Bundle 'vim-scripts/summerfruit256.vim'
 "Bundle 'vim-scripts/pyte'
@@ -100,22 +131,22 @@ Bundle 'morhetz/gruvbox'
 "Bundle 'altercation/vim-colors-solarized'
 "Bundle 'gosukiwi/vim-atom-dark'
 "Bundle 'chriskempson/base16-vim'
-Bundle 'tomasr/molokai'
+"Bundle 'tomasr/molokai'
 "Bundle 'danilo-augusto/vim-afterglow'
 "Bundle 'nielsmadan/harlequin'
 "Bundle 'nanotech/jellybeans.vim'
 "Bundle 'twerth/ir_black'
-Bundle 'w0ng/vim-hybrid'
+Plug 'w0ng/vim-hybrid'
 "Bundle 'noahfrederick/vim-hemisu'
 "Bundle 'reedes/vim-colors-pencil'
 "Bundle 'sjl/badwolf'
-Bundle 'rakr/vim-one'
-Bundle 'ayu-theme/ayu-vim'
-Bundle 'drewtempelmeyer/palenight.vim'
-Bundle 'sonph/onehalf', {'rtp': 'vim/'}
-Bundle 'junegunn/limelight.vim'
+"Bundle 'rakr/vim-one'
+"Bundle 'ayu-theme/ayu-vim'
+"Bundle 'drewtempelmeyer/palenight.vim'
+"Bundle 'sonph/onehalf', {'rtp': 'vim/'}
+"Bundle 'junegunn/limelight.vim'
 "Bundle 'neowit/vim-force.com'
-Bundle 'maksimr/vim-jsbeautify'
+Plug 'maksimr/vim-jsbeautify'
 "Bundle 'ciaranm/detectindent'
 "Bundle 'juneedahamed/vc.vim'
 "Bundle 'oplatek/Conque-Shell'
@@ -124,25 +155,77 @@ Bundle 'maksimr/vim-jsbeautify'
 "Bundle 'Quramy/tsuquyomi'
 "Bundle 'jerrymarino/iCompleteMe' "requires compilationdatabase
 "Bundle 'jerrymarino/XcodeCompilationDatabase'
-Bundle 'HerringtonDarkholme/yats.vim'
-Bundle 'mhinz/vim-startify'
-Bundle 'ryanoasis/vim-devicons'
-Bundle 'iamcco/markdown-preview.vim'
+Plug 'HerringtonDarkholme/yats.vim' "typescript highlighting
+Plug 'mhinz/vim-startify'
+Plug 'ryanoasis/vim-devicons'
+Plug 'iamcco/markdown-preview.vim'
+"Bundle 'severin-lemaignan/vim-minimap'
+"Plugin 'neoclide/coc.nvim', {'tag': '*', 'do': { -> coc#util#install()}}
+Plug 'junegunn/goyo.vim'
+Plug 'ervandew/supertab'
+Plug 'neoclide/coc.nvim', {'do': 'yarn install --frozen-lockfile'}
+"Plugin 'neoclide/coc.nvim', {'do': { -> coc#util#install()}}
 
+Plug 'hashivim/vim-terraform'
+Plug 'juliosueiras/vim-terraform-completion'
+"Plug 'shougo/deoplete.nvim'
+Plug 'tmux-plugins/vim-tmux-focus-events'
+"Plugin 'wincent/terminus'
+Plug 'roxma/nvim-yarp'
+Plug 'roxma/vim-hug-neovim-rpc'
+Plug 'severin-lemaignan/vim-minimap'
+"Plugin 'Valloric/YouCompleteMe'
+"call vundle#end()
+call plug#end()
+
+"call deoplete#custom#option({
+  "\ 'auto_complete_delay': 50,
+  "\ 'auto_refresh_delay': 25,
+  "\ 'min_pattern_length': 0,
+"\ })
+"call deoplete#custom#source('ale','input_pattern', '.')
+"call deoplete#custom#source('ale','input_pattern', '.')
+"call deoplete#custom#source('ale', {'rank':10000})
+
+"let g:deoplete#sources = {'php': ['ale','buffer']}
+"let g:deoplete#enable_at_startup = 1
+
+let g:pear_tree_repeatable_expand=0
+
+
+
+"TODO remove
+let g:coc_force_debug = 1
+
+let g:SuperTabDefaultCompletionType = "<c-n>"
+"
+set notermguicolors
+let g:vimade = {}
+let g:vimade.enablesigns = 1
+let g:vimade.detecttermcolors = 0
+let g:vimade.signsretentionperiod = 4000
+let g:vimade.enablefocusfading=1
+"let g:vimade.usecursorhold=1
+"let g:vimade.basebg='#ff0000'
+"let g:vimade.basefg='#000000'
 "PLUGIN CONFIG
 "ALE -- disabled because I am manually triggering due to performance reasons
-try
-  ALEDisable 
-catch
-  echo ''
-endtry  
+"try
+  "ALEDisable 
+"catch
+  "echo ''
+"endtry  
 let g:NERDTreeUpdateOnCursorHold = 0
-let g:ale_php_langserver_executable = '/Users/tlovell/.composer/vendor/bin/php-language-server.php'
+let g:ale_sourcekit_lsp_executable = '/Users/tlovell/Documents/workspace/sourcekit-lsp/.build/x86_64-apple-macosx/debug/sourcekit-lsp'
+let g:ale_php_langserver_executable = '/Users/tlovell/.composer/vendor/felixfbecker/language-server/bin/php-language-server.php'
 let g:ale_php_langserver_use_global = 1
-let g:ale_history_log_output = 1
-let g:ale_completion_enabled = 1
+"let g:ale_history_log_output = 1
+let g:ale_completion_enabled = 0
+"let g:ale_completion_delay = 25 
+"let g:ale_completion_enabled = 1
 let g:ale_linters = {
   \ "sh": ["language_server"],
+  \ "php": ["langserver"],
   \ }
 "lightline
 let g:lightline = {}
@@ -188,8 +271,8 @@ let g:NERDTreeIndicatorMapCustom = {
 let g:aghighlight=1
 let g:agformat="%f:%l:%c:%m"
 "ECLIM
-let g:EclimCompletionMethod = 'omnifunc' "makes eclim work with youcompleteme
-let g:EclimJavascriptLintConf=g:user_vim_dir.'custom/Eclim/jslint.conf'
+"let g:EclimCompletionMethod = 'omnifunc' "makes eclim work with youcompleteme
+"let g:EclimJavascriptLintConf=g:user_vim_dir.'custom/Eclim/jslint.conf'
 "ULTISNIPS
 let g:UltiSnipsExpandTrigger="<c-j>"
 let g:UltiSnipsJumpForwardTrigger="<c-j>"
@@ -214,26 +297,26 @@ let g:apex_tooling_force_dot_com_path=g:user_vim_dir.'/dependencies/shared/force
 let g:multi_cursor_normal_maps={'!':1, '@':1, '=':1, 'q':1, 'r':1, 't':1, 'T':1, 'y':1, '[':1, ']':1, '\':1, 'd':1, 'f':1, 'F':1, 'g':1, '"':1, 'z':1, 'c':1, 'm':1, '<':1, '>':1}
 let g:multi_cursor_visual_maps={'F':1,'f':1}
 "YOUCOMPLETEME
-let g:ycm_global_ycm_extra_conf= g:user_vim_dir.'custom/ycm/.ycm_extra_conf.py'
-"let g:ycm_min_num_of_chars_for_completion = 0
-let g:ycm_semantic_triggers =  {
-  \   'c' : ['->', '.'],
-  \   'objc' : ['->', '.', 're!\[[_a-zA-Z]+\w*\s', 're!^\s*[^\W\d]\w*\s',
-  \             're!\[.*\]\s'],
-  \   'ocaml' : ['.', '#'],
-  \   'cpp,objcpp' : ['->', '.', '::'],
-  \   'perl' : ['->'],
-  \   'php' : ['->', '::'],
-  \   'java,javascript,typescript,d,python,perl6,scala,vb,elixir,go,vue' : ['.'],
-  \   'groovy' : ['.'],
-  \   'cs' : ['.'],
-  \   'ruby' : ['.', '::'],
-  \   'lua' : ['.', ':'],
-  \   'erlang' : [':'],
-  \   'html' : ['[', ' ', '<','>', '+', '*', ']', '^'],
-  \   'svg' : ['[', ' ', '<', '>', '+', '*', ']', '^'],
-  \   'swift' : [']', '?', '.']
-  \ }
+"let g:ycm_global_ycm_extra_conf= g:user_vim_dir.'custom/ycm/.ycm_extra_conf.py'
+let g:ycm_min_num_of_chars_for_completion = 0
+"let g:ycm_semantic_triggers =  {
+  "\   'c' : ['->', '.'],
+  "\   'objc' : ['->', '.', 're!\[[_a-zA-Z]+\w*\s', 're!^\s*[^\W\d]\w*\s',
+  "\             're!\[.*\]\s'],
+  "\   'ocaml' : ['.', '#'],
+  "\   'cpp,objcpp' : ['->', '.', '::'],
+  "\   'perl' : ['->'],
+  "\   'php' : ['->', '::'],
+  "\   'java,javascript,typescript,d,python,perl6,scala,vb,elixir,go,vue' : ['.'],
+  "\   'groovy' : ['.'],
+  "\   'cs' : ['.'],
+  "\   'ruby' : ['.', '::'],
+  "\   'lua' : ['.', ':'],
+  "\   'erlang' : [':'],
+  "\   'html' : ['[', ' ', '<','>', '+', '*', ']', '^'],
+  "\   'svg' : ['[', ' ', '<', '>', '+', '*', ']', '^'],
+  "\   'swift' : [']', '?', '.']
+  "\ }
 let g:vim_vue_indent_paths = {
   \ 'javascript': '../vim-javascript/indent/javascript.vim' 
   \ }
@@ -241,7 +324,7 @@ let g:vim_vue_indent_paths = {
 let g:webdevicons_enable_nerdtree=1
 let g:webdevicons_conceal_nerdtree_brackets=1
 let g:WebDevIconsNerdTreeBeforeGlyphPadding=''
-let g:WebDevIconsNerdTreeAfterGlyphPadding=''
+let g:WebDevIconsNerdTreeAfterGlyphPadding= g:IS_TERM ? ' ' : ''
 let g:WebDevIconsUnicodeDecorateFolderNodes=1
 let g:DevIconsEnableFoldersOpenClose=1
 
@@ -274,15 +357,14 @@ set statusline=[%.n]%m\ %f%=%<%P
 set signcolumn=yes
 :command Bd bd
 
-if has("nvim")
-    syntax on
-else
-    Bundle 'roxma/nvim-yarp'
-    Bundle 'roxma/vim-hug-neovim-rpc'
-endif
+syntax on
+"if !has("nvim")
+    "Bundle 'roxma/nvim-yarp'
+    "Bundle 'roxma/vim-hug-neovim-rpc'
+"endif
 
 if has("win32")
-  Bundle 'YouCompleteMe_Win32'
+  "Bundle 'YouCompleteMe_Win32'
   set guioptions-=T
   let g:agprg=g:user_vim_dir.'dependencies/windows/ag/ag.exe --column' "AG
   let g:apex_binary_tee="C:/MinGW/msys/1.0/bin/tee.exe"
@@ -297,7 +379,6 @@ if has("win32")
 
   :map <silent> <C-F5> :if expand("%:p:h") != ""<CR>:!start explorer.exe %:p:h<CR>:endif<CR><CR>
 else
-  Bundle 'Valloric/YouCompleteMe'
   "set shortmess+=c
   set completeopt=menu,preview,noselect
   "set guifont=anonymous\ pro:h13
@@ -317,6 +398,7 @@ else
   inoremap <silent> / <C-R>=ExpandOrJump()<CR>
   inoremap <silent> , <C-R>=CommaSnip()<CR>
   snoremap / <ESC>:call UltiSnips#ExpandSnippetOrJump()<CR>
+
 endif
 "UltiSnips custom helpers
 exec g:py_cmd join(readfile(expand('~/.vim/config.py')), "\r")
@@ -348,7 +430,8 @@ vnoremap < <gv
 vnoremap > >gv
 nnoremap <c-p> :call OpenFZF()<CR>
 function! OpenFZF()
-  call FZFWithDevIcons()
+  FZF
+  "call FZFWithDevIcons()
   let b:FZF = 1
 endfunction
 "REMAP
@@ -371,7 +454,7 @@ endfunction
 
 imap <c-l> <right>
 imap <c-h> <left>
-tnoremap <ESC> <C-W>N:call TerminalNormal()<CR>
+tnoremap <ESC> <C-\><C-N>:call TerminalNormal()<CR>
 
 
 
@@ -388,6 +471,13 @@ endfunction
 hi NonText guibg=#111122 guifg=#444466
 autocmd VimEnter * call VimEnter()
 function VimEnter ()
+    if has('transparency')
+      set transparency=1
+    endif
+    if g:IS_TERM
+      set termguicolors
+    endif
+    VimadeOverrideFolded
     colorscheme onedark
     "colorscheme onehalfdark
     hi SpellBad gui=undercurl guibg=NONE
@@ -408,47 +498,53 @@ function VimEnter ()
     NERDTree
     call webdevicons#refresh()
     wincmd w
+
 endfunction
 
 autocmd FileType typescript,javascript,vue set omnifunc= "unset omnifunc to allow youCompleteMe and ALE to take precedence
-autocmd TextChanged,TextChangedI * call TextChanged()
-let g:tadaa_gitgutter_timer = 0
-let g:tadaa_gitgutter_delay = 1000
-let g:tadaa_ale_timer = 0
-let g:tadaa_ale_delay = 1000
-function Timer_GitGutter (arg1)
-    GitGutter
-    let g:tadaa_gitgutter_timer = 0
-endfunction
-function Timer_ALELint (arg1)
-    ALELint
-    let g:tadaa_ale_timer = 0
-endfunction
-function TextChanged ()
-    if g:tadaa_gitgutter_timer != 0
-        call timer_stop(g:tadaa_gitgutter_timer)
-    endif
-    if g:tadaa_ale_timer != 0
-        call timer_stop(g:tadaa_ale_timer)
-    endif
-    let g:tadaa_gitgutter_timer = timer_start(g:tadaa_gitgutter_delay, 'Timer_GitGutter')
-    let g:tadaa_ale_timer = timer_start(g:tadaa_ale_delay, 'Timer_ALELint')
-endfunction
+
+"autocmd TextChanged,TextChangedI * call TextChanged()
+"let g:tadaa_gitgutter_timer = 0
+"let g:tadaa_gitgutter_delay = 1000
+"let g:tadaa_ale_timer = 0
+"let g:tadaa_ale_delay = 1000
+"function Timer_GitGutter (arg1)
+    "GitGutter
+    "let g:tadaa_gitgutter_timer = 0
+"endfunction
+"function Timer_ALELint (arg1)
+    "ALELint
+    "let g:tadaa_ale_timer = 0
+"endfunction
+
+"call timer_start(1000, 'Timer_GitGutter', {'repeat': -1})
+"au! CursorHold * GitGutter
+"function TextChanged ()
+    "if g:tadaa_gitgutter_timer != 0
+        "call timer_stop(g:tadaa_gitgutter_timer)
+    "endif
+    "if g:tadaa_ale_timer != 0
+        "call timer_stop(g:tadaa_ale_timer)
+    "endif
+    "let g:tadaa_gitgutter_timer = timer_start(g:tadaa_gitgutter_delay, 'Timer_GitGutter')
+    "let g:tadaa_ale_timer = timer_start(g:tadaa_ale_delay, 'Timer_ALELint')
+"endfunction
 
 
 
 "
 "COMMANDS
 "SPECIAL ECLIPSE COMMAND  -- open in eclipse
-command! -nargs=* EclipseOpen call EclipseOpen(<f-args>)
-function! EclipseOpen (...) 
-    if a:0
-        let f=getcwd()."/".a:1
-    else
-        let f=expand('%')
-    endif
-    exec("!open -a \"Eclipse\ Neon\" ".f)
-endfunction
+"eclim done?
+"command! -nargs=* EclipseOpen call EclipseOpen(<f-args>)
+"function! EclipseOpen (...) 
+    "if a:0
+        "let f=getcwd()."/".a:1
+    "else
+        "let f=expand('%')
+    "endif
+    "exec("!open -a \"Eclipse\ Neon\" ".f)
+"endfunction
 
 
 "LYNXX Command to compile Java Buffer
@@ -547,3 +643,27 @@ function! FZFWithDevIcons()
   let opts['sink*'] = function('s:edit_file')
   call fzf#run(opts)
 endfunction
+
+if has('gui_running') == 0 && has('nvim') == 0
+   call feedkeys(":silent execute '!' | redraw!\<CR>")
+endif
+
+"au! bufenter * if (winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree()) | q | endif
+"nnoremap <CR> ciw
+"nnoremap <C-j> iSpooky!<Esc>
+
+"augroup vim_startup
+"au!
+"au! FocusLost * VimadeFadeActive
+"au! FocusGained * VimadeUnfadeActive
+"augroup END
+"VimadeDisable
+"call vimade#Disable()
+
+"
+"let g:vimade_running=0
+"function OnStart()
+
+"endfunction
+"call OnStart()
+"colorscheme one

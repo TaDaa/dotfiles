@@ -4,6 +4,13 @@ if (sys.version_info > (3, 0)):
 
 import vim
 import os
+import importlib.util
+# cfile = importlib.util.spec_from_file_location('extpathloader', os.path.realpath(vim.eval('g:user_vim_dir')+'custom/UltiSnips/extpathloader.py')) 
+# module = importlib.util.module_from_spec(cfile)
+# globals()["extpathloader"] = module
+# importlib.util.spec_from_file_location('javahelpers', os.path.realpath(vim.eval('g:user_vim_dir')+'custom/UltiSnips/javahelpers.py')) 
+# module = importlib.util.module_from_spec(cfile)
+# globals()["javahelpers"] = module
 globals()["extpathloader"] = (__import__('imp')).load_source('extpathloader', os.path.realpath(vim.eval('g:user_vim_dir')+'custom/UltiSnips/extpathloader.py'))
 globals()["javahelpers"] = (__import__('imp')).load_source('javahelpers', os.path.realpath(vim.eval('g:user_vim_dir')+'custom/UltiSnips/javahelpers.py'))
 from UltiSnips import UltiSnips_Manager
@@ -36,8 +43,14 @@ def check_move():
         line = vim.current.buffer[row][col:]
         if len(line) == 0 or line[0] == ' ':
             if len(line):
-                vim.vars['tadaa_check_move_res']=" "
-                vim.eval('feedkeys("\<bs>\<bs>\<C-R>='+PY_CMD+'eval(\'hook('+str(row)+','+str(col)+')\')\<CR>")')
+                # for YCM
+                # vim.vars['tadaa_check_move_res']=" "
+                # vim.eval('feedkeys("\<bs>\<bs>\<C-R>='+PY_CMD+'eval(\'hook('+str(row)+','+str(col)+')\')\<CR>")')
+                if 'ycm_auto_trigger' in vim.vars and vim.vars['ycm_auto_trigger']:
+                    vim.vars['tadaa_check_move_res']=" "
+                    vim.eval('feedkeys("\<bs>\<bs>\<C-R>='+PY_CMD+'eval(\'hook('+str(row)+','+str(col)+')\')\<CR>")')
+                else:
+                    vim.eval('feedkeys("\<bs>\<C-R>='+PY_CMD+'eval(\'hook('+str(row)+','+str(col)+')\')\<CR>")')
             else:
                 UltiSnips_Manager.expand_or_jump()
         else:

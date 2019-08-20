@@ -543,10 +543,10 @@ endsnippet
 
 #v
 snippet "\bv|^v" "var" r
-`!p
-res = match.group(0) if match.group(0) is not None else ''
-res += "ar"
-` $1
+var`!p
+if t[1] and t[1][0] != " ":
+	snip.rv += " "
+`$1
 endsnippet
 
 #wh 
