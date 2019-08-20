@@ -55,6 +55,9 @@ silent execute '!del "'.$VIMRUNTIME.'/temp/*~"'
 
 call plug#begin('~/.vim/plugged')
 Plug 'junegunn/vim-plug'
+Plug 'unblevable/quick-scope'
+"Plug 'easymotion/vim-easymotion'
+"Plug 'justinmk/vim-sneak'
 Plug 'scrooloose/nerdtree'
 Plug 'scrooloose/nerdcommenter'
 "Bundle 'Xuyuanp/nerdtree-git-plugin'
@@ -107,6 +110,8 @@ Plug 'roxma/nvim-yarp'
 Plug 'roxma/vim-hug-neovim-rpc'
 Plug 'severin-lemaignan/vim-minimap'
 call plug#end()
+let g:qs_highlight_on_keys = ['f', 'F', 't', 'T']
+let g:qs_highlight_on_keys = ['f', 'F']
 
 "call deoplete#custom#option({
   "\ 'auto_complete_delay': 50,
