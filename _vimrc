@@ -58,13 +58,14 @@ let &runtimepath.=",".g:user_vim_dir."dependencies"
 set rtp-='~/vimfiles'
 filetype off
 "let &runtimepath.=",".g:user_vim_dir."bundle/Vundle.vim"
-let &runtimepath.=",".g:user_vim_dir."bundle/vim-plug"
+source ~/.vim/plugged/vim-plug/plug.vim
 silent execute '!mkdir "'.$VIMRUNTIME.'/temp"'
 silent execute '!del "'.$VIMRUNTIME.'/temp/*~"'
 
 "call vundle#rc()
 "call vundle#begin()
 call plug#begin('~/.vim/plugged')
+Plug "junegunn/vim-plug"
 
 "preload eclim
 "Bundle 'vimfiles/eclim'

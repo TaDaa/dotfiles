@@ -4,3 +4,4 @@ plugged/
 old/
 bundle/
 __pycache__/
+.DS_Store
