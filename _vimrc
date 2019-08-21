@@ -110,8 +110,11 @@ Plug 'roxma/nvim-yarp'
 Plug 'roxma/vim-hug-neovim-rpc'
 Plug 'severin-lemaignan/vim-minimap'
 call plug#end()
+
 let g:qs_highlight_on_keys = ['f', 'F', 't', 'T']
 let g:qs_highlight_on_keys = ['f', 'F']
+hi QuickScopePrimary guifg=#ffff77 gui=bold
+hi QuickScopeSecondary guifg=#ccccff gui=bold
 
 "call deoplete#custom#option({
   "\ 'auto_complete_delay': 50,
