@@ -112,10 +112,11 @@ Plug 'unblevable/quick-scope'
 Plug 'kkoomen/vim-doge'
 "Plug 'joegesualdo/jsdoc.vim'
 Plug 'airblade/vim-rooter'
+Plug 'diepm/vim-rest-console'
 call plug#end()
 
 let g:doge_mapping_comment_jump_forward="<Leader>f"
-let g:doge_mapping_comment_jump_backward=""
+let g:doge_mapping_comment_jump_backward=0
 let g:doge_mapping="<Leader>d"
 let g:qs_highlight_on_keys = ['f', 'F', 't', 'T']
 let g:qs_highlight_on_keys = ['f', 'F']
