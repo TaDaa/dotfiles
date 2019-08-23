@@ -55,7 +55,6 @@ silent execute '!del "'.$VIMRUNTIME.'/temp/*~"'
 
 call plug#begin('~/.vim/plugged')
 Plug 'junegunn/vim-plug'
-Plug 'unblevable/quick-scope'
 "Plug 'easymotion/vim-easymotion'
 "Plug 'justinmk/vim-sneak'
 Plug 'scrooloose/nerdtree'
@@ -109,12 +108,17 @@ Plug 'tmux-plugins/vim-tmux-focus-events'
 Plug 'roxma/nvim-yarp'
 Plug 'roxma/vim-hug-neovim-rpc'
 Plug 'severin-lemaignan/vim-minimap'
+Plug 'unblevable/quick-scope'
+Plug 'kkoomen/vim-doge'
+"Plug 'joegesualdo/jsdoc.vim'
+Plug 'airblade/vim-rooter'
 call plug#end()
 
+let g:doge_mapping_comment_jump_forward="<Leader>f"
+let g:doge_mapping_comment_jump_backward=""
+let g:doge_mapping="<Leader>d"
 let g:qs_highlight_on_keys = ['f', 'F', 't', 'T']
 let g:qs_highlight_on_keys = ['f', 'F']
-hi QuickScopePrimary guifg=#ffff77 gui=bold
-hi QuickScopeSecondary guifg=#ccccff gui=bold
 
 "call deoplete#custom#option({
   "\ 'auto_complete_delay': 50,
@@ -156,6 +160,7 @@ let g:ale_completion_enabled = 0
 let g:ale_linters = {
   \ "sh": ["language_server"],
   \ "php": ["langserver"],
+  \ "js" : []
   \ }
 "lightline
 let g:lightline = {}
@@ -376,6 +381,17 @@ function VimEnter ()
     endif
     VimadeOverrideFolded
     colorscheme onedark
+
+    "rooter
+    call add(g:rooter_patterns, 'package.json')
+    let g:rooter_use_lcd = 1
+    let g:rooter_silent_chdir = 1
+    let g:rooter_change_directory_for_non_project_files = 'current'
+    autocmd User StartifyBufferOpened Rooter
+
+    "hi SpellBad gui=undercurl guibg=NONE
+    hi QuickScopePrimary guifg=#ffff77 gui=bold
+    hi QuickScopeSecondary guifg=#ccccff gui=bold
     hi SpellBad gui=undercurl guibg=NONE
     hi ColorColumn guibg=NONE guifg=#555566
     hi Normal guibg=#171b23
@@ -396,32 +412,41 @@ endfunction
 
 autocmd FileType typescript,javascript,vue set omnifunc= "unset omnifunc to allow youCompleteMe and ALE to take precedence
 
-"autocmd TextChanged,TextChangedI * call TextChanged()
-"let g:tadaa_gitgutter_timer = 0
-"let g:tadaa_gitgutter_delay = 1000
-"let g:tadaa_ale_timer = 0
-"let g:tadaa_ale_delay = 1000
-"function Timer_GitGutter (arg1)
-    "GitGutter
-    "let g:tadaa_gitgutter_timer = 0
-"endfunction
-"function Timer_ALELint (arg1)
-    "ALELint
-    "let g:tadaa_ale_timer = 0
-"endfunction
+autocmd TextChanged,TextChangedI * call TextChanged()
+"let g:ale_enabled=0
+let g:ale_lint_on_text_changed = 0
+let g:ale_lint_on_enter = 0
+let g:ale_lint_on_filetype_changed = 0
+let g:ale_lint_on_save = 0
+let g:ale_lint_on_insert_leave = 0
+let g:ale_set_highlights = 0
+
+let g:tadaa_gitgutter_timer = 0
+let g:tadaa_gitgutter_delay = 1000
+let g:tadaa_ale_timer = 0
+let g:tadaa_ale_delay = 1000
+function Timer_GitGutter (arg1)
+    GitGutter
+    let g:tadaa_gitgutter_timer = 0
+endfunction
+function Timer_ALELint (arg1)
+    ALELint
+    let g:tadaa_ale_timer = 0
+endfunction
 
 "call timer_start(1000, 'Timer_GitGutter', {'repeat': -1})
-"au! CursorHold * GitGutter
-"function TextChanged ()
-    "if g:tadaa_gitgutter_timer != 0
-        "call timer_stop(g:tadaa_gitgutter_timer)
-    "endif
-    "if g:tadaa_ale_timer != 0
-        "call timer_stop(g:tadaa_ale_timer)
-    "endif
-    "let g:tadaa_gitgutter_timer = timer_start(g:tadaa_gitgutter_delay, 'Timer_GitGutter')
-    "let g:tadaa_ale_timer = timer_start(g:tadaa_ale_delay, 'Timer_ALELint')
-"endfunction
+"call timer_start(1000, 'Timer_ALELint', {'repeat': -1})
+au! CursorHold * GitGutter
+function TextChanged ()
+    if g:tadaa_gitgutter_timer != 0
+        call timer_stop(g:tadaa_gitgutter_timer)
+    endif
+    if g:tadaa_ale_timer != 0
+        call timer_stop(g:tadaa_ale_timer)
+    endif
+    let g:tadaa_gitgutter_timer = timer_start(g:tadaa_gitgutter_delay, 'Timer_GitGutter')
+    let g:tadaa_ale_timer = timer_start(g:tadaa_ale_delay, 'Timer_ALELint')
+endfunction
 
 
 

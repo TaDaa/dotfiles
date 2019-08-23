@@ -1,3 +1,5 @@
 {
-    "coc.preferences.diagnostic.displayByAle": true
+    "diagnostic.enable": false,
+    "diagnostic.enableSign": true,
+    "diagnostic.enableMessage": "always"
 }
