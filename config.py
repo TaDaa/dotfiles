@@ -37,29 +37,59 @@ def hook(row,col):
 
 def check_move():
     import re
+    # vim.command('set eventignore=all')
+
+    UltiSnips_Manager._cursor_moved()
+    vim.vars['tadaa_check_move_res'] = vim.eval('UltiSnips#ExpandSnippet()')
     cursor = vim.current.window.cursor
     col = cursor[1]-1
     row = cursor[0]-1
-
-    UltiSnips_Manager.expand()
-    vim.vars['tadaa_check_move_res'] = ""
-    if vim.vars['ulti_expand_res'] == 0:
+    # UltiSnips_Manager.expand()
+    # vim.eval('feedkeys("\<c-h>")')
+    # UltiSnips_Manager.expand()
+    # vim.eval('UltiSnips#TrackChange()')
+    # vim.vars['tadaa_check_move_res'] = ''
+    if int(vim.vars['ulti_expand_res']) == 0:
         line = vim.current.buffer[row][col:]
         if len(line) == 0 or line[0] == ' ':
             if len(line):
                 # for YCM
                 # vim.vars['tadaa_check_move_res']=" "
                 # vim.eval('feedkeys("\<bs>\<bs>\<C-R>='+PY_CMD+'eval(\'hook('+str(row)+','+str(col)+')\')\<CR>")')
-                if 'ycm_auto_trigger' in vim.vars and vim.vars['ycm_auto_trigger']:
-                    vim.vars['tadaa_check_move_res']=" "
-                    vim.eval('feedkeys("\<bs>\<bs>\<C-R>='+PY_CMD+'eval(\'hook('+str(row)+','+str(col)+')\')\<CR>")')
-                else:
-                    vim.eval('feedkeys("\<bs>\<C-R>='+PY_CMD+'eval(\'hook('+str(row)+','+str(col)+')\')\<CR>")')
+                # if 'ycm_auto_trigger' in vim.vars and vim.vars['ycm_auto_trigger']:
+                # if int(vim.eval("pumvisible()")):
+                    # vim.vars['tadaa_check_move_res']=" "
+                    # vim.eval('feedkeys("\<bs>\<bs>\<C-R>='+PY_CMD+'eval(\'hook('+str(row)+','+str(col)+')\')\<CR>")')
+                # else:
+                    # vim.eval('feedkeys("\<bs>")')
+                    # vim.vars['tadaa_check_move_res']="\<bs>"
+                cursor = vim.current.window.cursor
+                vim.current.buffer[row] = vim.current.buffer[row][0:col] + vim.current.buffer[row][col+1:]
+                # vim.eval('UltiSnips#TrackChange()')
+                UltiSnips_Manager._cursor_moved()
+                vim.vars['tadaa_check_move_res'] = vim.eval('UltiSnips#ExpandSnippetOrJump()')
+                # vim.eval('feedkeys("\<c-j>")')
+                # UltiSnips_Manager.expand_or_jump()
+                # vim.vars['tadaa_check_move_res']
+                # vim.eval('UltiSnips#TrackChange()')
+                # hook(row, col)
+                    # vim.eval('feedkeys("\<bs>\<C-R>='+PY_CMD+'eval(\'hook('+str(row)+','+str(col)+')\')\<CR>")')
             else:
-                UltiSnips_Manager.expand_or_jump()
+                # vim.eval('feedkeys("\<c-j>")')
+                UltiSnips_Manager._cursor_moved()
+                vim.vars['tadaa_check_move_res'] = vim.eval('UltiSnips#ExpandSnippetOrJump()')
+                # UltiSnips_Manager.expand_or_jump()
         else:
-            vim.current.window.cursor = (row+1,col+1)
-            vim.vars['tadaa_check_move_res']=" "
+            # vim.eval('feedkeys(" ")')
+            vim.current.buffer[row] = vim.current.buffer[row][0:col+1] + ' ' + vim.current.buffer[row][col+1:]
+            vim.eval('UltiSnips#TrackChange()')
+            vim.current.window.cursor = (row+1,col+2)
+            UltiSnips_Manager._cursor_moved()
+            # vim.eval('UltiSnips#TrackChange()')
+            # vim.command('let v:char=" "')
+            # vim.command('let v:char=""')
+            vim.vars['tadaa_check_move_res']=""
+    # vim.command('set eventignore=')
 
 def checkComma():
     cursor = vim.current.window.cursor

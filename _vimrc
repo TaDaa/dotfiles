@@ -84,9 +84,9 @@ Plug 'tpope/vim-sleuth'
 Plug 'TaDaa/vimade'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'pangloss/vim-javascript'
-Plug 'w0rp/ale'
+"Plug 'dense-analysis/ale'
 Plug 'mg979/vim-visual-multi'
-Plug 'airblade/vim-gitgutter'
+"Plug 'airblade/vim-gitgutter'
 Plug 'itchyny/lightline.vim'
 Plug 'morhetz/gruvbox'
 Plug 'w0ng/vim-hybrid'
@@ -95,10 +95,12 @@ Plug 'maksimr/vim-jsbeautify'
 Plug 'HerringtonDarkholme/yats.vim' "typescript highlighting
 Plug 'mhinz/vim-startify'
 Plug 'ryanoasis/vim-devicons'
-Plug 'iamcco/markdown-preview.vim'
+Plug 'iamcco/markdown-preview.nvim', {'do': 'cd app & yarn install'}
+"Plug 'suan/vim-instant-markdown', {'for': 'markdown'}
 "Bundle 'severin-lemaignan/vim-minimap'
 Plug 'junegunn/goyo.vim'
 Plug 'ervandew/supertab'
+"Plug 'ycm-core/YouCompleteMe'
 Plug 'neoclide/coc.nvim', {'do': 'yarn install --frozen-lockfile'}
 
 Plug 'hashivim/vim-terraform'
@@ -112,8 +114,22 @@ Plug 'unblevable/quick-scope'
 Plug 'kkoomen/vim-doge'
 "Plug 'joegesualdo/jsdoc.vim'
 Plug 'airblade/vim-rooter'
-Plug 'diepm/vim-rest-console'
+Plug 'xolox/vim-misc'
+Plug 'xolox/vim-session'
+Plug 'vimwiki/vimwiki'
+Plug 'metakirby5/codi.vim'
+Plug 'RRethy/vim-illuminate'
+"Plug 'romainl/Apprentice'
+Plug 'skanehira/docker.vim'
+"Plug 'diepm/vim-rest-console'
+Plug 'sainnhe/gruvbox-material'
 call plug#end()
+
+let g:vimwiki_list = [{'path': '~/.vim/vimwiki', 'syntax': 'markdown', 'ext': '.md'}]
+
+let g:session_autosave = 'no'
+let g:startify_session_dir = '~/.vim/sessions'
+
 
 let g:doge_mapping_comment_jump_forward="<Leader>f"
 let g:doge_mapping_comment_jump_backward=0
@@ -161,7 +177,8 @@ let g:ale_completion_enabled = 0
 let g:ale_linters = {
   \ "sh": ["language_server"],
   \ "php": ["langserver"],
-  \ "js" : []
+  \ "js" : ["tsserver"],
+  \ "ts" : ["tsserver"]
   \ }
 "lightline
 let g:lightline = {}
@@ -199,11 +216,6 @@ let g:NERDTreeIndicatorMapCustom = {
 "AG
 let g:aghighlight=1
 let g:agformat="%f:%l:%c:%m"
-"ULTISNIPS
-let g:UltiSnipsExpandTrigger="<c-j>"
-let g:UltiSnipsJumpForwardTrigger="<c-j>"
-let g:UltiSnipsJumpBackwardTrigger="<c-k>"
-let g:UltiSnipsMappingsToIgnore=['/']
 "DELIMITMATE
 let delimitMate_expand_cr=1
 "TADAA EMMET_COMPLETIONS
@@ -300,16 +312,28 @@ else
   set completeopt=menu,preview,noselect
   set lsp=1
   inoremap <c-c> <ESC>
-  inoremap <expr> <CR> (pumvisible() ? "\<c-y>\<cr>" : "\<CR>")
+  "inoremap <expr> <CR> (pumvisible() ? "\<c-y>\<cr>" : "\<CR>")
 
   let g:UltiSnipsExpandSnippetOrJump = "UltiSnips#ExpandSnippetOrJump"
   let &backupdir=g:user_vim_dir.'backup'
   let &directory=g:user_vim_dir.'swap'
+  "inoremap <silent> / <C-R>=UltiSnips#ExpandSnippetOrJump()<CR>
   inoremap <silent> / <C-R>=ExpandOrJump()<CR>
   inoremap <silent> , <C-R>=CommaSnip()<CR>
-  snoremap / <ESC>:call UltiSnips#ExpandSnippetOrJump()<CR>
+  "snoremap / <ESC>:call UltiSnips#ExpandSnippetOrJump()<CR>
 
 endif
+
+"ULTISNIPS
+let g:UltiSnipsExpandTrigger="<c-h>"
+let g:UltiSnipsJumpForwardTrigger="<c-j>"
+let g:UltiSnipsJumpBackwardTrigger="<c-k>"
+noremap <silent> <leader>e :execute 'CocCommand explorer' .
+      \ ' --toggle' .
+      \ ' --sources=buffer+,file+' .
+      \ ' --file-columns=git,selection,icon,clip,indent,filename,size --reveal ' . expand('%:p')<CR>
+"let g:UltiSnipsMappingsToIgnore=['/']
+
 "UltiSnips custom helpers
 exec g:py_cmd join(readfile(expand('~/.vim/config.py')), "\r")
 function! Expand (var)
@@ -321,6 +345,7 @@ function! Expand (var)
 endfunction
 function! ExpandOrJump ()
     exec g:py_cmd "check_move()"
+    "return ""
     return g:tadaa_check_move_res
 endfunction
 function! CommaSnip ()
@@ -339,6 +364,11 @@ endfunction
 vnoremap < <gv
 vnoremap > >gv
 nnoremap <c-p> :call OpenFZF()<CR>
+
+nnoremap <Leader>os :CocList<CR>
+nnoremap <Leader>oa :CocAction<CR>
+nnoremap <Leader>oc :CocCommand<CR>
+
 function! OpenFZF()
   FZF
   "call FZFWithDevIcons()
@@ -385,12 +415,19 @@ function VimEnter ()
 
     "rooter
     call add(g:rooter_patterns, 'package.json')
+    call add(g:rooter_patterns, '.env')
     let g:rooter_use_lcd = 1
     let g:rooter_silent_chdir = 1
     let g:rooter_change_directory_for_non_project_files = 'current'
     autocmd User StartifyBufferOpened Rooter
 
     "hi SpellBad gui=undercurl guibg=NONE
+    hi CocErrorHighlight gui=bold,underline guifg=#ff11a4
+    hi CocWarningHighlight gui=bold,underline guifg=#ffffa4
+    hi CocInfoHighlight gui=bold,underline guifg=#ffffff
+    "hi link CocWarningHighlight Error
+    "hi link CocInfoHighlight Error
+
     hi QuickScopePrimary guifg=#ffff77 gui=bold
     hi QuickScopeSecondary guifg=#ccccff gui=bold
     hi SpellBad gui=undercurl guibg=NONE
@@ -400,6 +437,9 @@ function VimEnter ()
     hi DiffChange guibg=#232c45 guifg=NONE gui=NONE
     hi DiffText guibg=#202087 guifg=NONE gui=NONE
     hi DiffAdd guibg=#105501 guifg=NONE gui=NONE
+    hi GitAdd guifg=#bbbb00
+    hi GitChanged guifg=#4444ff
+    hi GitRemoved guifg=#ff2222
     hi DiffDelete guibg=#cd1010 guifg=#cd1010 gui=NONE
     hi VertSplit guifg=#223322
    "this fixes status line icons not showing or cutoff
@@ -413,41 +453,41 @@ endfunction
 
 autocmd FileType typescript,javascript,vue set omnifunc= "unset omnifunc to allow youCompleteMe and ALE to take precedence
 
-autocmd TextChanged,TextChangedI * call TextChanged()
+"autocmd TextChanged,TextChangedI * call TextChanged()
 "let g:ale_enabled=0
-let g:ale_lint_on_text_changed = 0
-let g:ale_lint_on_enter = 0
-let g:ale_lint_on_filetype_changed = 0
-let g:ale_lint_on_save = 0
-let g:ale_lint_on_insert_leave = 0
-let g:ale_set_highlights = 0
+"let g:ale_lint_on_text_changed = 0
+"let g:ale_lint_on_enter = 0
+"let g:ale_lint_on_filetype_changed = 0
+"let g:ale_lint_on_save = 0
+"let g:ale_lint_on_insert_leave = 0
+"let g:ale_set_highlights = 0
 
-let g:tadaa_gitgutter_timer = 0
-let g:tadaa_gitgutter_delay = 1000
-let g:tadaa_ale_timer = 0
-let g:tadaa_ale_delay = 1000
-function Timer_GitGutter (arg1)
-    GitGutter
-    let g:tadaa_gitgutter_timer = 0
-endfunction
-function Timer_ALELint (arg1)
-    ALELint
-    let g:tadaa_ale_timer = 0
-endfunction
+"let g:tadaa_gitgutter_timer = 0
+"let g:tadaa_gitgutter_delay = 1000
+"let g:tadaa_ale_timer = 0
+"let g:tadaa_ale_delay = 1000
+"function Timer_GitGutter (arg1)
+    "GitGutter
+    "let g:tadaa_gitgutter_timer = 0
+"endfunction
+"function Timer_ALELint (arg1)
+    "ALELint
+    "let g:tadaa_ale_timer = 0
+"endfunction
 
 "call timer_start(1000, 'Timer_GitGutter', {'repeat': -1})
 "call timer_start(1000, 'Timer_ALELint', {'repeat': -1})
-au! CursorHold * GitGutter
-function TextChanged ()
-    if g:tadaa_gitgutter_timer != 0
-        call timer_stop(g:tadaa_gitgutter_timer)
-    endif
-    if g:tadaa_ale_timer != 0
-        call timer_stop(g:tadaa_ale_timer)
-    endif
-    let g:tadaa_gitgutter_timer = timer_start(g:tadaa_gitgutter_delay, 'Timer_GitGutter')
-    let g:tadaa_ale_timer = timer_start(g:tadaa_ale_delay, 'Timer_ALELint')
-endfunction
+"au! CursorHold * GitGutter
+"function TextChanged ()
+    "if g:tadaa_gitgutter_timer != 0
+        "call timer_stop(g:tadaa_gitgutter_timer)
+    "endif
+    "if g:tadaa_ale_timer != 0
+        "call timer_stop(g:tadaa_ale_timer)
+    "endif
+    "let g:tadaa_gitgutter_timer = timer_start(g:tadaa_gitgutter_delay, 'Timer_GitGutter')
+    "let g:tadaa_ale_timer = timer_start(g:tadaa_ale_delay, 'Timer_ALELint')
+"endfunction
 
 
 
@@ -535,3 +575,28 @@ endfunction
 if has('gui_running') == 0 && has('nvim') == 0
    call feedkeys(":silent execute '!' | redraw!\<CR>")
 endif
+
+
+"coc
+"coc-prettier
+"coc-json
+"coc-pairs
+"coc-marketplace
+"coc-post
+"coc-java
+"coc-vimlsp
+"coc-git
+"coc-emmet
+"coc-highlight
+"coc-snippets
+"coc-project
+"coc-sql
+"coc-docker
+"coc-yaml
+"coc-tsserver
+"coc-svg
+"coc-phpls
+"coc-html
+"coc-python
+"coc-css
+"coc-todolist

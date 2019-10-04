@@ -1,5 +1,35 @@
 {
-    "diagnostic.enable": false,
-    "diagnostic.enableSign": true,
-    "diagnostic.enableMessage": "always"
+    "translator.toLang": "fr",
+    "translator.engines": ["google"],
+    "explorer.icon.enableNerdfont": true,
+    "git.addedSign.hlGroup": "GitAdd",
+    "git.changedSign.hlGroup": "GitChanged",
+    "git.removedSign.hlGroup": "GitRemoved",
+    "git.topRemovedSign.hlGroup": "GitRemoved",
+    "coc.preferences.formatOnType": false,
+    "coc.preferences.rootPatterns": [".env"],
+    "diagnostic.virtualText": false,
+    "diagnostic.enable": true,
+    "java.home": "/Library/Java/JavaVirtualMachines/jdk-12.0.2.jdk/Contents/Home",
+    "python.jediEnabled": false,
+    "languageserver": {
+        "bash": {
+            "command": "bash-language-server",
+            "args": ["start"],
+            "filetypes": ["sh"],
+            "ignoredRootPaths": ["~"]
+        },
+        "ccls": {
+            "command": "ccls",
+            "filetypes": ["c", "cpp", "cuda", "objc", "objcpp"],
+            "rootPatterns": [".ccls", "compile_commands.json", ".vim/", ".git/", ".hg/"],
+            "initializationOptions": {
+                "cache": {
+                    "directory": "/tmp/ccls-cache",
+                    "retainInMemory": 1
+                }
+            }
+        }
+    },
+    "git.enableGutters": true
 }

@@ -187,8 +187,8 @@ $1 ($2) {`!p
 if (t[3] and t[3].find('\n') != 0):
 	snip >> 1
 	snip += ''
-else:
-	res = ''`${3}`!p
+`${3}`!p
+
 if (t[3] and t[3].find('\n') != 0):
 	snip += '}'
 else:
@@ -200,12 +200,12 @@ constructor ($1) {`!p
 if (t[2] and t[2].find('\n') != 0):
 	snip >> 1
 	snip += ''
-else:
-	res = ''`${2}`!p
+`$2`!p
 if (t[2] and t[2].find('\n') != 0):
 	snip += '}'
 else:
-	res = '}'`
+	res = '}'
+`
 endsnippet
 #body result
 #body
@@ -214,12 +214,12 @@ snippet "\bo\b" "body" r
 if (t[1] and t[1].find('\n') != 0):
 	snip >> 1
 	snip += ''
-else:
-	res = ''`${1}`!p
+`$1`!p
 if (t[1] and t[1].find('\n') != 0):
 	snip += '}'
 else:
-	res = '}'`$2
+	res = '}'
+`
 endsnippet
 
 
