@@ -4,16 +4,16 @@ if (sys.version_info > (3, 0)):
 
 import vim
 import os
-import importlib.util
+# import importlib.util
 # cfile = importlib.util.spec_from_file_location('extpathloader', os.path.realpath(vim.eval('g:user_vim_dir')+'custom/UltiSnips/extpathloader.py')) 
 # module = importlib.util.module_from_spec(cfile)
 # globals()["extpathloader"] = module
 # importlib.util.spec_from_file_location('javahelpers', os.path.realpath(vim.eval('g:user_vim_dir')+'custom/UltiSnips/javahelpers.py')) 
 # module = importlib.util.module_from_spec(cfile)
 # globals()["javahelpers"] = module
-from importlib.machinery import SourceFileLoader
-globals()['extpathloader'] = SourceFileLoader('extpathloader', os.path.realpath(vim.eval('g:user_vim_dir')+'custom/UltiSnips/extpathloader.py')).load_module()
-globals()['javahelpers'] = SourceFileLoader('extpathloader', os.path.realpath(vim.eval('g:user_vim_dir')+'custom/UltiSnips/javahelpers.py')).load_module()
+# from importlib.machinery import SourceFileLoader
+# globals()['extpathloader'] = SourceFileLoader('extpathloader', os.path.realpath(vim.eval('g:user_vim_dir')+'custom/UltiSnips/extpathloader.py')).load_module()
+# globals()['javahelpers'] = SourceFileLoader('extpathloader', os.path.realpath(vim.eval('g:user_vim_dir')+'custom/UltiSnips/javahelpers.py')).load_module()
 
 # globals()["extpathloader"] = (__import__('imp')).load_source('extpathloader', os.path.realpath(vim.eval('g:user_vim_dir')+'custom/UltiSnips/extpathloader.py'))
 # globals()["javahelpers"] = (__import__('imp')).load_source('javahelpers', os.path.realpath(vim.eval('g:user_vim_dir')+'custom/UltiSnips/javahelpers.py'))
@@ -23,34 +23,49 @@ def hook(row,col):
     snippet = None
     start_cursor = vim.current.window.cursor
     ln = len(UltiSnips_Manager._active_snippets)
+    last = None
     while ln >= 1 and UltiSnips_Manager._active_snippets[ln - 1] != snippet:
         snippet = UltiSnips_Manager._active_snippets[ln - 1]
-        UltiSnips_Manager.expand_or_jump()
+        cursor = vim.current.window.cursor
+        if last == None:
+            last = snippet
+        UltiSnips_Manager.jump_forwards()
         ln = len(UltiSnips_Manager._active_snippets)
         if ln > 0:
             end = snippet.end
-            if vim.current.window.cursor[0] == end[0] + 1 and vim.current.window.cursor[1] == end[1] and UltiSnips_Manager._active_snippets[ln - 1] != snippet:
+            # vim.current.window.cursor = (end[0]+1,end[1]-1)
+            if cursor[0] == end[0] + 1 and cursor[1] == end[1] and UltiSnips_Manager._active_snippets[ln - 1] != snippet and last.end[0] == snippet.end[0] and last.end[1] == snippet.end[1]:
+                last = snippet
                 continue
+            else:
+                break
+        else:
+            break
+        # last = snippet
     if start_cursor[0] > vim.current.window.cursor[0] or (start_cursor[0] == vim.current.window.cursor[0] and start_cursor[1] > vim.current.window.cursor[1]):
         vim.current.window.cursor = (start_cursor[0],start_cursor[1])
     return ''
 
 def check_move():
     import re
-    # vim.command('set eventignore=all')
+    vim.command('set eventignore=all')
 
     UltiSnips_Manager._cursor_moved()
-    vim.vars['tadaa_check_move_res'] = vim.eval('UltiSnips#ExpandSnippet()')
+    # vim.vars['tadaa_check_move_res'] = vim.eval('UltiSnips#ExpandSnippet()')
     cursor = vim.current.window.cursor
     col = cursor[1]-1
     row = cursor[0]-1
+    line = vim.current.buffer[row][col:]
+    if len(line) != 0 and line[0] != '}' and line[0] != ' ':
+        UltiSnips_Manager.expand()
+    else:
+        vim.vars['ulti_expand_res'] = 0
     # UltiSnips_Manager.expand()
     # vim.eval('feedkeys("\<c-h>")')
     # UltiSnips_Manager.expand()
     # vim.eval('UltiSnips#TrackChange()')
-    # vim.vars['tadaa_check_move_res'] = ''
+    vim.vars['tadaa_check_move_res'] = ''
     if int(vim.vars['ulti_expand_res']) == 0:
-        line = vim.current.buffer[row][col:]
         if len(line) == 0 or line[0] == ' ':
             if len(line):
                 # for YCM
@@ -65,31 +80,36 @@ def check_move():
                     # vim.vars['tadaa_check_move_res']="\<bs>"
                 cursor = vim.current.window.cursor
                 vim.current.buffer[row] = vim.current.buffer[row][0:col] + vim.current.buffer[row][col+1:]
-                # vim.eval('UltiSnips#TrackChange()')
                 UltiSnips_Manager._cursor_moved()
-                vim.vars['tadaa_check_move_res'] = vim.eval('UltiSnips#ExpandSnippetOrJump()')
+                # vim.current.window.cursor = (row+1,col+2)
+                # vim.eval('UltiSnips#TrackChange()')
+                # vim.vars['tadaa_check_move_res'] = vim.eval('UltiSnips#ExpandSnippetOrJump()')
                 # vim.eval('feedkeys("\<c-j>")')
                 # UltiSnips_Manager.expand_or_jump()
+                hook(row,col)
+                # if vim.current.buffer[row][col- 1] != '}':
+                    # UltiSnips_Manager.expand_or_jump()
+                # else:
+                    # UltiSnips_Manager.jump_forwards()
                 # vim.vars['tadaa_check_move_res']
                 # vim.eval('UltiSnips#TrackChange()')
                 # hook(row, col)
                     # vim.eval('feedkeys("\<bs>\<C-R>='+PY_CMD+'eval(\'hook('+str(row)+','+str(col)+')\')\<CR>")')
             else:
-                # vim.eval('feedkeys("\<c-j>")')
-                UltiSnips_Manager._cursor_moved()
-                vim.vars['tadaa_check_move_res'] = vim.eval('UltiSnips#ExpandSnippetOrJump()')
-                # UltiSnips_Manager.expand_or_jump()
+                UltiSnips_Manager.expand_or_jump()
+                # UltiSnips_Manager._cursor_moved()
         else:
             # vim.eval('feedkeys(" ")')
-            vim.current.buffer[row] = vim.current.buffer[row][0:col+1] + ' ' + vim.current.buffer[row][col+1:]
-            vim.eval('UltiSnips#TrackChange()')
-            vim.current.window.cursor = (row+1,col+2)
-            UltiSnips_Manager._cursor_moved()
+            # vim.current.buffer[row] = vim.current.buffer[row][0:col+1] + ' ' + vim.current.buffer[row][col+1:]
+            # vim.eval('UltiSnips#TrackChange()')
+            # vim.current.window.cursor = (row+1,col+2)
+            # UltiSnips_Manager._cursor_moved()
             # vim.eval('UltiSnips#TrackChange()')
             # vim.command('let v:char=" "')
             # vim.command('let v:char=""')
-            vim.vars['tadaa_check_move_res']=""
-    # vim.command('set eventignore=')
+            # vim.vars['tadaa_check_move_res']=" "
+            vim.vars['tadaa_check_move_res']=" "
+    vim.command('set eventignore=')
 
 def checkComma():
     cursor = vim.current.window.cursor
