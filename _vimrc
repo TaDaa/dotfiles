@@ -1,3 +1,4 @@
+echo has('python')
 "NOTES 
 "TODO - need to update my code in here to work right with Vundle (missing - begining + end)
 "- tsserver installed global
@@ -6,7 +7,7 @@
 "Ag The SilverSearcher installed global
 "fd installed global
 "force py3
-let g:py_cmd = "py3"
+let g:py_cmd = "py"
 let g:IS_TERM = !has('gui_running')
 
 if has('python3')
@@ -25,7 +26,9 @@ if has("gui")
   if has("win32")
     set guifont=OperatorMonoNerdFont-Light:h10
   else
-    set guifont=OperatorMonoNerdFont-Light:h13
+        set guifont=OperatorMono\ Nerd\ Font:h15
+    "set guifont=OperatorMonoNerdFont-Light:h13
+    "set guifont=Courier\ New:h15
   endif
   if !has('nvim')
     function! SetTransparency(a)
@@ -36,10 +39,14 @@ if has("gui")
       if has("win32")
         set guifont=OperatorMonoNerdFont-Light:h10
       else
-        set guifont=OperatorMonoNerdFont-Light:h13
+        set guifont=OperatorMono\ Nerd\ Font:h15
+        "set guifont=OperatorMonoNerdFont-Light:h13
+        "set guifont=Courier\ New:h15
       endif
       call timer_start(1, 'SetTransparency')
     endfunction
+  else
+    set guifont=AurulentSansMono\ Nerd\ Font:h14
   endif
 endif
 set nocompatible
@@ -54,7 +61,12 @@ silent execute '!mkdir "'.$VIMRUNTIME.'/temp"'
 silent execute '!del "'.$VIMRUNTIME.'/temp/*~"'
 
 call plug#begin('~/.vim/plugged')
+Plug 'ErichDonGubler/vim-sublime-monokai'
+"Plug 'Yggdroot/indentLine'
+Plug 'benfrain/nord-iterm2'
+"Plug 'wellle/context.vim'
 Plug 'junegunn/vim-plug'
+Plug 'jnurmine/Zenburn'
 "Plug 'easymotion/vim-easymotion'
 "Plug 'justinmk/vim-sneak'
 Plug 'scrooloose/nerdtree'
@@ -66,10 +78,12 @@ Plug 'tpope/vim-eunuch'
 Plug 'tpope/vim-abolish'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-fugitive'
+Plug 'diepm/vim-rest-console'
 "Plugin 'alvan/vim-closetag'
 "Plugin 'tpope/vim-endwise'
 "Bundle 'jiangmiao/auto-pairs'
 "Plugin 'Raimondi/delimitMate'
+
 Plug 'tmsvg/pear-tree'
 Plug 'mattn/emmet-vim'
 "Bundle 'skammer/vim-css-color'
@@ -81,18 +95,31 @@ Plug 'tpope/vim-sleuth'
 "Bundle 'TaDaa/vim-emmet-autocompleter'
 "Bundle 'TaDaa/vim-emmet-visualforce-autocompleter'
 "Bundle 'TaDaa/vim-emmet-android-autocompleter'
+
+"Plug 'mckellyln/vim-rtags'
+"Plug 'tpope/vim-fugitive'
+Plug 'airblade/vim-gitgutter'
+"Plug 'bfrg/vim-cpp-modern'
+"Plug 'itchyny/lightline.vim'
 Plug 'TaDaa/vimade'
+"Plug 'tmux-plugins/vim-tmux-focus-events'
+
+"Plug 'camspiers/animate.vim'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
-Plug 'pangloss/vim-javascript'
+Plug 'junegunn/fzf.vim'
+
+
+
+"Plug 'pangloss/vim-javascript'
 "Plug 'dense-analysis/ale'
 Plug 'mg979/vim-visual-multi'
-"Plug 'airblade/vim-gitgutter'
+Plug 'airblade/vim-gitgutter'
 Plug 'itchyny/lightline.vim'
 Plug 'morhetz/gruvbox'
 Plug 'w0ng/vim-hybrid'
 Plug 'maksimr/vim-jsbeautify'
 "Bundle 'ciaranm/detectindent'
-Plug 'HerringtonDarkholme/yats.vim' "typescript highlighting
+"Plug 'HerringtonDarkholme/yats.vim' "typescript highlighting
 Plug 'mhinz/vim-startify'
 Plug 'ryanoasis/vim-devicons'
 Plug 'iamcco/markdown-preview.nvim', {'do': 'cd app & yarn install'}
@@ -102,6 +129,7 @@ Plug 'junegunn/goyo.vim'
 Plug 'ervandew/supertab'
 "Plug 'ycm-core/YouCompleteMe'
 Plug 'neoclide/coc.nvim', {'do': 'yarn install --frozen-lockfile'}
+"Plug 'neovim/nvim-lsp'
 
 Plug 'hashivim/vim-terraform'
 Plug 'juliosueiras/vim-terraform-completion'
@@ -109,8 +137,9 @@ Plug 'juliosueiras/vim-terraform-completion'
 Plug 'tmux-plugins/vim-tmux-focus-events'
 Plug 'roxma/nvim-yarp'
 Plug 'roxma/vim-hug-neovim-rpc'
-Plug 'severin-lemaignan/vim-minimap'
-Plug 'unblevable/quick-scope'
+"Plug 'severin-lemaignan/vim-minimap'
+Plug 'wfxr/minimap.vim', {'do': ':!cargo install --locked code-minimap'}
+"Plug 'unblevable/quick-scope'
 Plug 'kkoomen/vim-doge'
 "Plug 'joegesualdo/jsdoc.vim'
 Plug 'airblade/vim-rooter'
@@ -120,11 +149,29 @@ Plug 'vimwiki/vimwiki'
 Plug 'metakirby5/codi.vim'
 Plug 'RRethy/vim-illuminate'
 "Plug 'romainl/Apprentice'
-Plug 'skanehira/docker.vim'
+"Plug 'skanehira/docker.vim'
 "Plug 'diepm/vim-rest-console'
 Plug 'sainnhe/gruvbox-material'
+Plug 'bluz71/vim-nightfly-guicolors'
+"Plug 'camspiers/animate.vim'
+"Plug 'TaDaa/animate.vim'
+"Plug 'camspiers/lens.vim'
+"Plug 'arzg/vim-colors-xcode'
+Plug 'vim-scripts/dbext.vim'
+Plug 'tpope/vim-dadbod'
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+Plug 'nvim-treesitter/playground'
+"Plug 'kyazdani42/nvim-web-devicons'
+"Plug 'nvim-lua/popup.nvim'
+"Plug 'nvim-lua/plenary.nvim'
+"Plug 'nvim-telescope/telescope.nvim'
+"Plug 'numirias/semshi', {'do': ':UpdateRemotePlugins'}
 call plug#end()
 
+let $FZF_DEFAULT_COMMAND = 'rg --files'
+"let $FZF_DEFAULT_COMMAND = 'ag -g ""'
+
+"set updatetime = 1000
 let g:vimwiki_list = [{'path': '~/.vim/vimwiki', 'syntax': 'markdown', 'ext': '.md'}]
 
 let g:session_autosave = 'no'
@@ -151,17 +198,21 @@ let g:qs_highlight_on_keys = ['f', 'F']
 
 let g:pear_tree_repeatable_expand=0
 
+let g:indentLine_leadingSpaceChar = '.'
+let g:indentLine_char = '.'
+let g:indentLine_leadingSpaceEnabled = 1
 
 "TODO remove
 let g:coc_force_debug = 1
+let g:coc_node_path = '/Users/tlovell/.nvm/versions/node/v13.2.0/bin/node'
 let g:SuperTabDefaultCompletionType = "<c-n>"
 "
-set notermguicolors
+set termguicolors
 let g:vimade = {}
-let g:vimade.enablesigns = 1
 let g:vimade.detecttermcolors = 0
 let g:vimade.signsretentionperiod = 4000
 let g:vimade.enablefocusfading=1
+let g:vimade.enabletreesitter=1
 "PLUGIN CONFIG
 "ALE -- disabled because I am manually triggering due to performance reasons
 "try
@@ -291,7 +342,7 @@ set encoding=utf-8
 set laststatus=2                             " always show statusbar  
 set statusline=[%.n]%m\ %f%=%<%P
 set signcolumn=yes
-:command Bd bd
+:command! Bd bd
 
 syntax on
 
@@ -312,6 +363,7 @@ else
   set completeopt=menu,preview,noselect
   set lsp=1
   inoremap <c-c> <ESC>
+  inoremap <C-c> <Esc>
   "inoremap <expr> <CR> (pumvisible() ? "\<c-y>\<cr>" : "\<CR>")
 
   let g:UltiSnipsExpandSnippetOrJump = "UltiSnips#ExpandSnippetOrJump"
@@ -363,15 +415,28 @@ endfunction
 
 vnoremap < <gv
 vnoremap > >gv
-nnoremap <c-p> :call OpenFZF()<CR>
+nnoremap <c-p> :call OpenFZF("files")<CR>
+nnoremap <leader>ff :call OpenFZF("files")<CR>
+nnoremap <leader>fb :call OpenFZF("buffers")<CR>
+nnoremap <leader>fg :call OpenFZF("grep")<CR>
+nnoremap <leader>fc :call OpenFZF("commits")<CR>
 
 nnoremap <Leader>os :CocList<CR>
 nnoremap <Leader>oa :CocAction<CR>
 nnoremap <Leader>oc :CocCommand<CR>
 
-function! OpenFZF()
-  FZF
-  "call FZFWithDevIcons()
+
+function! OpenFZF(fzf_type)
+  "FZF
+  if a:fzf_type == "files"
+    call fzf#vim#files(0, fzf#vim#with_preview({'options': [ '--info=inline']}), 0)
+  elseif a:fzf_type == "buffers"
+    call fzf#vim#buffers(fzf#vim#with_preview({'options': [ '--info=inline']}), 0)
+  elseif a:fzf_type == "grep"
+    call fzf#vim#grep('rg --column --line-number --no-heading --color=always --smart-case -- '.shellescape(''), 1, fzf#vim#with_preview({'options': [ '--info=inline']}), 0)
+  elseif a:fzf_type == "commits"
+    call fzf#vim#commits(fzf#vim#with_preview({'options': [ '--info=inline']}), 0)
+  endif
   let b:FZF = 1
 endfunction
 
@@ -392,9 +457,12 @@ tnoremap <ESC> <C-\><C-N>:call TerminalNormal()<CR>
 
 
 "AUTOCMDS
+let g:indentLine_fileTypeExclude=['json']
+autocmd FileType typescript,javascript,vue set omnifunc= "unset omnifunc to allow youCompleteMe and ALE to take precedence
 autocmd FileType scss syn cluster sassCssAttributes add=@cssColors "VIM-CSS-COLOR
 autocmd BufEnter,BufNew *.tsx set ft=typescript
 autocmd BufEnter * call BuffEnter()
+autocmd VimEnter * call VimEnter()
 
 function BuffEnter ()
     set smarttab
@@ -402,8 +470,10 @@ function BuffEnter ()
     "NERDTreeMirror
 endfunction
 hi NonText guibg=#111122 guifg=#444466
-autocmd VimEnter * call VimEnter()
 function VimEnter ()
+    "GitGutterLineNrHighlightsEnable
+    "GitGutterLineHighlightsEnable
+    hi CursorLineNr guibg=white
     if has('transparency')
       set transparency=1
     endif
@@ -428,8 +498,8 @@ function VimEnter ()
     "hi link CocWarningHighlight Error
     "hi link CocInfoHighlight Error
 
-    hi QuickScopePrimary guifg=#ffff77 gui=bold
-    hi QuickScopeSecondary guifg=#ccccff gui=bold
+    "hi QuickScopePrimary guifg=#ffff77 gui=bold
+    "hi QuickScopeSecondary guifg=#ccccff gui=bold
     hi SpellBad gui=undercurl guibg=NONE
     hi ColorColumn guibg=NONE guifg=#555566
     hi Normal guibg=#171b23
@@ -451,7 +521,6 @@ function VimEnter ()
 
 endfunction
 
-autocmd FileType typescript,javascript,vue set omnifunc= "unset omnifunc to allow youCompleteMe and ALE to take precedence
 
 "autocmd TextChanged,TextChangedI * call TextChanged()
 "let g:ale_enabled=0
@@ -535,7 +604,8 @@ function! StartifyEntryFormat()
 "FZF + devicons
 function! FZFWithDevIcons()
   function! s:files()
-    let files = split(system('fd --type f --exclude node_modules'), '\n')
+    "let files = split(system('fd --type f --exclude node_modules'), '\n')
+    let files = split(system('rg --files'), '\n')
     call s:prepend_icon(files)
     return l:files
   endfunction
@@ -600,3 +670,52 @@ endif
 "coc-python
 "coc-css
 "coc-todolist
+let g:fzf_layout={'window': {'width':0.8, 'height': 0.8}}
+let g:fzf_preview_window = ['right:40%', 'ctrl-/']
+"com! -bar -bang Ag call fzf#vim#ag(, fzf#vim#with_preview({'options': '--delimiter=:--nth=4..'}, 'right'), 0)
+"let g:fzf_layout = { 'window': 'call FloatingFZF()' }
+"let $FZF_DEFAULT_OPTS .= ' --reverse '
+"if has('nvim') && !exists('g:fzf_layout')
+  "autocmd! FileType fzf
+  "autocmd  FileType fzf set laststatus=0 noshowmode noruler
+    "\| autocmd BufLeave <buffer> set laststatus=2 showmode ruler
+"endif
+ 
+"function! FloatingFZF()
+  "let buf = nvim_create_buf(v:false, v:true)
+  "call setbufvar(buf, '&signcolumn', 'no')
+ 
+  "let height = float2nr(&lines * 0.4)
+  "let width = float2nr(&columns * 0.7)
+  "let horizontal = float2nr((&columns - width) / 2)
+  "let vertical = float2nr((&lines - height) / 2)
+  "let opts = {
+        "\ 'relative': 'editor',
+        "\ 'row': vertical,
+        "\ 'col': horizontal,
+        "\ 'width': width,
+        "\ 'height': height,
+        "\ 'style': 'minimal'
+        "\ }
+ 
+  "call nvim_open_win(buf, v:true, opts)
+"endfunction
+"
+"
+VimadeDisable
+lua <<EOF
+
+require'nvim-treesitter.configs'.setup {
+  ensure_installed = "maintained", -- one of "all", "maintained" (parsers with maintainers), or a list of languages
+  highlight = {
+    enable = true,              -- false will disable the whole extension
+    disable = { "c", "rust" },  -- list of language that will be disabled
+  },
+  playground = {
+    enable = true,
+    disable = {},
+    updatetime = 25, -- Debounced time for highlighting nodes in the playground from source code
+    persist_queries = false -- Whether the query persists across vim sessions
+  }
+}
+EOF

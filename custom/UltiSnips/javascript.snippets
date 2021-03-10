@@ -1019,7 +1019,7 @@ endsnippet
 
 ##testing
 snippet "\bdes\b" "describe" wr
-describe('$1',function ($2) {`!p
+describe('$1', ($2) => {`!p
 if (t[3] and t[3].find('\n') != 0):
 	snip >> 1
 	snip += ''
@@ -1032,7 +1032,7 @@ else:
 endsnippet
 
 snippet "\bit\b" "it" wr
-it('$1',function ($2) {`!p
+it('$1', ($2) => {`!p
 if (t[3] and t[3].find('\n') != 0):
 	snip >> 1
 	snip += ''
