@@ -204,7 +204,7 @@ let g:indentLine_leadingSpaceEnabled = 1
 
 "TODO remove
 let g:coc_force_debug = 1
-let g:coc_node_path = '/Users/tlovell/.nvm/versions/node/v13.2.0/bin/node'
+" let g:coc_node_path = '/Users/tlovell/.nvm/versions/node/v13.2.0/bin/node'
 let g:SuperTabDefaultCompletionType = "<c-n>"
 "
 set termguicolors
