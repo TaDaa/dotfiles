@@ -126,7 +126,7 @@ Plug 'iamcco/markdown-preview.nvim', {'do': 'cd app & yarn install'}
 "Plug 'suan/vim-instant-markdown', {'for': 'markdown'}
 "Bundle 'severin-lemaignan/vim-minimap'
 Plug 'junegunn/goyo.vim'
-Plug 'ervandew/supertab'
+"Plug 'ervandew/supertab'
 "Plug 'ycm-core/YouCompleteMe'
 Plug 'neoclide/coc.nvim', {'do': 'yarn install --frozen-lockfile'}
 "Plug 'neovim/nvim-lsp'
@@ -205,7 +205,7 @@ let g:indentLine_leadingSpaceEnabled = 1
 "TODO remove
 let g:coc_force_debug = 1
 " let g:coc_node_path = '/Users/tlovell/.nvm/versions/node/v13.2.0/bin/node'
-let g:SuperTabDefaultCompletionType = "<c-n>"
+" let g:SuperTabDefaultCompletionType = "<c-n>"
 "
 set termguicolors
 let g:vimade = {}
