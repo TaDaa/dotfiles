@@ -10,6 +10,7 @@
     "coc.preferences.rootPatterns": [".env"],
     "diagnostic.virtualText": false,
     "diagnostic.enable": true,
+    "inlayHint.enable": false,
     "java.home": "/Library/Java/JavaVirtualMachines/jdk-12.0.2.jdk/Contents/Home",
     "python.jediEnabled": false,
     "languageserver": {
