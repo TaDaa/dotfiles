@@ -670,6 +670,20 @@ endif
 "coc-python
 "coc-css
 "coc-todolist
+function! CheckBackspace() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+
+inoremap <silent><expr> <Tab>
+      \ coc#pum#visible() ? coc#pum#next(1) :
+      \ CheckBackspace() ? "\<Tab>" :
+      \ coc#refresh()
+inoremap <expr> <Tab> coc#pum#visible() ? coc#pum#next(1) : "\<Tab>"
+inoremap <expr> <S-Tab> coc#pum#visible() ? coc#pum#prev(1) : "\<S-Tab>"
+
+
+
 let g:fzf_layout={'window': {'width':0.8, 'height': 0.8}}
 let g:fzf_preview_window = ['right:40%', 'ctrl-/']
 "com! -bar -bang Ag call fzf#vim#ag(, fzf#vim#with_preview({'options': '--delimiter=:--nth=4..'}, 'right'), 0)
