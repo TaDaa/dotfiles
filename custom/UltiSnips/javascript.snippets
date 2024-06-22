@@ -825,19 +825,30 @@ endsnippet
 
 #IF
 snippet "\bif\b" "if..." r
-if (${1}) {
-	${2}
-}`!p
-if t[3] and t[3][0] != ' ':
-	snip.rv = ' '
-`$3
+if ($1) {`!p
+if (t[2] and t[2].find('\n') != 0):
+	snip >> 1
+	snip += ''
+else:
+	res = ''`${2}`!p
+if (t[2] and t[2].find('\n') != 0):
+	snip += '}'
+else:
+	res = '}'`${3/.+/ /}${3}
 endsnippet
 
 #ELSE IF
 snippet "\bei\b|\belseif\b" "else i.." r
-else if (${1}) {
-	${2}
-}${3/.+/ /}${3}
+else if ($1) {`!p
+if (t[2] and t[2].find('\n') != 0):
+	snip >> 1
+	snip += ''
+else:
+	res = ''`${2}`!p
+if (t[2] and t[2].find('\n') != 0):
+	snip += '}'
+else:
+	res = '}'`${3/.+/ /}${3}
 endsnippet
 
 #divide
@@ -851,9 +862,16 @@ endsnippet
 
 #ELSE
 snippet "\bel\b|\belse\b" "else..." r
-else {
-	${1}
-}${2}
+else {`!p
+if (t[1] and t[1].find('\n') != 0):
+	snip >> 1
+	snip += ''
+else:
+	res = ''`${1}`!p
+if (t[1] and t[1].find('\n') != 0):
+	snip += '}'
+else:
+	res = '}'`
 endsnippet
 
 #setTimeout

@@ -6,9 +6,9 @@ snippet def "#define ..."
 #define ${1}
 endsnippet
 
-snippet ifndef "#ifndef ... #define ... #endif"
-#ifndef ${1/([A-Za-z0-9_]+).*/$1/}
-#define ${1:SYMBOL} ${2:value}
+snippet ifn "#ifndef ... #define ... #endif"
+#ifndef $1
+#define ${1:`!p snip.rv = snip.basename`}
 #endif
 endsnippet
 
@@ -18,11 +18,11 @@ ${VISUAL}${0:${VISUAL/(.*)/(?1::code)/}}
 #endif
 endsnippet
 
-snippet inc "#include local header (inc)"
+snippet in "#include local header (inc)"
 #include "${1:`!p snip.rv = snip.basename + '.h'`}"
 endsnippet
 
-snippet Inc "#include <> (Inc)"
+snippet int "#include <> (Inc)"
 #include <${1:.h}>
 endsnippet
 
@@ -50,87 +50,139 @@ for (${2:i} = 0; $2 < ${1:count}; ${3:++$2})
 }
 endsnippet
 
-snippet fori "for int loop (fori)"
-for (${4:int} ${2:i} = 0; $2 < ${1:count}; ${3:++$2})
-{
-	${VISUAL}${0:${VISUAL/(.*)/(?1::\/* code *\/)/}}
-}
-endsnippet
+#snippet fori "for int loop (fori)"
+#for (${4:int} ${2:i} = 0; $2 < ${1:count}; ${3:++$2})
+#{
+	#${VISUAL}${0:${VISUAL/(.*)/(?1::\/* code *\/)/}}
+#}
+#endsnippet
 
-snippet enum "Enumeration"
-enum ${1:name} { $0 };
-endsnippet
+#snippet enum "Enumeration"
+#enum ${1:name} { $0 };
+#endsnippet
 
-snippet once "Include header once only guard"
-#ifndef ${1:`!p
-if not snip.c:
-	import random, string
-	name = re.sub(r'[^A-Za-z0-9]+','_', snip.fn).upper()
-	rand = ''.join(random.sample(string.ascii_letters+string.digits, 8))
-	snip.rv = ('%s_%s' % (name,rand)).upper()
+snippet st "enum .. (enum)"
+enum${1/.+/ /m}${1} {`!p
+if (t[2] and t[2].find('\n') != 0):
+	snip >> 1
+	snip += ''
 else:
-    snip.rv = snip.c`}
-#define $1
+	res = ''`${2}`!p
+if (t[2] and t[2].find('\n') != 0):
+	snip += '}'
+else:
+	res = '}'`
+endsnippet
 
-${0}
+#snippet once "Include header once only guard"
+##ifndef ${1:`!p
+#if not snip.c:
+	#import random, string
+	#name = re.sub(r'[^A-Za-z0-9]+','_', snip.fn).upper()
+	#rand = ''.join(random.sample(string.ascii_letters+string.digits, 8))
+	#snip.rv = ('%s_%s' % (name,rand)).upper()
+#else:
+    #snip.rv = snip.c`}
+##define $1
+
+#${0}
 
 #endif /* end of include guard: $1 */
 
-endsnippet
+#endsnippet
 
 snippet td "Typedef"
 typedef ${1:int} ${2:MyCustomType};
 endsnippet
 
-snippet wh "while loop"
-while(${1:/* condition */}) {
-	${VISUAL}${0:${VISUAL/(.*)/(?1::\/* code *\/)/}}
-}
-endsnippet
+#snippet wh "while loop"
+#while(${1:/* condition */}) {
+	#${VISUAL}${0:${VISUAL/(.*)/(?1::\/* code *\/)/}}
+#}
+#endsnippet
 
-snippet do "do...while loop (do)"
-do {
-	${VISUAL}${0:${VISUAL/(.*)/(?1::\/* code *\/)/}}
-} while(${1:/* condition */});
-endsnippet
+#snippet do "do...while loop (do)"
+#do {
+	#${VISUAL}${0:${VISUAL/(.*)/(?1::\/* code *\/)/}}
+#} while(${1:/* condition */});
+#endsnippet
 
 snippet fprintf "fprintf ..."
 fprintf(${1:stderr}, "${2:%s}\n"${2/([^%]|%%)*(%.)?.*/(?2:, :\);)/}$3${2/([^%]|%%)*(%.)?.*/(?2:\);)/}
 endsnippet
 
-snippet if "if .. (if)"
-if (${1:/* condition */})
-{
-	${VISUAL}${0:${VISUAL/(.*)/(?1::\/* code *\/)/}}
-}
+#snippet if "if .. (if)"
+#if (${1:/* condition */})
+#{
+	#${VISUAL}${0:${VISUAL/(.*)/(?1::\/* code *\/)/}}
+#}
+#endsnippet
+
+#IF
+snippet "\bif\b" "if..." r
+if ($1) {`!p
+if (t[2] and t[2].find('\n') != 0):
+	snip >> 1
+	snip += ''
+else:
+	res = ''`${2}`!p
+if (t[2] and t[2].find('\n') != 0):
+	snip += '}'
+else:
+	res = '}'`${3/.+/ /}${3}
 endsnippet
 
-snippet el "else .. (else)"
-else {
-	${VISUAL}${0:${VISUAL/(.*)/(?1::\/* code *\/)/}}
-}
+#ELSE IF
+snippet "\bei\b|\belseif\b" "else i.." r
+else if ($1) {`!p
+if (t[2] and t[2].find('\n') != 0):
+	snip >> 1
+	snip += ''
+else:
+	res = ''`${2}`!p
+if (t[2] and t[2].find('\n') != 0):
+	snip += '}'
+else:
+	res = '}'`${3/.+/ /}${3}
 endsnippet
 
-snippet ife "if .. else (ife)"
-if (${1:/* condition */})
-{
-	${2:/* code */}
-}
-else
-{
-	${3:/* else */}
-}
+#ELSE
+snippet "\bel\b|\belse\b" "else..." r
+else {`!p
+if (t[1] and t[1].find('\n') != 0):
+	snip >> 1
+	snip += ''
+else:
+	res = ''`${1}`!p
+if (t[1] and t[1].find('\n') != 0):
+	snip += '}'
+else:
+	res = '}'`
 endsnippet
+
+snippet ",t\b" "type" r
+<$1>
+endsnippet
+
+#snippet el "else .. (else)"
+#else {
+	#${VISUAL}${0:${VISUAL/(.*)/(?1::\/* code *\/)/}}
+#}
+#endsnippet
+
+#snippet ife "if .. else (ife)"
+#if (${1:/* condition */})
+#{
+	#${2:/* code */}
+#}
+#else
+#{
+	#${3:/* else */}
+#}
+#endsnippet
 
 snippet printf "printf .. (printf)"
 printf("${1:%s}\n"${1/([^%]|%%)*(%.)?.*/(?2:, :\);)/}$2${1/([^%]|%%)*(%.)?.*/(?2:\);)/}
-endsnippet
-
-snippet st "struct"
-struct ${1:`!p snip.rv = (snip.basename or "name") + "_t"`}
-{
-	${0:/* data */}
-};
 endsnippet
 
 snippet fun "function" b
@@ -142,6 +194,252 @@ endsnippet
 
 snippet fund "function declaration" b
 ${1:void} ${2:function_name}(${3});
+endsnippet
+
+#fld
+snippet fld "for loop - increment down and cached length (decrementer, assume 0)" w
+for (${1};${1/(int[\s\t]*)|((=|,).*)//g}>=0;${1/(int[\s\t]*)|((=|,).*)//g}--) {`!p
+if (t[2] and t[2].find('\n') != 0):
+	snip >> 1
+	snip += ''
+else:
+	res = ''`${2}`!p
+if (t[2] and t[2].find('\n') != 0):
+	snip += '}'
+else:
+	res = '}'`${3}
+endsnippet
+snippet "\bsw|switch\b" "switch..." r
+switch (${1}) {`!p
+if (t[2] and t[2].find('\n') != 0):
+	snip >> 1
+	snip += ''
+else:
+	res = ''
+`${2:case }`!p
+if (t[3] and t[3].find('\n') != 0):
+	snip >> 1
+	snip += ''
+else:
+	res = ''
+`${3:default }
+}
+${4}
+endsnippet
+snippet "(?<!')(?![.])+'p" "single quote" r
+'+
+'${1}'${2}
+endsnippet
+#STRING -single
+snippet "''p\b" "single quote" r
+'${1}'+
+'${2}'${3}
+endsnippet
+#STRING -double
+snippet "(?<!\")(?![.])+\"p" "single quote" r
+"+
+"${1}"${2}
+endsnippet
+#STRING -double
+snippet "\"\"p\b" "double quote" r
+"${1}"+
+"${2}"${3}
+endsnippet
+
+#CASE
+snippet "\bcase|ca\b" "case..." r
+case ${1}:${2}`!p
+if (t[2] and t[3] and t[2].find('\n') != 0):
+	snip >> 1
+	snip += ''
+else:
+	res = ''
+`${3:break;}
+endsnippet
+#DEFAULT
+snippet "\bdefault|\bdf\b" "default..." r
+default: ${1}`!p
+if (t[1] and t[2] and t[1].find('\n') != 0):
+	snip >> 1
+	snip += ' '
+else:
+	res = ''
+`${2:break;}
+endsnippet
+
+#BREAK
+snippet br "break;" w
+break;${1}
+endsnippet
+
+#CONTINUE
+snippet "\bcn|co\b" "continue;" r
+continue;${1}
+endsnippet
+
+#RETURN
+snippet "\bre|ret\b" "return" r
+return${1/.+/ /}${1:null};
+endsnippet	
+
+snippet "\b[,]{0,1}e\b" "assignment" r
+= 
+endsnippet
+#e 
+
+#c
+snippet c "colon" w
+:
+endsnippet
+
+#cc
+snippet c "colon colon" w
+::
+endsnippet
+
+#n
+snippet n "not" w
+!
+endsnippet
+#ee
+snippet ee "Equality" w
+== 
+endsnippet
+#ne
+snippet ne "Not equals" w
+!= 
+endsnippet
+snippet l "less than" w
+< 
+endsnippet
+snippet le "less than equal" w
+<= 
+endsnippet
+
+#g
+snippet g "greater than" w
+> 
+endsnippet
+
+#ge
+snippet ge "greater than equals" w
+>= 
+endsnippet
+
+snippet na "name .. (name)"
+`!p snip.rv = "".join([x[0].upper() + x[1:] for x in snip.basename.split("_")]) or ""`
+endsnippet
+
+snippet "\bpu\b" "public" r
+public`!p
+if (t[1] and t[1].strip()[0] != ':'):
+	res = ' '
+`${1}
+endsnippet
+snippet "\bpr\b" "private" r
+private`!p
+if (t[1] and t[1].strip()[0] != ':'):
+	res = ' '
+`${1}
+endsnippet
+snippet "\bpo\b" "protected" r
+protected`!p
+if (t[1] and t[1].strip()[0] != ':'):
+	res = ' '
+`${1}
+endsnippet
+snippet "\bcpu\b" "public .. (public)" r
+public:
+	${1}
+endsnippet
+snippet "\bcpi\b" "private .. (private)" r
+private:
+	${1}
+endsnippet
+snippet "\bcpo\b" "protected .. (protected)" r
+protected:
+	${1}
+endsnippet
+snippet "\b[,]{0,1}oo\b" "or ||" refs
+|| 
+endsnippet
+snippet "\b[,]{0,1}pa\b" "parenthesis" r
+(${1})
+endsnippet
+snippet "\b[,]{0,1}par\b" "parenthesis with array" r
+([${1}])
+endsnippet
+snippet "\b[,]{0,1}ar\b" "array" r
+[${1}]
+endsnippet
+
+snippet wh "while" w
+while (${1}) {`!p
+if (t[2] and t[2].find('\n') != 0):
+	snip >> 1
+	snip += ''
+else:
+	res = ''
+`${2}`!p
+if (t[2] and t[2].find('\n') != 0):
+	snip += '}'
+else:
+	res = '}'
+`${3}
+endsnippet
+snippet try "try...catch" w
+try {
+	${1}
+} catch (${2:e}) {`!p
+if (t[3] and t[3].find('\n') != 0):
+	snip >> 1
+	snip += ''
+else:
+	res=''
+`${3}`!p
+if (t[3] and t[3].find('\n') != 0):
+	snip += '}'
+else:
+	res = '}'
+`${4}
+endsnippet
+snippet do "do while" w
+do {`!p
+if (t[1] and t[1].find('\n') != 0):
+	snip >> 1
+	snip += ''
+else:
+	res=""
+`${1}`!p
+if (t[1] and t[1].find('\n') != 0):
+	snip += '}'
+else:
+	res="}"
+` while (${2})${3}
+endsnippet
+snippet fl "for loop - no vars" w
+for (${1};${2};${3}) {`!p
+if (t[4] and t[4].find('\n') != 0):
+	snip >> 1
+	snip += ''
+else:
+	res = ''`${4}`!p
+if (t[4] and t[4].find('\n') != 0):
+	snip += '}'
+else:
+	res = '}'`${5}
+endsnippet
+snippet flu "for loop up" w
+for (${1};${1/(int[\s\t]*)|((=|,).*)//g}<${1/(.*,)|(=.*)|(int[\s\t]*.*)//g)/};${1/(int[\s\t]*)|((=|,).*)//g}++) {`!p
+if (t[2] and t[2].find('\n') != 0):
+	snip >> 1
+	snip += ''
+else:
+	res = ''`${2}`!p
+if (t[2] and t[2].find('\n') != 0):
+	snip += '}'
+else:
+	res = '}'`${3}
 endsnippet
 
 # vim:ft=snippets:
