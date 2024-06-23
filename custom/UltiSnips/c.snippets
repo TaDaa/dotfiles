@@ -288,12 +288,12 @@ endsnippet
 #e 
 
 #c
-snippet c "colon" w
+snippet "\b[\,]{0,1}c\b" "colon colon" r
 :
 endsnippet
 
 #cc
-snippet c "colon colon" w
+snippet "\b[\,]{0,1}cc\b" "colon colon" r
 ::
 endsnippet
 
@@ -371,6 +371,23 @@ snippet "\b[,]{0,1}par\b" "parenthesis with array" r
 endsnippet
 snippet "\b[,]{0,1}ar\b" "array" r
 [${1}]
+endsnippet
+snippet "\bo\b" "body" r
+{`!p
+if (t[1] and t[1].find('\n') != 0):
+	snip >> 1
+	snip += ''
+`$1`!p
+if (t[1] and t[1].find('\n') != 0):
+	snip += '}'
+else:
+	res = '}'
+`
+endsnippet
+
+
+snippet "\bio\b" "inline body" r
+{$1}
 endsnippet
 
 snippet wh "while" w
