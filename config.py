@@ -67,6 +67,8 @@ def check_move():
     # vim.eval('feedkeys("\<c-h>")')
     # UltiSnips_Manager.expand()
     # vim.eval('UltiSnips#TrackChange()')
+
+    vim.vars['tadaa_skip_return'] = 0
     if int(vim.vars['ulti_expand_res']) != 0:
         vim.vars['tadaa_check_move_res'] = ''
     else:
@@ -86,7 +88,8 @@ def check_move():
                 # cursor = vim.current.window.cursor
                 #TODO iswindows
                 if is_win:
-                    vim.current.buffer[row] = vim.current.buffer[row][0:col] + vim.current.buffer[row][col+2:]
+                    #vim.current.buffer[row] = vim.current.buffer[row][0:col] + vim.current.buffer[row][col+2:]
+                    vim.current.buffer[row] = vim.current.buffer[row][0:col] + vim.current.buffer[row][col+1:]
                 else:
                     vim.current.buffer[row] = vim.current.buffer[row][0:col] + vim.current.buffer[row][col+1:]
                 UltiSnips_Manager._cursor_moved()
@@ -113,16 +116,30 @@ def check_move():
             if vim.current.buffer[row][col] != ' ':
                 # vim.eval('feedkeys("  ", "mtx")')
                 if is_win:
-                    vim.current.buffer[row] = vim.current.buffer[row][0:col+0] + vim.current.buffer[row][col] + ' ' + vim.current.buffer[row][col+1:]
+                    # vim.current.buffer[row] = vim.current.buffer[row][0:col+0] + vim.current.buffer[row][col] + ' ' + vim.current.buffer[row][col+1:]
+                    # end = vim.current.buffer[row][col+1:]
+                    # val = vim.current.buffer[row][col]
+                    # vim.current.buffer[row] = vim.current.buffer[row][0:col+1]
+                    # vim.eval('feedkeys("'+val+'", "nt")')
+                    vim.current.window.cursor = (row+1,col+1)
+                    vim.eval('feedkeys(" ", "nt")')
+                    # vim.current.buffer[row] = vim.current.buffer[row] + end
+                    #vim.eval('feedkeys("'+vim.current.buffer[row][col]+'", "nt")')
+                    # vim.eval('feedkeys(" ", "nt")')
+                    #UltiSnips_Manager._cursor_moved()
+                    vim.vars['tadaa_check_move_res']=" "
+                    vim.vars['tadaa_skip_return'] = 1
+                    # UltiSnips_Manager._cursor_moved()
                 else:
                     vim.eval('feedkeys("'+vim.current.buffer[row][col]+'", "nt")')
                     vim.eval('feedkeys(" ", "nt")')
                     UltiSnips_Manager._cursor_moved()
+                    vim.vars['tadaa_check_move_res']=" "
                 # vim.current.buffer[row] = vim.current.buffer[row][0:col+0] + vim.current.buffer[row][col] + '  ' + vim.current.buffer[row][col+1:]
                 # print(123)
 
                 UltiSnips_Manager._cursor_moved()
-                vim.vars['tadaa_check_move_res']=" "
+                #vim.vars['tadaa_check_move_res']=" "
             else:
                 UltiSnips_Manager.expand_or_jump()
                 vim.vars['tadaa_check_move_res'] = ''

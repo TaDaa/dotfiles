@@ -72,7 +72,7 @@ if t[1] and t[1][0] != " ":
 endsnippet
 
 #EXPORT
-snippet "\bxp\b|\bexp\b" "export" r
+snippet "\bxp\b|\bexp\b|\bep\b" "export" r
 export`!p
 if t[1] and t[1][0] != " ":
 	snip.rv += " "
@@ -87,8 +87,8 @@ if t[1] and t[1][0] != " ":
 `$1
 endsnippet
 
-#CONST
-snippet "\bl(\b[\s]{0,1})" "let" r
+#scoped var(let)
+snippet "\bs\b|\blt\b" "let" r
 let`!p
 if t[1] and t[1][0] != " ":
 	snip.rv += " "
@@ -106,7 +106,7 @@ if t[1] and t[1][0] != " ":
 endsnippet
 
 
-snippet "\bnum\b" "number" r
+snippet "\bnum\b|\bnm\b" "number" r
 number
 endsnippet
 
@@ -209,7 +209,7 @@ else:
 endsnippet
 #body result
 #body
-snippet "\bo\b" "body" r
+snippet "\bb\b" "body" r
 {`!p
 if (t[1] and t[1].find('\n') != 0):
 	snip >> 1
@@ -222,14 +222,18 @@ else:
 `
 endsnippet
 
+snippet "\bbo\b" "body cursor out" r
+{}
+endsnippet
 
-snippet "\bio\b" "inline body" r
+
+snippet "\bbi\b" "inline body" r
 {$1}
 endsnippet
 
 #Object KEY
-snippet "\bke\b" "object key" r
-'$1' : $2
+snippet "\bk\b" "key" r
+'$1': $2
 endsnippet
 
 
@@ -253,24 +257,24 @@ Promise
 endsnippet
 
 #then
-snippet "\.the\b" "then" r
+snippet "\bthe\b" "then" r
 then($1)
 endsnippet
 
 #then
-snippet "\.rej\b" "reject" r
+snippet "\brej\b" "reject" r
 reject($1)
 endsnippet
 #then
-snippet "\.res\b" "resolve" r
+snippet "\bres\b" "resolve" r
 resolve($1)
 endsnippet
-snippet "\.cat\b" "catch" r
+snippet "\bcat\b" "catch" r
 catch($1)
 endsnippet
 
 #null
-snippet "\b(nu)\b" "null" r
+snippet "\bnu\b" "null" r
 null$1
 endsnippet
 #anew
@@ -291,38 +295,38 @@ document$1
 endsnippet
 
 #removeEventListener
-snippet "\.rel\b" "removeEventListener" r
+snippet "\brel\b" "removeEventListener" r
 .removeEventListener(${1})$2
 endsnippet
 
 #addEventListener
-snippet "\.ael\b" "addEventListener" r
+snippet "\bael\b" "addEventListener" r
 .addEventListener(${1})$2
 endsnippet
 
 #createElement
-snippet "\.cel\b" "createElement" r
+snippet "\bcel\b" "createElement" r
 .createElement(${1})$2
 endsnippet
 
 #querySelector
-snippet "\.qs\b" "querySelector" r
+snippet "\bqs\b" "querySelector" r
 .querySelector(${1})
 endsnippet
 
 #querySelectorAll
-snippet "\.qsa\b" "querySelectorAll" r
+snippet "\bqsa\b" "querySelectorAll" r
 .querySelectorAll(${1})
 endsnippet
 
 #getBoundingClentRect
-snippet "\.gbr\b" "getBoundingClientRect" r
+snippet "\bgbr\b" "getBoundingClientRect" r
 .getBoundingClientRect(${1})
 endsnippet
 
 
 #appendChild
-snippet "\.ac\b" "appendChild" r
+snippet "\bac\b" "appendChild" r
 .appendChild(${1})
 endsnippet
 
@@ -332,27 +336,27 @@ document.createElement('${1}')
 endsnippet
 
 #setAttribute
-snippet "\.sta\b" "setAttribute" r
+snippet "\bsta\b" "setAttribute" r
 .setAttribute('${2}','${3}')
 endsnippet
 
 #removeAttribute
-snippet "\.rma\b" "removeAttribute" r
+snippet "\brma\b" "removeAttribute" r
 .removeAttribute('${2}')
 endsnippet
 
 #stProperty
-snippet "\.sp\b" "setProperty" r
+snippet "\bsp\b" "setProperty" r
 .setProperty('${1}','${2}')
 endsnippet
 
 #removeProperty
-snippet "\.rmp\b" "removeProperty" r
+snippet "\brmp\b" "removeProperty" r
 .removeProperty('${1}')
 endsnippet
 
 #me
-snippet "\bm\b" "me" r
+snippet "\bmeth\b" "me" r
 me = this
 endsnippet
 
@@ -382,9 +386,25 @@ snippet "\bto\b|typeof\b" "typeof" r
 typeof ${1} === '${2}'
 endsnippet
 
+#a
+snippet "\b([,]{0,1})a\b" "and &" r
+`!p
+if match and match.group(1):
+	res = ' '
+else:
+	res = ''
+`&
+endsnippet
 
-
-
+#o
+snippet "\b([,]{0,1})o\b" "or |" r
+`!p
+if match and match.group(1):
+	res = ' '
+else:
+	res = ''
+`|
+endsnippet
 
 #and &&
 snippet "\b([,]{0,1})aa\b" "and &&" r
@@ -429,10 +449,15 @@ else:
 endsnippet
 
 #pop ({})
-snippet "\b[,]{0,1}pop\b" "parenthesis with object" r
+snippet "\b[,]{0,1}p(h|b)k\b" "parenthesis with object" r
 ({
-	${1} : ${2}
+	${1}: ${2}
 }${3})
+endsnippet
+
+#pop ({})
+snippet "\b[,]{0,1}p(h|b)\b" "parenthesis with object" r
+({}${3})
 endsnippet
 
 #par ([])
@@ -445,26 +470,46 @@ endsnippet
 snippet "\b[\,]{0,1}ar\b" "array" r
 [${1}]$2
 endsnippet
-#arop
-snippet "\barop\b" "array containing object" r
+
+#aro []
+snippet "\b[\,]{0,1}(aro|ao)\b" "array cursor out" r
+[]
+endsnippet
+
+#arh
+snippet "\bar(h|b)k\b" "array containing object" r
 [{
-	${1} : ${2}
+	${1}: ${2}
 }]
 endsnippet
-#op {}
-snippet "{}p\b|\bop\b" "object key" r
+
+#arh
+snippet "\bar(h|b)\b" "array containing object" r
+[{}]
+endsnippet
+
+#h {}
+snippet "{}(h|b)k\b|\b(h|b)k\b" "object" r
 {
-	${1} : ${2}
+	${1}: ${2}
 }
+endsnippet
+
+snippet "\bh\b" "object" r
+{$1}
+endsnippet
+
+snippet "\bho\b" "object" r
+{}
 endsnippet
 #snippet "([^\{o\}]{1})p\b" "property in object" r
 #`!p
 #res = match.group(1) if match.group(1) is not None else ''
 #`'${1}' : ${2}
 #endsnippet
-snippet "(\{p)(})?\b" "object key" r
+snippet "(\{(h|b)k)(})?\b" "object key" r
 {
-	${1} : ${2}
+	${1}: ${2}
 `!p
 res = '\n}' if match.group(2) is not None else ''
 `
@@ -472,7 +517,7 @@ endsnippet
 #,
 snippet "\,$" "object key" r
 ,
-${1} : ${2}
+${1}: ${2}
 endsnippet
 
 #setget
@@ -497,7 +542,7 @@ function (v) {
 endsnippet
 
 #proto
-snippet "\.pr\b" "prototype" r
+snippet "\bproto\b" "prototype" r
 .prototype
 endsnippet
 
@@ -778,7 +823,7 @@ break;
 endsnippet
 
 #CONTINUE
-snippet "\bcon\b" "continue;" r
+snippet "\bcon\b|\bcn\b" "continue;" r
 continue;
 endsnippet
 
@@ -799,7 +844,7 @@ delete${1/.+/ /}${1:pointer};
 endsnippet
 
 #arguments
-snippet "\ba\b|\barg\b|\bargs\b" "arguments" r
+snippet "\barg\b|\bargs\b" "arguments" r
 arguments
 endsnippet
 				
@@ -894,57 +939,89 @@ snippet "\bu\b|\bun\b" "undefined" r
 undefined
 endsnippet
 
-snippet "\b([,]{0,1})e\b" "assignment" r
+snippet "(^|\b)([,]{0,1})e\b" "assignment" r
 `!p
-if match.group(1):
-	snip.rv = ' '
-`= $1
+if match and match.group(1):
+	res = ' '
+else:
+	res = ''
+`= 
 endsnippet
 #e 
 
 #n
-snippet "\bn\b" "not" r
+snippet "(^|\b)([,]{0,1})n\b" "not" r
 !
 endsnippet
 
 #se
-snippet "\beee\b" "Strict Equality..." r
-=== 
+snippet "(^|\b)([,]{0,1})(eee|se)\b" "Strict equality" r
+`!p
+if match and match.group(1):
+	res = ' '
+else:
+	res = ''
+`===
 endsnippet
 
 #ee
-snippet "\bee\b" "Equality" r
-== 
+snippet "(^|\b)([,]{0,1})ee\b" "Equality" r
+`!p
+if match and match.group(1):
+	res = ' '
+else:
+	res = ''
+`==
 endsnippet
 
 #nee
-snippet "\bnee\b" "Strict not equals..." r
-!== 
+snippet "(^|\b)([,]{0,1})(sne|nee)\b" "Strict not equals..." r
+`!p
+if match and match.group(1):
+	res = ' '
+else:
+	res = ''
+`!==
 endsnippet
 
 #ne
-snippet "\bne\b" "Not equals" r
-!= 
+snippet "(^|\b)([,]{0,1})ne\b" "Not equals..." r
+`!p
+if match and match.group(1):
+	res = ' '
+else:
+	res = ''
+`!=
 endsnippet
 
-#l 
-snippet "\blt\b" "less than" r
-< 
+#l
+snippet "(^|\b)([,]{0,1})l\b" "less than" r
+<
 endsnippet
 
 #le 
-snippet "\blte\b" "less than equal" r
-<= 
+snippet "(^|\b)([,]{0,1})le\b" "less than equal" r
+`!p
+if match and match.group(1):
+	res = ' '
+else:
+	res = ''
+`<=
 endsnippet
 
 #g
-snippet "\bgt\b" "greater than" r
-> 
+snippet "(^|\b)([,]{0,1})g\b" "greater than" r
+>
 endsnippet
 
 #ge
-snippet "\bgte\b" "greater than equals" r
->= 
+snippet "\b([,]{0,1})ge\b" "greater than equal" r
+`!p
+if match and match.group(1):
+	res = ' '
+else:
+	res = ''
+`>=
 endsnippet
 
 
@@ -1084,6 +1161,14 @@ snippet "\@cm\b|\@cmp\b" "@Component" r
 	templateUrl: '$2.html',
 	styleUrls: ['${3:$2}.scss']
 }) $4;
+endsnippet
+
+#x
+snippet "\b[\,]{0,1}x\b" "colon (extends)" r
+:`!p
+if t[1] and t[1][0] != " " and t[1][0].isalnum():
+	snip.rv += " "
+`${1}
 endsnippet
 
 

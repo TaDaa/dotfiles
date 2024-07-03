@@ -61,7 +61,7 @@ endsnippet
 #enum ${1:name} { $0 };
 #endsnippet
 
-snippet st "enum .. (enum)"
+snippet en "enum .. (enum)"
 enum${1/.+/ /m}${1} {`!p
 if (t[2] and t[2].find('\n') != 0):
 	snip >> 1
@@ -273,57 +273,108 @@ break;${1}
 endsnippet
 
 #CONTINUE
-snippet "\bcn|co\b" "continue;" r
+snippet "\bcon\b|\bcn\b" "continue;" r
 continue;${1}
 endsnippet
 
+#CONST
+snippet "(\b|\,)(c\b|co\b)" "const" r
+`!p
+if match and match.group(1):
+	snip.rv += match.group(1) + " "
+`const`!p
+if t[1] and t[1][0] != " ":
+	snip.rv += " "
+`$1
+endsnippet
+
 #RETURN
-snippet "\bre|ret\b" "return" r
-return${1/.+/ /}${1:null};
+snippet "\bre\b|\bret\b" "return" r
+return${1/.+/ /}`!p
+if (t[1] and t[2] and t[1].find(' ') != 0):
+	snip >> 1
+	snip += ' '
+else:
+	res = ''
+`${1};
 endsnippet	
 
-snippet "\b[,]{0,1}e\b" "assignment" r
-= 
+snippet "\b([,]{0,1})e\b" "assignment" r
+`!p
+if match and match.group(1):
+	res = ' '
+else:
+	res = ''
+`= 
 endsnippet
 #e 
 
-#c
-snippet "\b[\,]{0,1}c\b" "colon colon" r
-:
+#x
+snippet "\b[\,]{0,1}x\b" "colon (extends)" r
+:`!p
+if t[1] and t[1][0] != " " and t[1][0].isalnum():
+	snip.rv += " "
+`${1}
 endsnippet
 
 #cc
-snippet "\b[\,]{0,1}cc\b" "colon colon" r
+snippet "\b[\,]{0,1}(cc|xx|r)\b" "colon colon" r
 ::
 endsnippet
 
 #n
-snippet n "not" w
+snippet "(^|\b)([,]{0,1})n\b" "not" r
 !
 endsnippet
+
 #ee
-snippet ee "Equality" w
-== 
+snippet "(^|\b)([,]{0,1})ee\b" "Equality" r
+`!p
+if match and match.group(1):
+	res = ' '
+else:
+	res = ''
+`==
 endsnippet
+
 #ne
-snippet ne "Not equals" w
-!= 
+snippet "(^|\b)([,]{0,1})ne\b" "Not equals..." r
+`!p
+if match and match.group(1):
+	res = ' '
+else:
+	res = ''
+`!=
 endsnippet
-snippet l "less than" w
-< 
+
+#l
+snippet "(^|\b)([,]{0,1})l\b" "less than" r
+<
 endsnippet
-snippet le "less than equal" w
-<= 
+
+#le
+snippet "(^|\b)([,]{0,1})le\b" "less than equal" r
+`!p
+if match and match.group(1):
+	res = ' '
+else:
+	res = ''
+`<=
 endsnippet
 
 #g
-snippet g "greater than" w
-> 
+snippet "(^|\b)([,]{0,1})g\b" "greater than" r
+>
 endsnippet
 
 #ge
-snippet ge "greater than equals" w
->= 
+snippet "\b([,]{0,1})ge\b" "greater than equal" r
+`!p
+if match and match.group(1):
+	res = ' '
+else:
+	res = ''
+`>=
 endsnippet
 
 snippet na "name .. (name)"
@@ -336,23 +387,25 @@ if (t[1] and t[1].strip()[0] != ':'):
 	res = ' '
 `${1}
 endsnippet
-snippet "\bpr\b" "private" r
+snippet "\b(pr|pi)\b" "private" r
 private`!p
 if (t[1] and t[1].strip()[0] != ':'):
 	res = ' '
 `${1}
 endsnippet
+
 snippet "\bpo\b" "protected" r
 protected`!p
 if (t[1] and t[1].strip()[0] != ':'):
 	res = ' '
 `${1}
 endsnippet
+
 snippet "\bcpu\b" "public .. (public)" r
 public:
 	${1}
 endsnippet
-snippet "\bcpi\b" "private .. (private)" r
+snippet "\b(cpi|cpr)\b" "private .. (private)" r
 private:
 	${1}
 endsnippet
@@ -360,9 +413,47 @@ snippet "\bcpo\b" "protected .. (protected)" r
 protected:
 	${1}
 endsnippet
-snippet "\b[,]{0,1}oo\b" "or ||" r
-|| 
+
+#o
+snippet "\b([,]{0,1})o\b" "or |" r
+`!p
+if match and match.group(1):
+	res = ' '
+else:
+	res = ''
+`|
 endsnippet
+
+#oo
+snippet "\b([,]{0,1})oo\b" "or ||" r
+`!p
+if match and match.group(1):
+	res = ' '
+else:
+	res = ''
+`||
+endsnippet
+
+#a
+snippet "\b([,]{0,1})a\b" "and &" r
+`!p
+if match and match.group(1):
+	res = ' '
+else:
+	res = ''
+`&
+endsnippet
+
+#aa
+snippet "\b([,]{0,1})aa\b" "and &&" r
+`!p
+if match and match.group(1):
+	res = ' '
+else:
+	res = ''
+`&&
+endsnippet
+
 snippet "\b[,]{0,1}pa\b" "parenthesis" r
 (${1})
 endsnippet
@@ -372,7 +463,13 @@ endsnippet
 snippet "\b[,]{0,1}ar\b" "array" r
 [${1}]
 endsnippet
-snippet "\bo\b" "body" r
+
+#aro []
+snippet "\b[\,]{0,1}(aro|ao)\b" "array cursor out" r
+[]
+endsnippet
+
+snippet "\bb\b" "body" r
 {`!p
 if (t[1] and t[1].find('\n') != 0):
 	snip >> 1
@@ -386,7 +483,7 @@ else:
 endsnippet
 
 
-snippet "\bio\b" "inline body" r
+snippet "\bbi\b" "inline body" r
 {$1}
 endsnippet
 
