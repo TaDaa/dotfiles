@@ -707,6 +707,20 @@ if t[1] and t[1][0] != " ":
 `$1
 endsnippet
 
+snippet "\bsp\b" "shared_ptr" r
+shared_ptr<$1>`!p
+if t[2] and t[2][0] != " ":
+	snip.rv += " "
+`$2
+endsnippet
+
+snippet "\bssp\b" "shared_ptr" r
+std::shared_ptr<$1>`!p
+if t[2] and t[2][0] != " ":
+	snip.rv += " "
+`$2
+endsnippet
+
 snippet "\bfn\b|\bfu\b|\bfun\b" "function" r
 function<$1($2)>`!p
 if t[3] and t[3][0] != " ":
