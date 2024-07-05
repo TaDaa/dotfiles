@@ -69,9 +69,9 @@ if (t[2] and t[2].find('\n') != 0):
 else:
 	res = ''`${2}`!p
 if (t[2] and t[2].find('\n') != 0):
-	snip += '}'
+	snip += '};'
 else:
-	res = '}'`
+	res = '};'`
 endsnippet
 
 #snippet once "Include header once only guard"
@@ -288,6 +288,97 @@ if t[1] and t[1][0] != " ":
 `$1
 endsnippet
 
+snippet "\bau\b|\bu\b" "auto" r
+auto`!p
+if t[1] and t[1][0] != " ":
+	snip.rv += " "
+`$1
+endsnippet
+
+snippet "\bvo\b|\bv\b" "void" r
+void`!p
+if t[1] and t[1][0] != " ":
+	snip.rv += " "
+`$1
+endsnippet
+
+snippet "\bbo\b|\bbl\b" "bool" r
+bool`!p
+if t[1] and t[1][0] != " ":
+	snip.rv += " "
+`$1
+endsnippet
+
+snippet i8 "int8_t"
+int8_t`!p
+if t[1] and t[1][0] != " ":
+	snip.rv += " "
+`$1
+endsnippet
+
+snippet i16 "int16_t"
+int16_t`!p
+if t[1] and t[1][0] != " ":
+	snip.rv += " "
+`$1
+endsnippet
+
+snippet i3 "int32_t"
+int32_t`!p
+if t[1] and t[1][0] != " ":
+	snip.rv += " "
+`$1
+endsnippet
+
+snippet i6 "int64_t"
+int64_t`!p
+if t[1] and t[1][0] != " ":
+	snip.rv += " "
+`$1
+endsnippet
+
+snippet ui8 "uint8_t"
+uint8_t`!p
+if t[1] and t[1][0] != " ":
+	snip.rv += " "
+`$1
+endsnippet
+
+snippet ui16 "uint16_t"
+uint16_t`!p
+if t[1] and t[1][0] != " ":
+	snip.rv += " "
+`$1
+endsnippet
+
+snippet ui3 "uint32_t"
+uint32_t`!p
+if t[1] and t[1][0] != " ":
+	snip.rv += " "
+`$1
+endsnippet
+
+snippet ui6 "uint64_t"
+uint64_t`!p
+if t[1] and t[1][0] != " ":
+	snip.rv += " "
+`$1
+endsnippet
+
+snippet lo "long"
+long`!p
+if t[1] and t[1][0] != " ":
+	snip.rv += " "
+`$1
+endsnippet
+
+snippet fl "float"
+float`!p
+if t[1] and t[1][0] != " ":
+	snip.rv += " "
+`$1
+endsnippet
+
 #RETURN
 snippet "\bre\b|\bret\b" "return" r
 return${1/.+/ /}`!p
@@ -415,7 +506,15 @@ protected:
 endsnippet
 
 #o
-snippet "\b([,]{0,1})o\b" "or |" r
+snippet "(^|[^a-zA-Z\d:,])o\b" "or |" r
+`!p
+if match and match.group(1):
+	res = match.group(1)
+`|
+endsnippet
+
+#o
+snippet "([,]{1})o\b" "or |" r
 `!p
 if match and match.group(1):
 	res = ' '
@@ -554,6 +653,24 @@ if (t[2] and t[2].find('\n') != 0):
 	snip += '}'
 else:
 	res = '}'`${3}
+endsnippet
+
+snippet "(^|[^a-zA-Z\d:])s\b|\bstd\b" "std" r
+std::
+endsnippet
+
+snippet "\bop\b|\bot|(:)o\b" "optional" r
+`!p
+if match and match.group(1):
+	res = match.group(1)
+`optional<$1>
+endsnippet
+
+snippet "(:)s\b|\bstr\b" "string" r
+`!p
+if match and match.group(1):
+	res = match.group(1)
+`string
 endsnippet
 
 # vim:ft=snippets:

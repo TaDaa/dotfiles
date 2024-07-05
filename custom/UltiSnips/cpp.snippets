@@ -23,8 +23,12 @@ if (t[3] and t[3].find('\n') != 0):
 else:
 	res = '}'`
 endsnippet
+
 snippet "\bvi\b" "virtual" r
-virtual${1/.+/ /m}${1}
+virtual`!p
+if t[1] and t[1][0] != " ":
+	snip.rv += " "
+`$1
 endsnippet
 
 snippet fe "for each" w
@@ -53,9 +57,9 @@ if (t[2] and t[2].find('\n') != 0):
 else:
 	res = ''`${2}`!p
 if (t[2] and t[2].find('\n') != 0):
-	snip += '}'
+	snip += '};'
 else:
-	res = '}'`
+	res = '};'`
 endsnippet
 
 snippet st "struct .. (struct)"
@@ -66,9 +70,9 @@ if (t[2] and t[2].find('\n') != 0):
 else:
 	res = ''`${2}`!p
 if (t[2] and t[2].find('\n') != 0):
-	snip += '}'
+	snip += '};'
 else:
-	res = '}'`
+	res = '};'`
 endsnippet
 
 snippet cln "class .. (class)"
