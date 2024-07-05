@@ -309,70 +309,70 @@ if t[1] and t[1][0] != " ":
 `$1
 endsnippet
 
-snippet i8 "int8_t"
+snippet i8 "int8_t" w
 int8_t`!p
 if t[1] and t[1][0] != " ":
 	snip.rv += " "
 `$1
 endsnippet
 
-snippet i16 "int16_t"
+snippet i16 "int16_t" w
 int16_t`!p
 if t[1] and t[1][0] != " ":
 	snip.rv += " "
 `$1
 endsnippet
 
-snippet i3 "int32_t"
+snippet i3 "int32_t" w
 int32_t`!p
 if t[1] and t[1][0] != " ":
 	snip.rv += " "
 `$1
 endsnippet
 
-snippet i6 "int64_t"
+snippet i6 "int64_t" w
 int64_t`!p
 if t[1] and t[1][0] != " ":
 	snip.rv += " "
 `$1
 endsnippet
 
-snippet ui8 "uint8_t"
+snippet ui8 "uint8_t" w
 uint8_t`!p
 if t[1] and t[1][0] != " ":
 	snip.rv += " "
 `$1
 endsnippet
 
-snippet ui16 "uint16_t"
+snippet ui16 "uint16_t" w
 uint16_t`!p
 if t[1] and t[1][0] != " ":
 	snip.rv += " "
 `$1
 endsnippet
 
-snippet ui3 "uint32_t"
+snippet ui3 "uint32_t" w
 uint32_t`!p
 if t[1] and t[1][0] != " ":
 	snip.rv += " "
 `$1
 endsnippet
 
-snippet ui6 "uint64_t"
+snippet ui6 "uint64_t" w
 uint64_t`!p
 if t[1] and t[1][0] != " ":
 	snip.rv += " "
 `$1
 endsnippet
 
-snippet lo "long"
+snippet lo "long" w
 long`!p
 if t[1] and t[1][0] != " ":
 	snip.rv += " "
 `$1
 endsnippet
 
-snippet fl "float"
+snippet fl "float" w
 float`!p
 if t[1] and t[1][0] != " ":
 	snip.rv += " "
@@ -401,7 +401,18 @@ endsnippet
 #e 
 
 #x
-snippet "\b[\,]{0,1}x\b" "colon (extends)" r
+snippet "(^|[^a-zA-Z\d,])x\b" "colon (extends)" r
+`!p
+if match and match.group(1):
+	res = match.group(1)
+`:`!p
+if t[1] and t[1][0] != " " and t[1][0].isalnum():
+	snip.rv += " "
+`${1}
+endsnippet
+
+#x
+snippet ",x\b" "colon (extends)" r
 :`!p
 if t[1] and t[1][0] != " " and t[1][0].isalnum():
 	snip.rv += " "
@@ -691,6 +702,20 @@ endsnippet
 
 snippet "\bss\b|\bsstr\b" "string" r
 std::string`!p
+if t[1] and t[1][0] != " ":
+	snip.rv += " "
+`$1
+endsnippet
+
+snippet "\bfn\b|\bfu\b|\bfun\b" "function" r
+function`!p
+if t[1] and t[1][0] != " ":
+	snip.rv += " "
+`$1
+endsnippet
+
+snippet "\bsfn\b|\bsfu\b|\bsfun\b" "function" r
+std::function`!p
 if t[1] and t[1][0] != " ":
 	snip.rv += " "
 `$1
