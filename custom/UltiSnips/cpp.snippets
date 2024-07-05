@@ -63,7 +63,7 @@ else:
 endsnippet
 
 snippet fc "function class implementation"
-${1:return_type} ${2:namespace::class::method} ($5) {`!p
+${1:return_type} ${2:namespace::class::method}($5) {`!p
 if (t[6] and t[6].find('\n') != 0):
 	snip >> 1
 	snip += ''
@@ -76,11 +76,11 @@ else:
 endsnippet
 
 snippet fd "function definition"
-$1 ($2);
+$1($2);
 endsnippet
 
 snippet "\bfdb\b|fdi\b" "function definition" r
-$1 ($2) {`!p
+$1($2) {`!p
 if (t[3] and t[3].find('\n') != 0):
 	snip >> 1
 	snip += ''
