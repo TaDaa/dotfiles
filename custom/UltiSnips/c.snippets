@@ -492,15 +492,15 @@ if (t[1] and t[1].strip()[0] != ':'):
 `${1}
 endsnippet
 
-snippet "\bcpu\b" "public .. (public)" r
+snippet "\bcpu\b|\bpux\b" "public .. (public)" r
 public:
 	${1}
 endsnippet
-snippet "\b(cpi|cpr)\b" "private .. (private)" r
+snippet "\b(cpi|cpr|prx|pix)\b" "private .. (private)" r
 private:
 	${1}
 endsnippet
-snippet "\bcpo\b" "protected .. (protected)" r
+snippet "\bcpo\b|\bpox\b" "protected .. (protected)" r
 protected:
 	${1}
 endsnippet
