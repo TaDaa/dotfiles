@@ -666,22 +666,34 @@ snippet "\bop\b|\bot|(:)o\b" "optional" r
 `!p
 if match and match.group(1):
 	res = match.group(1)
-`optional<$1>
+`optional<$1>`!p
+if t[2] and t[2][0] != " ":
+	snip.rv += " "
+`$2
 endsnippet
 
 snippet "\bsop\b|\bsot|\bso\b" "std::optional" r
-std::optional<$1>
+std::optional<$1>`!p
+if t[2] and t[2][0] != " ":
+	snip.rv += " "
+`$2
 endsnippet
 
 snippet "(:)s\b|\bstr\b" "string" r
 `!p
 if match and match.group(1):
 	res = match.group(1)
-`string
+`string`!p
+if t[1] and t[1][0] != " ":
+	snip.rv += " "
+`$1
 endsnippet
 
 snippet "\bss\b|\bsstr\b" "string" r
-std::string
+std::string`!p
+if t[1] and t[1][0] != " ":
+	snip.rv += " "
+`$1
 endsnippet
 
 # vim:ft=snippets:
