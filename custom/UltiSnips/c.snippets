@@ -721,4 +721,18 @@ if t[3] and t[3][0] != " ":
 `$3
 endsnippet
 
+snippet "\bsc\b" "static" r
+static`!p
+if t[1] and t[1][0] != " ":
+	snip.rv += " "
+`${1}
+endsnippet
+
+snippet "\bil\b|\bie\b" "inline" r
+inline`!p
+if t[1] and t[1][0] != " ":
+	snip.rv += " "
+`${1}
+endsnippet
+
 # vim:ft=snippets:
