@@ -656,7 +656,10 @@ else:
 endsnippet
 
 snippet "(^|[^a-zA-Z\d:])s\b|\bstd\b" "std" r
-std::
+`!p
+if match and match.group(1):
+	res = match.group(1)
+`std::
 endsnippet
 
 snippet "\bop\b|\bot|(:)o\b" "optional" r
@@ -666,11 +669,19 @@ if match and match.group(1):
 `optional<$1>
 endsnippet
 
+snippet "\bsop\b|\bsot|\bso\b" "std::optional" r
+std::optional<$1>
+endsnippet
+
 snippet "(:)s\b|\bstr\b" "string" r
 `!p
 if match and match.group(1):
 	res = match.group(1)
 `string
+endsnippet
+
+snippet "\bss\b|\bsstr\b" "string" r
+std::string
 endsnippet
 
 # vim:ft=snippets:
