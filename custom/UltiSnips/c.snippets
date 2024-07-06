@@ -283,98 +283,98 @@ snippet "(\b|\,)(c\b|co\b)" "const" r
 if match and match.group(1):
 	snip.rv += match.group(1) + " "
 `const`!p
-if t[1] and t[1][0] != " ":
+if t[1] and t[1][0] != " " and t[1][0] != ",":
 	snip.rv += " "
 `$1
 endsnippet
 
-snippet "\bau\b|\bt\b" "auto" r
+snippet "\bau\b|\bu\b" "auto" r
 auto`!p
-if t[1] and t[1][0] != " ":
+if t[1] and t[1][0] != " " and t[1][0] != ",":
 	snip.rv += " "
 `$1
 endsnippet
 
 snippet "\bvo\b|\bv\b" "void" r
 void`!p
-if t[1] and t[1][0] != " ":
+if t[1] and t[1][0] != " " and t[1][0] != ",":
 	snip.rv += " "
 `$1
 endsnippet
 
 snippet "\bbo\b|\bbl\b" "bool" r
 bool`!p
-if t[1] and t[1][0] != " ":
+if t[1] and t[1][0] != " " and t[1][0] != ",":
 	snip.rv += " "
 `$1
 endsnippet
 
 snippet i8 "int8_t" w
 int8_t`!p
-if t[1] and t[1][0] != " ":
+if t[1] and t[1][0] != " " and t[1][0] != ",":
 	snip.rv += " "
 `$1
 endsnippet
 
 snippet i16 "int16_t" w
 int16_t`!p
-if t[1] and t[1][0] != " ":
+if t[1] and t[1][0] != " " and t[1][0] != ",":
 	snip.rv += " "
 `$1
 endsnippet
 
 snippet i3 "int32_t" w
 int32_t`!p
-if t[1] and t[1][0] != " ":
+if t[1] and t[1][0] != " " and t[1][0] != ",":
 	snip.rv += " "
 `$1
 endsnippet
 
 snippet i6 "int64_t" w
 int64_t`!p
-if t[1] and t[1][0] != " ":
+if t[1] and t[1][0] != " " and t[1][0] != ",":
 	snip.rv += " "
 `$1
 endsnippet
 
 snippet ui8 "uint8_t" w
 uint8_t`!p
-if t[1] and t[1][0] != " ":
+if t[1] and t[1][0] != " " and t[1][0] != ",":
 	snip.rv += " "
 `$1
 endsnippet
 
 snippet ui16 "uint16_t" w
 uint16_t`!p
-if t[1] and t[1][0] != " ":
+if t[1] and t[1][0] != " " and t[1][0] != ",":
 	snip.rv += " "
 `$1
 endsnippet
 
 snippet ui3 "uint32_t" w
 uint32_t`!p
-if t[1] and t[1][0] != " ":
+if t[1] and t[1][0] != " " and t[1][0] != ",":
 	snip.rv += " "
 `$1
 endsnippet
 
 snippet ui6 "uint64_t" w
 uint64_t`!p
-if t[1] and t[1][0] != " ":
+if t[1] and t[1][0] != " " and t[1][0] != ",":
 	snip.rv += " "
 `$1
 endsnippet
 
 snippet lo "long" w
 long`!p
-if t[1] and t[1][0] != " ":
+if t[1] and t[1][0] != " " and t[1][0] != ",":
 	snip.rv += " "
 `$1
 endsnippet
 
 snippet fl "float" w
 float`!p
-if t[1] and t[1][0] != " ":
+if t[1] and t[1][0] != " " and t[1][0] != ",":
 	snip.rv += " "
 `$1
 endsnippet
@@ -557,7 +557,7 @@ endsnippet
 #r
 snippet "(^|[^a-zA-Z\d,])r\b" "reference" r
 $1&`!p
-if t[2] and t[2][0] != " ":
+if t[2] and t[2][0] != " " and t[2][0] != ",":
 	snip.rv += " "
 `$2
 endsnippet
@@ -693,14 +693,14 @@ snippet "\bop\b|\bot|(:)o\b" "optional" r
 if match and match.group(1):
 	res = match.group(1)
 `optional<$1>`!p
-if t[2] and t[2][0] != " ":
+if t[2] and t[2][0] != " " and t[2][0] != ",":
 	snip.rv += " "
 `$2
 endsnippet
 
 snippet "\bsop\b|\bsot|\bso\b" "std::optional" r
 std::optional<$1>`!p
-if t[2] and t[2][0] != " ":
+if t[2] and t[2][0] != " " and t[2][0] != ",":
 	snip.rv += " "
 `$2
 endsnippet
@@ -710,42 +710,42 @@ snippet "(:)s\b|\bstr\b" "string" r
 if match and match.group(1):
 	res = match.group(1)
 `string`!p
-if t[1] and t[1][0] != " ":
+if t[1] and t[1][0] != " " and t[1][0] != ",":
 	snip.rv += " "
 `$1
 endsnippet
 
 snippet "\bss\b|\bsstr\b" "string" r
 std::string`!p
-if t[1] and t[1][0] != " ":
+if t[1] and t[1][0] != " " and t[1][0] != ",":
 	snip.rv += " "
 `$1
 endsnippet
 
 snippet "\bsp\b" "shared_ptr" r
 shared_ptr<$1>`!p
-if t[2] and t[2][0] != " ":
+if t[2] and t[2][0] != " " and t[2][0] != ",":
 	snip.rv += " "
 `$2
 endsnippet
 
 snippet "\bssp\b" "shared_ptr" r
 std::shared_ptr<$1>`!p
-if t[2] and t[2][0] != " ":
+if t[2] and t[2][0] != " " and t[2][0] != ",":
 	snip.rv += " "
 `$2
 endsnippet
 
 snippet "\bfn\b|\bfu\b|\bfun\b" "function" r
 function<$1($2)>`!p
-if t[3] and t[3][0] != " ":
+if t[3] and t[3][0] != " " and t[3][0] != ",":
 	snip.rv += " "
 `$3
 endsnippet
 
 snippet "\bsfn\b|\bsfu\b|\bsfun\b" "function" r
 std::function<$1($2)>`!p
-if t[3] and t[3][0] != " ":
+if t[3] and t[3][0] != " " and t[3][0] != ",":
 	snip.rv += " "
 `$3
 endsnippet
