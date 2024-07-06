@@ -420,7 +420,7 @@ if t[1] and t[1][0] != " " and t[1][0].isalnum():
 endsnippet
 
 #cc
-snippet "\b[\,]{0,1}(cc|xx|r)\b" "colon colon" r
+snippet "\b[\,]{0,1}(xx|z)\b" "colon colon" r
 ::
 endsnippet
 
@@ -552,6 +552,11 @@ if match and match.group(1):
 else:
 	res = ''
 `&
+endsnippet
+
+#r
+snippet "\b([,]{0,1})r\b" "reference" r
+&
 endsnippet
 
 #aa
