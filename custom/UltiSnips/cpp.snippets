@@ -155,7 +155,10 @@ endsnippet
 
 #using
 snippet "\bu\b|\bus\b" "using" r
-using
+using`!p
+if t[1] and t[1][0] != " ":
+	snip.rv += " "
+`$1
 endsnippet
 
 snippet readfile "read file (readF)"
