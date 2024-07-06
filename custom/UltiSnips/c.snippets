@@ -555,8 +555,18 @@ else:
 endsnippet
 
 #r
-snippet "\b([,]{0,1})r\b" "reference" r
-&
+snippet "(^|[^a-zA-Z\d,])r\b" "reference" r
+$1&`!p
+if t[2] and t[2][0] != " ":
+	snip.rv += " "
+`$2
+endsnippet
+
+snippet ",r" "reference" r
+&`!p
+if t[1] and t[1][0] != " ":
+	snip.rv += " "
+`$1
 endsnippet
 
 #aa
