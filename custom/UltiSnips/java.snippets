@@ -59,14 +59,72 @@ snippet "\bnw\b" "new Object or variable" r
 new $1($2)
 endsnippet
 
-snippet "\bo\b" "brackets" r
-{
-	$1
-}
+#enum
+snippet en "enum .. (enum)"
+enum${1/.+/ /m}${1} {`!p
+if (t[2] and t[2].find('\n') != 0):
+	snip >> 1
+	snip += ''
+else:
+	res = ''`${2}`!p
+if (t[2] and t[2].find('\n') != 0):
+	snip += '}'
+else:
+	res = '}'`
 endsnippet
 
-snippet "\b[\,]t\b" "type" r
+
+#IF
+snippet "\bif\b" "if..." r
+if ($1) {`!p
+if (t[2] and t[2].find('\n') != 0):
+	snip >> 1
+	snip += ''
+else:
+	res = ''`${2}`!p
+if (t[2] and t[2].find('\n') != 0):
+	snip += '}'
+else:
+	res = '}'`${3/.+/ /}${3}
+endsnippet
+
+#ELSE IF
+snippet "\bei\b|\belseif\b" "else i.." r
+else if ($1) {`!p
+if (t[2] and t[2].find('\n') != 0):
+	snip >> 1
+	snip += ''
+else:
+	res = ''`${2}`!p
+if (t[2] and t[2].find('\n') != 0):
+	snip += '}'
+else:
+	res = '}'`${3/.+/ /}${3}
+endsnippet
+
+#ELSE
+snippet "\bel\b|\belse\b" "else..." r
+else {`!p
+if (t[1] and t[1].find('\n') != 0):
+	snip >> 1
+	snip += ''
+else:
+	res = ''`${1}`!p
+if (t[1] and t[1].find('\n') != 0):
+	snip += '}'
+else:
+	res = '}'`
+endsnippet
+
+snippet ",t\b" "type" r
 <$1>
+endsnippet
+
+snippet "\bpst\b" "printStackTrace"  r
+printStackTrack();
+endsnippet
+snippet "\bsop\b" "println"  r
+System.out.println($1);$0
 endsnippet
 
 global !p
@@ -91,15 +149,15 @@ snippet /\bob\b|\bobj\b/ "Object" r
 Object`!p res = ' ' if t[1] != '' and t[1].find(" ") != 0 and t[1] != ')' and t[1] != ']' and t[1] != ',' and t[1] != '>' and t[1] != '.' else '' `$1
 endsnippet
 
-snippet "\bin\b" "int" r
+snippet "\bi\b" "int" r
 int`!p res = ' ' if t[1] != '' and t[1].find(" ") != 0 and t[1] != ')' and t[1] != ']' and t[1] != ',' and t[1] != '>' and t[1] != '.' else '' `$1
 endsnippet
 
-snippet "\bi\b|\bin\b|\boint\b" "integer" r
+snippet "\boi\b" "integer" r
 Integer`!p res = ' ' if t[1] != '' and t[1].find(" ") != 0 and t[1] != ')' and t[1] != ']' and t[1] != ',' and t[1] != '>' and t[1] != '.' else '' `$1
 endsnippet
 
-snippet "\bf\b|\bfl\b" "float" r
+snippet "\bfl\b" "float" r
 float`!p res = ' ' if t[1] != '' and t[1].find(" ") != 0 and t[1] != ')' and t[1] != ']' and t[1] != ',' and t[1] != '>' and t[1] != '.' else '' `$1
 endsnippet
 
@@ -107,15 +165,15 @@ snippet "\bof\b|\bofl\b" "Float" r
 Float`!p res = ' ' if t[1] != '' and t[1].find(" ") != 0 and t[1] != ')' and t[1] != ']' and t[1] != ',' and t[1] != '>' and t[1] != '.' else '' `$1
 endsnippet
 
-snippet "\bd\b|\bdbl\b" "double" r
+snippet "\bdb\b|\bdbl\b" "double" r
 double`!p res = ' ' if t[1] != '' and t[1].find(" ") != 0 and t[1] != ')' and t[1] != ']' and t[1] != ',' and t[1] != '>' and t[1] != '.' else '' `$1
 endsnippet
 
-snippet "\bod\b|\bodbl\b" "Double" r
+snippet "\bod\b|\bodb\b|\bodbl\b" "Double" r
 Double`!p res = ' ' if t[1] != '' and t[1].find(" ") != 0 and t[1] != ')' and t[1] != ']' and t[1] != ',' and t[1] != '>' and t[1] != '.' else '' `$1
 endsnippet
 
-snippet "\bc\b|\bch\b" "char" r
+snippet "\bch\b" "char" r
 char`!p res = ' ' if t[1] != '' and t[3].find(" ") != 0 and t[1] != ')' and t[1] != ']' and t[1] != ',' and t[1] != '>' and t[1] != '.' else '' `$1
 endsnippet
 
@@ -123,11 +181,11 @@ snippet "\boc\b|\boch\b" "Char" r
 Char`!p res = ' ' if t[1] != '' and t[1] != ')' and t[1] != ']' and t[1] != ',' and t[1] != '>' and t[1] != '.' else '' `$1
 endsnippet
 
-snippet "\bbo\b|\bboo\b|\bbool\b" "boolean" r
+snippet "\bbo\b|\bbl\b" "bool" r
 boolean`!p res = ' ' if t[1] != '' and t[1].find(" ") != 0 and t[1] != ')' and t[1] != ']' and t[1] != ',' and t[1] != '>' and t[1] != '.' else '' `$1
 endsnippet
 
-snippet "\bobo\b|\bobool\b" "boolean" r
+snippet "\bobo\b|\bobl\b" "bool" r
 Boolean`!p res = ' ' if t[1] != '' and t[1].find(" ") != 0 and t[1] != ')' and t[1] != ']' and t[1] != ',' and t[1] != '>' and t[1] != '.' else '' `$1
 endsnippet
 
@@ -139,11 +197,11 @@ snippet "\boby\b" "Byte" r
 Byte`!p res = ' ' if t[1] != '' and t[1].find(" ") != 0 and t[1] != ')' and t[1] != ']' and t[1] != ',' and t[1] != '>' and t[1] != '.' else '' `$1
 endsnippet
 
-snippet "\bv\b|\bvo\b|\bvoid\b" "void" r
+snippet "\bvo\b|\bv\b" "void" r
 void`!p res = ' ' if t[1] != '' and t[1].find(" ") != 0 and t[1] != ')' and t[1] != ']' and t[1] != ',' and t[1] != '>' and t[1] != '.' else '' `$1
 endsnippet
 
-snippet "\bfi\b|\bfin\b|\bfinal\b" "final" r
+snippet "\bfi\b|\bfin\b" "final" r
 final`!p
 if t[1] != "" and t[1].find(" ") != 0:
 	snip.rv = " "
@@ -152,7 +210,7 @@ else:
 `$1
 endsnippet
 
-snippet "\bst\b|\bstatic\b" "static" r
+snippet "\bsc\b" "static" r
 static`!p
 if t[1] != "" and t[1].find(" ") != 0:
 	snip.rv = " "
@@ -166,74 +224,6 @@ endsnippet
 #const ${1}
 #endsnippet
 
-#aa &&
-snippet "\b([,]{0,1})aa\b" "and &&" r
-`!p
-if match.group(1):
-	snip.rv = ' '
-`&& 
-endsnippet
-
-#oo ||
-snippet "\b[,]{0,1}oo\b" "or ||" r
-`!p
-if match.group(1):
-	snip.rv = ' '
-`|| 
-endsnippet
-
-#p ()
-snippet "\b([,]{0,1})pa\b" "parenthesis" r
-`!p
-if match.group(1):
-	snip.rv=' '
-`($1)
-endsnippet
-
-#par ([])
-#snippet "\b[,]{0,1}par\b" "parenthesis with array" r
-#([${1}])
-#endsnippet
-
-#ar []
-snippet "\b[,]{0,1}ar\b" "array" r
-[$1]
-endsnippet
-snippet "\b[,]{0,1}arl\b" "array" r
-[]
-endsnippet
-
-snippet "\bwh\b" "while" r
-while ($1) {`!p
-if (t[2] and t[2].find('\n') != 0):
-	snip >> 1
-	snip += ''
-else:
-	res = ''
-`${2}`!p
-if (t[2] and t[2].find('\n') != 0):
-	snip += '}'
-else:
-	res = '}'
-`
-endsnippet
-
-#do
-snippet "\bdw\b" "do while" r
-do {`!p
-if (t[1] and t[1].find('\n') != 0):
-	snip >> 1
-	snip += ''
-else:
-	res=""
-`$1`!p
-if (t[1] and t[1].find('\n') != 0):
-	snip += '}'
-else:
-	res="}"
-` while (${2});
-endsnippet
-
 snippet "\bfor\b" "for loop - no vars" r
 for (${1};${2};${3}) {`!p
 if (t[4] and t[4].find('\n') != 0):
@@ -245,6 +235,19 @@ if (t[4] and t[4].find('\n') != 0):
 	snip += '}'
 else:
 	res = '}'`
+endsnippet
+
+snippet fe "for each" w
+for (${1}:${2/.+/ /m}${2}) {`!p
+if (t[3] and t[3].find('\n') != 0):
+	snip >> 1
+	snip += ''
+else:
+	res = ''`${3}`!p
+if (t[3] and t[3].find('\n') != 0):
+	snip += '}'
+else:
+	res = '}'`${4}
 endsnippet
 
 #flu
@@ -292,32 +295,24 @@ else:
 }
 endsnippet
 
-#STRING -single
-snippet "'([^']*)'\b" "single quote" r
-'`!p
-snip.rv = match.group(1)
-`'+
+snippet "(?<!')(?![.])+'p" "single quote" r
+'+
 '${1}'${2}
 endsnippet
-
 #STRING -single
-#snippet "''p\b" "single quote" r
-#'${1}'+
-#'${2}'
-#endsnippet
-
-#STRING -double
-snippet ""([^"]*)"\b" "double quote" r
-"`!p
-snip.rv = match.group(1)
-`"+
-"${1}"
+snippet "''p\b" "single quote" r
+'${1}'+
+'${2}'${3}
 endsnippet
-
+#STRING -double
+snippet "(?<!\")(?![.])+\"p" "single quote" r
+"+
+"${1}"${2}
+endsnippet
 #STRING -double
 snippet "\"\"p\b" "double quote" r
 "${1}"+
-"${2}"
+"${2}"${3}
 endsnippet
 
 #CASE
@@ -348,81 +343,233 @@ break;
 endsnippet
 
 #CONTINUE
-snippet "\bcon\b|\bco\b" "continue;" r
-continue;
+snippet "\bcon\b|\bcn\b" "continue;" r
+continue;${1}
 endsnippet
 
 #RETURN
 snippet "\bre\b|\bret\b" "return" r
-return`!p
-if t[1] != "" and t[1].find(" ") != 0:
-	snip.rv += ' '
+return${1/.+/ /}`!p
+if (t[1] and t[2] and t[1].find(' ') != 0):
+	snip >> 1
+	snip += ' '
 else:
-	snip.rv=''
-`$1;
-endsnippet				
-
-#IF
-snippet "\bif\b" "if..." r
-if (${1}) {
-	${2}
-}${3/.+/ /}${3}
-endsnippet
-
-#ELSE IF
-snippet "\bei\b|\belseif\b" "else if..." r
-else if (${1}) {
-	${2}
-}${3/.+/ /}${3}
-endsnippet
-
-#ELSE
-snippet "\bel\b|\belse\b" "else..." r
-else {
-	${1}
-}${2}
-endsnippet
+	res = ''
+`${1};
+endsnippet	
 
 snippet "\b([,]{0,1})e\b" "assignment" r
 `!p
-if match.group(1):
-	snip.rv = ' '
+if match and match.group(1):
+	res = ' '
+else:
+	res = ''
 `= 
 endsnippet
 
+#cc
+snippet "\b[\,]{0,1}(xx|z)\b" "colon colon" r
+::
+endsnippet
+
 #n
-snippet "\bn\b" "not" r
+snippet "(^|\b)([,]{0,1})n\b" "not" r
 !
 endsnippet
 
 #ee
-snippet "\bee\b" "Equality" r
-== 
+snippet "(^|\b)([,]{0,1})ee\b" "Equality" r
+`!p
+if match and match.group(1):
+	res = ' '
+else:
+	res = ''
+`==
 endsnippet
 
 #ne
-snippet "\bne\b" "Not equals" r
-!= 
+snippet "(^|\b)([,]{0,1})ne\b" "Not equals..." r
+`!p
+if match and match.group(1):
+	res = ' '
+else:
+	res = ''
+`!=
 endsnippet
 
-#l 
-snippet "\bl\b" "less than" r
-< 
+#l
+snippet "(^|\b)([,]{0,1})l\b" "less than" r
+<
 endsnippet
 
-#le 
-snippet "\ble\b" "less than equal" r
-<= 
+#le
+snippet "(^|\b)([,]{0,1})le\b" "less than equal" r
+`!p
+if match and match.group(1):
+	res = ' '
+else:
+	res = ''
+`<=
 endsnippet
 
 #g
-snippet "\bg\b" "greater than" r
-> 
+snippet "(^|\b)([,]{0,1})g\b" "greater than" r
+>
 endsnippet
 
 #ge
-snippet "\bge\b" "greater than equals" r
->= 
+snippet "\b([,]{0,1})ge\b" "greater than equal" r
+`!p
+if match and match.group(1):
+	res = ' '
+else:
+	res = ''
+`>=
+endsnippet
+
+snippet "\bpu\b" "public" r
+public`!p
+if (t[1] and t[1].strip()[0] != ':'):
+	res = ' '
+`${1}
+endsnippet
+snippet "\b(pr|pi)\b" "private" r
+private`!p
+if (t[1] and t[1].strip()[0] != ':'):
+	res = ' '
+`${1}
+endsnippet
+
+snippet "\bpo\b" "protected" r
+protected`!p
+if (t[1] and t[1].strip()[0] != ':'):
+	res = ' '
+`${1}
+endsnippet
+
+#o
+snippet "(^|[^a-zA-Z\d:,])o\b" "or |" r
+`!p
+if match and match.group(1):
+	res = match.group(1)
+`|
+endsnippet
+
+#o
+snippet "([,]{1})o\b" "or |" r
+`!p
+if match and match.group(1):
+	res = ' '
+else:
+	res = ''
+`|
+endsnippet
+
+#oo
+snippet "\b([,]{0,1})oo\b" "or ||" r
+`!p
+if match and match.group(1):
+	res = ' '
+else:
+	res = ''
+`||
+endsnippet
+
+#a
+snippet "\b([,]{0,1})a\b" "and &" r
+`!p
+if match and match.group(1):
+	res = ' '
+else:
+	res = ''
+`&
+endsnippet
+
+snippet "\b([,]{0,1})aa\b" "and &&" r
+`!p
+if match and match.group(1):
+	res = ' '
+else:
+	res = ''
+`&&
+endsnippet
+
+snippet "\b[,]{0,1}pa\b" "parenthesis" r
+(${1})
+endsnippet
+snippet "\b[,]{0,1}par\b" "parenthesis with array" r
+([${1}])
+endsnippet
+snippet "\b[,]{0,1}ar\b" "array" r
+[${1}]
+endsnippet
+#aro []
+snippet "\b[\,]{0,1}(aro|ao)\b" "array cursor out" r
+[]
+endsnippet
+
+snippet "\bb\b" "body" r
+{`!p
+if (t[1] and t[1].find('\n') != 0):
+	snip >> 1
+	snip += ''
+`$1`!p
+if (t[1] and t[1].find('\n') != 0):
+	snip += '}'
+else:
+	res = '}'
+`
+endsnippet
+
+snippet "\bbi\b" "inline body" r
+{$1}
+endsnippet
+
+snippet wh "while" w
+while (${1}) {`!p
+if (t[2] and t[2].find('\n') != 0):
+	snip >> 1
+	snip += ''
+else:
+	res = ''
+`${2}`!p
+if (t[2] and t[2].find('\n') != 0):
+	snip += '}'
+else:
+	res = '}'
+`${3}
+endsnippet
+
+snippet "\btry\b" "try...catch" r
+try {
+	${1}
+} catch (${2:Exception} ${3:ex}) {`!p if (t[4] and t[4].find('\n') != 0):
+	snip >> 1
+	snip += ''
+else:
+	res=''
+`${4}`!p
+if (t[4] and t[4].find('\n') != 0):
+	snip += '}'
+else:
+	res = '}'
+`${5}
+endsnippet
+
+#do
+snippet do "do while" w
+do {`!p
+if (t[1] and t[1].find('\n') != 0):
+	snip >> 1
+	snip += ''
+else:
+	res=""
+`${1}`!p
+if (t[1] and t[1].find('\n') != 0):
+	snip += '}'
+else:
+	res="}"
+` while (${2})${3}
 endsnippet
 
 
@@ -471,17 +618,47 @@ endsnippet
 #}
 #endsnippet
 
-snippet "\bfil\b|\bfile\b" "filename" r
-`!p snip.rv=snip.basename or "untitled"`
+snippet na "name .. (name)"
+`!p snip.rv = "".join([x[0].upper() + x[1:] for x in snip.basename.split("_")]) or ""`
 endsnippet
 
-snippet "\bcl\b"  "class" r
-${1}`!p 
-if t[1] !="": snip.rv=" class " 
-else: snip.rv = "class "
-`${3:`!p snip.rv=snip.basename or "untitled"`} ${4}{
-	${5}
-}
+snippet cl "class .. (class)"
+class${1/.+/ /m}${1} {`!p
+if (t[2] and t[2].find('\n') != 0):
+	snip >> 1
+	snip += ''
+else:
+	res = ''`${2}`!p
+if (t[2] and t[2].find('\n') != 0):
+	snip += '}'
+else:
+	res = '}'`
+endsnippet
+
+snippet cln "class .. (class)"
+class ${1:`!p snip.rv = "".join([((x[0].upper() + x[1:]) if len(x) else "") for x in (snip.basename).split("_")]) or ""`} {`!p
+if (t[2] and t[2].find('\n') != 0):
+	snip >> 1
+	snip += ''
+else:
+	res = ''`${2}`!p
+if (t[2] and t[2].find('\n') != 0):
+	snip += '}'
+else:
+	res = '}'`
+endsnippet
+
+snippet fc "function class implementation"
+${1:return_type} ${2:namespace::class::method}($5) {`!p
+if (t[6] and t[6].find('\n') != 0):
+	snip >> 1
+	snip += ''
+else:
+	res = ''`${6}`!p
+if (t[6] and t[6].find('\n') != 0):
+	snip += '}'
+else:
+	res = '}'`
 endsnippet
 
 snippet "\bclf\b"  "class filename" r
@@ -827,22 +1004,6 @@ public static void main(String[] args) {
 }
 endsnippet
 
-snippet "\btry\b|\btr\b" "try...catch" r
-try {
-	${1}
-} catch (${2:Exception} ${3:ex}) {`!p if (t[4] and t[4].find('\n') != 0):
-	snip >> 1
-	snip += ''
-else:
-	res=''
-`${4}`!p
-if (t[4] and t[4].find('\n') != 0):
-	snip += '}'
-else:
-	res = '}'
-`${5}
-endsnippet
-
 
 #TODO throws
 
@@ -948,30 +1109,6 @@ endsnippet
 #System.out.print($1);$0
 #endsnippet
 
-snippet "\bpst\b" "printStackTrace"  r
-printStackTrack();
-endsnippet
-snippet "\bsop\b" "println"  r
-System.out.println($1);$0
-endsnippet
-
-snippet "\bpr\b" "private" r
-private`!p
-if t[1] != "" and t[1].find(" ") != 0:
-	snip.rv = " "
-else:
-	snip.rv=""
-`$1
-endsnippet
-
-snippet "\bpo\b|\bpro\b" "protected" r
-protected`!p
-if t[1] != "" and t[1].find(" ") != 0:
-	snip.rv = " "
-else:
-	snip.rv=""
-`$1
-endsnippet
 
 snippet "\bth\b" "throws" r
 throws`!p
@@ -987,17 +1124,6 @@ def expand (snip, jump_pos=1):
 	vim.eval('feedkeys("\<C-R>=UltiSnips#ExpandSnippet()\<CR>")')
 endglobal
 post_jump "expand(snip)"
-
-snippet "\bpu\b(.*)" "public" r
-public`!p
-if t[1] != "" and t[1].find(" ") != 0:
-	snip.rv = " "
-else:
-	snip.rv=""
-if match.group(1) != None:
-	snip.rv += match.group(1)
-`$1
-endsnippet
 
 snippet "\bab\b" "abstract" r
 abstract`!p

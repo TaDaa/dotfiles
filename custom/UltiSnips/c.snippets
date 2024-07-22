@@ -43,12 +43,12 @@ int main(int argc, char *argv[])
 }
 endsnippet
 
-snippet for "for loop (for)"
-for (${2:i} = 0; $2 < ${1:count}; ${3:++$2})
-{
-	${VISUAL}${0:${VISUAL/(.*)/(?1::\/* code *\/)/}}
-}
-endsnippet
+#snippet for "for loop (for)"
+#for (${2:i} = 0; $2 < ${1:count}; ${3:++$2})
+#{
+	#${VISUAL}${0:${VISUAL/(.*)/(?1::\/* code *\/)/}}
+#}
+#endsnippet
 
 #snippet fori "for int loop (fori)"
 #for (${4:int} ${2:i} = 0; $2 < ${1:count}; ${3:++$2})
@@ -656,7 +656,7 @@ else:
 	res="}"
 ` while (${2})${3}
 endsnippet
-snippet fl "for loop - no vars" w
+snippet for "for loop - no vars" w
 for (${1};${2};${3}) {`!p
 if (t[4] and t[4].find('\n') != 0):
 	snip >> 1

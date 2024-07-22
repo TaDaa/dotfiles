@@ -106,7 +106,7 @@ else:
 endsnippet
 
 snippet cln "class .. (class)"
-class ${1:`!p snip.rv = "".join([x[0].upper() + x[1:] for x in snip.basename.split("_")]) or ""`} {`!p
+class ${1:`!p snip.rv = "".join([((x[0].upper() + x[1:]) if len(x) else "") for x in snip.basename.split("_")]) or ""`} {`!p
 if (t[2] and t[2].find('\n') != 0):
 	snip >> 1
 	snip += ''
@@ -119,7 +119,7 @@ else:
 endsnippet
 
 snippet stn "struct"
-struct ${1:`!p snip.rv = "".join([x[0].upper() + x[1:] for x in snip.basename.split("_")]) or ""`} {`!p
+struct ${1:`!p snip.rv = "".join([((x[0].upper() + x[1:]) if len(x) else "") for x in snip.basename.split("_")]) or ""`} {`!p
 if (t[2] and t[2].find('\n') != 0):
 	snip >> 1
 	snip += ''
