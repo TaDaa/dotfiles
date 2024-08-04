@@ -172,6 +172,28 @@ if (FILE *fp = fopen(${1:"filename"}, "r"))
 }
 endsnippet
 
+#co_return
+snippet "\bcr\b|\bcre\b|\bcret\b" "co_return" r
+co_return${1/.+/ /}`!p
+if (t[1] and t[2] and t[1].find(' ') != 0):
+	snip >> 1
+	snip += ' '
+else:
+	res = ''
+`${1};
+endsnippet	
+
+#co_await
+snippet "\bca\b|\bcaw\b" "co_await" r
+co_await${1/.+/ /}`!p
+if (t[1] and t[2] and t[1].find(' ') != 0):
+	snip >> 1
+	snip += ' '
+else:
+	res = ''
+`${1};
+endsnippet	
+
 snippet map "std::map (map)"
 std::map<${1:key}, ${2:value}> map$0;
 endsnippet
