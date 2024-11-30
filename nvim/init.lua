@@ -1,6 +1,4 @@
---vim.cmd.source('~/.vimrc')
-
-vim.cmd.source('~/.vim/common.vim')
+vim.cmd.source('~/dotfiles/common.vim')
 
 -- Resolve root directories
 local root_names = { '.git', 'Makefile', 'package.json', 'editor.config'}
@@ -23,11 +21,3 @@ local root_augroup = vim.api.nvim_create_augroup('MyAutoRoot', {})
 vim.api.nvim_create_autocmd('BufEnter', { group = root_augroup, callback = set_root })
 
 require('config.lazy')
-
-vim.cmd('colorscheme onedark')
-
-
--- TODO use editorconfig
--- TODO git?
--- TODO hg
--- TODO ultisnips

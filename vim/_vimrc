@@ -15,7 +15,7 @@ if has('python3')
 endif
 let g:arr_esc="\<c-[>"
 
-let g:user_vim_dir=fnamemodify("~/.vim",":p") "full path to vim files
+let g:user_vim_dir=fnamemodify("~/dotfiles",":p") "full path to vim files
 if has("win32")
     source $VIMRUNTIME/mswin.vim
     let g:user_vim_dir=substitute(g:user_vim_dir,'/','\\','g')
@@ -38,7 +38,7 @@ if has('nvim') == 0
   set pythonthreedll=C:\\Users\\Trevor\\AppData\\Local\\Programs\\Python\\Python313\\python313.dll
 endif 
 
-call plug#begin('~/.vim/plugin-data')
+call plug#begin('~/dotfiles/plugin-data')
 Plug 'lukas-reineke/indent-blankline.nvim'
 Plug 'junegunn/vim-plug'
 Plug 'scrooloose/nerdtree'
@@ -86,10 +86,10 @@ call plug#end()
 cd ~/workspaces/
 
 let $FZF_DEFAULT_COMMAND = 'rg --files'
-let g:vimwiki_list = [{'path': '~/.vim/vimwiki', 'syntax': 'markdown', 'ext': '.md'}]
+let g:vimwiki_list = [{'path': '~/dotfiles/vimwiki', 'syntax': 'markdown', 'ext': '.md'}]
 
 let g:session_autosave = 'no'
-let g:startify_session_dir = '~/.vim/sessions'
+let g:startify_session_dir = '~/dotfiles/sessions'
 
 let g:pear_tree_repeatable_expand=0
 let g:indentLine_leadingSpaceChar = '.'
@@ -171,7 +171,7 @@ let g:WebDevIconsNerdTreeAfterGlyphPadding= g:IS_TERM ? ' ' : ''
 let g:WebDevIconsUnicodeDecorateFolderNodes=1
 let g:DevIconsEnableFoldersOpenClose=1
 
-source ~/.vim/common.vim
+source ~/dotfiles/common.vim
 
 syntax on
 
@@ -231,21 +231,15 @@ function! OpenFZF(fzf_type)
 endfunction
 
 nnoremap <Leader>n :NERDTreeToggle<CR>
-nnoremap <Leader>ci :call NERDComment(0,"toggle")<CR>
-vnoremap <Leader>ci :call NERDComment(0,"toggle")<CR>
+"nnoremap <Leader>ci :call NERDComment(0,"toggle")<CR>
+"vnoremap <Leader>ci :call NERDComment(0,"toggle")<CR>
 
+" called from common.vim
 function! TerminalNormal()
   if exists('b:FZF')
     :q!
   endif
 endfunction
-
-imap <c-l> <right>
-imap <c-h> <left>
-tnoremap <ESC> <C-\><C-N>:call TerminalNormal()<CR>
-
-
-colorscheme onedark
 
 "AUTOCMDS
 let g:indentLine_fileTypeExclude=['json']
@@ -257,8 +251,8 @@ autocmd VimEnter * call VimEnter()
 "autocmd VimEnter * ++nested highlight Normal ctermbg=NONE guibg=NONE
 
 function BuffEnter ()
-    set smarttab
-    set smartindent
+  set smarttab
+  set smartindent
 endfunction
 hi NonText guibg=#111122 guifg=#444466
 function VimEnter ()
@@ -451,7 +445,7 @@ from vimade.util import type as TYPE
 #vimade.setup(**Minimalist(animate=True))
 #vimade.setup(**TYPE.extend(Ripple(animate=False)))
 #vimade.setup(**TYPE.extend(Duo(animate=True)))
-vimade.setup(recipe = ['Minimalist', {'animate':True}])
+vimade.setup(recipe = ['default', {'animate':True}])
 #vimade.setup(**TYPE.extend(Default(animate=True)))
 EOF
 endfunction

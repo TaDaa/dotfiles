@@ -1,8 +1,10 @@
 set termguicolors
 set guifont=OperatorMono\ Nerd\ Font
-nmap <Leader>ci gc
-vmap <Leader>ci gc
-vmap <Leader>cs gc
+"unfortunately builtin commenting is borderline useless since it doesn't
+"support block comments
+"nmap <Leader>ci gc
+"vmap <Leader>ci gc
+"vmap <Leader>cs gc
 set shiftwidth=2
 set tabstop=2
 set softtabstop=2
@@ -42,3 +44,10 @@ endfunction
 
 au! User LazyDone call FinishSetup()
 au! VimEnter * call FinishSetup()
+
+"overridden in vimconfig
+function! TerminalNormal()
+endfunction
+
+" allows terminal to go into normal mode
+tnoremap <ESC> <C-\><C-N>:call TerminalNormal()<CR>
