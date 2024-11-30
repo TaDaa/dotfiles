@@ -1,0 +1,469 @@
+"echo has('python')
+"NOTES 
+"TODO - need to update my code in here to work right with Vundle (missing - begining + end)
+"- tsserver installed global
+"- vue-language-server installed global ... make script
+"- python3 installed global
+"Ag The SilverSearcher installed global
+"fd installed global
+"force py3
+let g:py_cmd = "py"
+let g:IS_TERM = !has('gui_running')
+
+if has('python3')
+    let g:py_cmd = "py3"
+endif
+let g:arr_esc="\<c-[>"
+
+let g:user_vim_dir=fnamemodify("~/.vim",":p") "full path to vim files
+if has("win32")
+    source $VIMRUNTIME/mswin.vim
+    let g:user_vim_dir=substitute(g:user_vim_dir,'/','\\','g')
+endif
+set nocompatible
+if !has('nvim')
+  behave mswin
+endif
+let &runtimepath.=",".g:user_vim_dir."custom"
+let &runtimepath.=",".g:user_vim_dir."dependencies"
+set rtp-='~/vimfiles'
+let g:android_sdk_path="C:/Users/Trevor/AppData/Local/Android/Sdk/"
+
+execute "source ".g:user_vim_dir."plugin-data/vim-plug/plug.vim"
+silent execute '!mkdir "'.$VIMRUNTIME.'/temp"'
+silent execute '!del "'.$VIMRUNTIME.'/temp/*~"'
+
+if has('nvim') == 0
+  set pythonthreehome=C:\\Users\\Trevor\\AppData\\Local\\Programs\\Python\\Python313
+  set pythonthreedll=C:\\Users\\Trevor\\AppData\\Local\\Programs\\Python\\Python313\\python313.dll
+endif 
+
+call plug#begin('~/.vim/plugin-data')
+Plug 'lukas-reineke/indent-blankline.nvim'
+Plug 'junegunn/vim-plug'
+Plug 'scrooloose/nerdtree'
+Plug 'scrooloose/nerdcommenter'
+Plug 'tpope/vim-surround'
+Plug 'tpope/vim-projectionist'
+Plug 'tpope/vim-eunuch'
+Plug 'tpope/vim-abolish'
+Plug 'tpope/vim-repeat'
+Plug 'tpope/vim-fugitive'
+Plug 'sphamba/smear-cursor.nvim'
+Plug 'shellRaining/hlchunk.nvim'
+Plug 'tmsvg/pear-tree'
+Plug 'mattn/emmet-vim'
+Plug 'rking/ag.vim'
+Plug 'joshdick/onedark.vim'
+Plug 'rakr/vim-one'
+Plug 'SirVer/UltiSnips'
+Plug 'tpope/vim-sleuth'
+Plug 'airblade/vim-gitgutter'
+Plug 'TaDaa/vimade'
+Plug 'TaDaa/snippets-ultisnips'
+"Bundle 'TaDaa/vim-emmet-autocompleter'
+Plug 'tmux-plugins/vim-tmux-focus-events'
+Plug 'dstein64/vim-startuptime'
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'junegunn/fzf.vim'
+Plug 'mg979/vim-visual-multi'
+Plug 'morhetz/gruvbox'
+Plug 'w0ng/vim-hybrid'
+Plug 'maksimr/vim-jsbeautify'
+Plug 'ryanoasis/vim-devicons'
+Plug 'iamcco/markdown-preview.nvim', {'do': 'cd app & yarn install'}
+Plug 'neoclide/coc.nvim', {'do': 'yarn install --frozen-lockfile'}
+"Plug 'roxma/nvim-yarp'
+"Plug 'roxma/vim-hug-neovim-rpc'
+Plug 'airblade/vim-rooter'
+"Plug 'xolox/vim-misc'
+"Plug 'xolox/vim-session'
+Plug 'vimwiki/vimwiki'
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate', 'tag': 'v0.9.2'}
+Plug 'nvim-treesitter/playground'
+call plug#end()
+
+cd ~/workspaces/
+
+let $FZF_DEFAULT_COMMAND = 'rg --files'
+let g:vimwiki_list = [{'path': '~/.vim/vimwiki', 'syntax': 'markdown', 'ext': '.md'}]
+
+let g:session_autosave = 'no'
+let g:startify_session_dir = '~/.vim/sessions'
+
+let g:pear_tree_repeatable_expand=0
+let g:indentLine_leadingSpaceChar = '.'
+let g:indentLine_char = '.'
+let g:indentLine_leadingSpaceEnabled = 1
+
+let g:SuperTabDefaultCompletionType = "<c-n>"
+
+"let g:vimade = {}
+"let g:vimade.renderer = 'auto'
+"let g:vimade.disablebatch = 1 
+"let g:vimade.renderer = 'lua'
+"let g:vimade.renderer = 'python'
+"let g:vimade.checkinterval = 1000
+"let g:vimade.signsretentionperiod = 4000
+"let g:vimade.enablefocusfading=1
+"let g:vimade.enabletreesitter=1
+"let g:vimade.normalid = {}
+
+let g:NERDTreeUpdateOnCursorHold = 0
+
+"NERDTREE
+let g:NERDTreeChDirMode=2
+let g:NERDTreeMapOpen='<CR>'
+let g:NERDTreeMapPreview='<S-CR>'
+let g:NERDTreeMapOpenSplit='<C-x>'
+let g:NERDTreeMapPreviewSplit='px'
+let g:NERDTreeMapOpenVSplit='<C-v>'
+let g:NERDTreeMapPreviewVSplit='pv'
+let g:NERDTreeIndicatorMapCustom = {
+    \ "Modified"  : "✹",
+    \ "Staged"    : "✚",
+    \ "Untracked" : "✭",
+    \ "Renamed"   : "➜",
+    \ "Unmerged"  : "═",
+    \ "Deleted"   : "✖",
+    \ "Dirty"     : "✹",
+    \ "Clean"     : "✔︎",
+    \ 'Ignored'   : '☒',
+    \ "Unknown"   : "?"
+    \ }
+"
+"AG
+let g:aghighlight=1
+let g:agformat="%f:%l:%c:%m"
+
+"TADAA EMMET_COMPLETIONS
+let g:emmet_completions_use_omnifunc=1
+"TADAA SOURCEKITTEN
+let g:sourcekitten_use_omnifunc=1
+
+"YOUCOMPLETEME
+"let g:ycm_global_ycm_extra_conf= g:user_vim_dir.'custom/ycm/.ycm_extra_conf.py'
+"let g:ycm_min_num_of_chars_for_completion = 0
+"let g:ycm_semantic_triggers =  {
+  "\   'c' : ['->', '.'],
+  "\   'objc' : ['->', '.', 're!\[[_a-zA-Z]+\w*\s', 're!^\s*[^\W\d]\w*\s',
+  "\             're!\[.*\]\s'],
+  "\   'ocaml' : ['.', '#'],
+  "\   'cpp,objcpp' : ['->', '.', '::'],
+  "\   'perl' : ['->'],
+  "\   'php' : ['->', '::'],
+  "\   'java,javascript,typescript,d,python,perl6,scala,vb,elixir,go,vue' : ['.'],
+  "\   'groovy' : ['.'],
+  "\   'cs' : ['.'],
+  "\   'ruby' : ['.', '::'],
+  "\   'lua' : ['.', ':'],
+  "\   'erlang' : [':'],
+  "\   'html' : ['[', ' ', '<','>', '+', '*', ']', '^'],
+  "\   'svg' : ['[', ' ', '<', '>', '+', '*', ']', '^'],
+  "\   'swift' : [']', '?', '.']
+  "\ }
+
+"webicons
+let g:webdevicons_enable_nerdtree=1
+let g:webdevicons_conceal_nerdtree_brackets=1
+let g:WebDevIconsNerdTreeBeforeGlyphPadding=''
+let g:WebDevIconsNerdTreeAfterGlyphPadding= g:IS_TERM ? ' ' : ''
+let g:WebDevIconsUnicodeDecorateFolderNodes=1
+let g:DevIconsEnableFoldersOpenClose=1
+
+source ~/.vim/common.vim
+
+syntax on
+
+if has("win32")
+  set guioptions-=T
+  let g:agprg=g:user_vim_dir.'dependencies/windows/ag/ag.exe --column' "AG
+  let g:apex_binary_tee="C:/MinGW/msys/1.0/bin/tee.exe"
+  let g:apex_binary_tee="C:/MinGW/msys/1.0/bin/touch.exe"
+  let &backupdir=g:user_vim_dir.'backup'
+  let &directory=g:user_vim_dir.'swap'
+  :map <silent> <C-F5> :if expand("%:p:h") != ""<CR>:!start explorer.exe %:p:h<CR>:endif<CR><CR>
+else
+  inoremap <c-c> <ESC>
+  inoremap <C-c> <Esc>
+
+  let &backupdir=g:user_vim_dir.'backup'
+  let &directory=g:user_vim_dir.'swap'
+endif
+
+"ULTISNIPS
+let g:UltiSnipsExpandTrigger="<c-h>"
+let g:UltiSnipsJumpForwardTrigger="<c-j>"
+let g:UltiSnipsJumpBackwardTrigger="<c-k>"
+noremap <silent> <leader>e :execute 'CocCommand explorer' .
+      \ ' --toggle' .
+      \ ' --sources=buffer+,file+' .
+      \ ' --file-columns=git,selection,icon,clip,indent,filename,size --reveal ' . expand('%:p')<CR>
+
+"KEYBINDINGS
+"visual shifting (does not exit Visual mode)
+
+vnoremap < <gv
+vnoremap > >gv
+nnoremap <c-p> :call OpenFZF("files")<CR>
+nnoremap <leader>ff :call OpenFZF("files")<CR>
+nnoremap <leader>fb :call OpenFZF("buffers")<CR>
+nnoremap <leader>fg :call OpenFZF("grep")<CR>
+nnoremap <leader>fc :call OpenFZF("commits")<CR>
+
+nnoremap <Leader>os :CocList<CR>
+nnoremap <Leader>oa :CocAction<CR>
+nnoremap <Leader>oc :CocCommand<CR>
+
+
+function! OpenFZF(fzf_type)
+  "FZF
+  if a:fzf_type == "files"
+    call fzf#vim#files(0, fzf#vim#with_preview({'options': [ '--info=inline']}), 0)
+  elseif a:fzf_type == "buffers"
+    call fzf#vim#buffers(fzf#vim#with_preview({'options': [ '--info=inline']}), 0)
+  elseif a:fzf_type == "grep"
+    call fzf#vim#grep('rg --column --line-number --no-heading --color=always --smart-case -- '.shellescape(''), 1, fzf#vim#with_preview({'options': [ '--info=inline']}), 0)
+  elseif a:fzf_type == "commits"
+    call fzf#vim#commits(fzf#vim#with_preview({'options': [ '--info=inline']}), 0)
+  endif
+  let b:FZF = 1
+endfunction
+
+nnoremap <Leader>n :NERDTreeToggle<CR>
+nnoremap <Leader>ci :call NERDComment(0,"toggle")<CR>
+vnoremap <Leader>ci :call NERDComment(0,"toggle")<CR>
+
+function! TerminalNormal()
+  if exists('b:FZF')
+    :q!
+  endif
+endfunction
+
+imap <c-l> <right>
+imap <c-h> <left>
+tnoremap <ESC> <C-\><C-N>:call TerminalNormal()<CR>
+
+
+colorscheme onedark
+
+"AUTOCMDS
+let g:indentLine_fileTypeExclude=['json']
+autocmd FileType typescript,javascript,vue set omnifunc= "unset omnifunc to allow youCompleteMe and ALE to take precedence
+autocmd FileType scss syn cluster sassCssAttributes add=@cssColors "VIM-CSS-COLOR
+autocmd BufEnter,BufNew *.tsx set ft=typescript
+autocmd BufEnter * call BuffEnter()
+autocmd VimEnter * call VimEnter()
+"autocmd VimEnter * ++nested highlight Normal ctermbg=NONE guibg=NONE
+
+function BuffEnter ()
+    set smarttab
+    set smartindent
+endfunction
+hi NonText guibg=#111122 guifg=#444466
+function VimEnter ()
+    hi CursorLineNr guibg=white
+    if has('transparency')
+      set transparency=1
+    endif
+    colorscheme onedark
+    "rooter
+    call add(g:rooter_patterns, 'package.json')
+    call add(g:rooter_patterns, '.env')
+    let g:rooter_use_lcd = 1
+    let g:rooter_silent_chdir = 1
+    let g:rooter_change_directory_for_non_project_files = 'current'
+    autocmd User StartifyBufferOpened Rooter
+
+    hi CocErrorHighlight gui=bold,underline guifg=#ff11a4
+    hi CocWarningHighlight gui=bold,underline guifg=#ffffa4
+    hi CocInfoHighlight gui=bold,underline guifg=#ffffff
+    hi SpellBad gui=undercurl guibg=NONE
+    hi ColorColumn guibg=NONE guifg=#555566
+    hi Normal guibg=#171b23
+    hi NonText guifg=#171b23
+    hi DiffChange guibg=#232c45 guifg=NONE gui=NONE
+    hi DiffText guibg=#202087 guifg=NONE gui=NONE
+    hi DiffAdd guibg=#105501 guifg=NONE gui=NONE
+    hi GitAdd guifg=#bbbb00
+    hi GitChanged guifg=#4444ff
+    hi GitRemoved guifg=#ff2222
+    hi DiffDelete guibg=#cd1010 guifg=#cd1010 gui=NONE
+    hi VertSplit guifg=#223322
+
+    "colorscheme onedark
+   "this fixes status line icons not showing or cutoff
+
+    hi LightlineRight_active_2 guifg=#ABB2BF
+    filetype plugin on 
+    "NERDTree
+    call webdevicons#refresh()
+    wincmd w
+endfunction
+
+"Javascript/Typescript LintFix
+command! LintFix call LintFix()
+function! LintFix ()
+    if &ft == "typescript"
+        execute("!tslint --fix ".@%)
+    elseif &ft == "javascript"
+        execute("!eslint --fix ".@%)
+    endif
+endfunction
+
+"startify + devIcons
+function! StartifyEntryFormat()
+  return 'WebDevIconsGetFileTypeSymbol(absolute_path) ." ". entry_path'
+endfunction
+
+"FZF + devicons
+function! FZFWithDevIcons()
+  function! s:files()
+    "let files = split(system('fd --type f --exclude node_modules'), '\n')
+    let files = split(system('rg --files'), '\n')
+    call s:prepend_icon(files)
+    return l:files
+  endfunction
+
+  function! s:prepend_icon(candidates)
+    let result = a:candidates 
+    let i = 0
+    for candidate in result
+      "let filename = fnamemodify(candidate, ':p:t')
+      let icon = WebDevIconsGetFileTypeSymbol(fnamemodify(candidate, ':p:t'), 0)
+      let result[i] = icon . ' ' . candidate
+      let i = i + 1
+    endfor
+  endfunction
+
+  function! s:edit_file(items)
+    let items = a:items
+    let i = 1
+    let ln = len(items)
+    while i < ln
+      let item = items[i]
+      let parts = split(item, ' ')
+      let file_path = get(parts, 2, '')
+      let items[i] = file_path
+      let i += 1
+    endwhile
+    call s:Sink(items)
+  endfunction
+
+  let opts = fzf#wrap({})
+  let opts.source = <sid>files()
+  let s:Sink = opts['sink*']
+  let opts['sink*'] = function('s:edit_file')
+  call fzf#run(opts)
+endfunction
+
+"coc
+"coc-prettier
+"coc-json
+"coc-pairs
+"coc-marketplace
+"coc-post
+"coc-java
+"coc-vimlsp
+"coc-git
+"coc-emmet
+"coc-highlight
+"coc-snippets
+"coc-project
+"Deferredcoc-sql
+"coc-docker
+"coc-yaml
+"coc-tsserver
+"coc-svg
+"coc-phpls
+"coc-html
+"coc-python
+"coc-css
+"coc-todolist
+function! CheckBackspace() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+
+inoremap <silent><expr> <C-space>
+      \ coc#pum#visible() ? coc#pum#next(1) :
+      \ CheckBackspace() ? "\<Tab>" :
+      \ coc#refresh()
+inoremap <expr> <Tab> coc#pum#visible() ? coc#pum#next(1) : "\<Tab>"
+inoremap <expr> <S-Tab> coc#pum#visible() ? coc#pum#prev(1) : "\<S-Tab>"
+
+
+let g:fzf_layout={'window': {'width':0.8, 'height': 0.8}}
+let g:fzf_preview_window = ['right:40%', 'ctrl-/']
+
+if has('nvim') != 0
+lua <<EOF
+require'nvim-treesitter.configs'.setup {
+  ensure_installed = "", -- one of "all", "maintained" (parsers with maintainers), or a list of languages
+  highlight = {
+    enable = true,              -- false will disable the whole extension
+    disable = {},  -- list of language that will be disabled
+  },
+  playground = {
+    enable = true,
+    disable = {},
+    updatetime = 25, -- Debounced time for highlighting nodes in the playground from source code
+    persist_queries = false -- Whether the query persists across vim sessions
+  }
+}
+
+local vimade = require('vimade')
+-- local Minimalist = require('vimade.recipe.minimalist').Minimalist
+local Default = require('vimade.recipe.default').Default
+local TYPE = require('vimade.util.type')
+
+-- TODO bg_buffers.tape
+--vimade.setup(TYPE.extend(Default{animate=false}, {tint={bg={rgb={0,0,0}, intensity=0.3}}}))
+
+-- TODO minimalist.tape
+-- require('vimade').setup(require('vimade.recipe.minimalist').Minimalist{animate = true})
+require('vimade').setup({recipe = {'Minimalist', {animate = true}}})
+-- TODO default.tape
+-- require('vimade').setup(require('vimade.recipe.default').Default{animate = true})
+--print('here1111')
+-- require('vimade').setup(require('vimade.recipe.ripple').Ripple{animate = true})
+-- require('vimade').setup(require('vimade.recipe.duo').Duo{animate = false})
+--require('vimade').setup(require('vimade.recipe.space').Space{animate = true})
+--require('vimade').setup(require('vimade.recipe.paper').Paper{animate = true})
+--require('smear_cursor').setup({legacy_computing_symbols_support=true})
+EOF
+endif
+"let g:vimade.tint = {'fg':{'rgb':[0,0,0], 'intensity':0.5},'bg':{'rgb':[0,0,0], 'intensity':0.5}}
+"let g:vimade.tint = {'bg':{'rgb':[0,0,0], 'intensity':0.35}, 'fg':{'rgb':[0,0,255],'intensity':0.218}}
+
+"let g:vimade.renderer='python'
+function! PythonReady()
+py3 << EOF
+from vimade import vimade
+#vimade.setup(tint={'bg': {'rgb':[0,0,0], 'intensity': 1}})
+from vimade import vimade
+from vimade.recipe.minimalist import Minimalist
+from vimade.recipe.default import Default
+from vimade.recipe.duo import Duo
+from vimade.recipe.ripple import Ripple
+from vimade.util import type as TYPE
+#vimade.setup(**TYPE.extend(Minimalist(animate=False), {'tint': {'bg': {'rgb':[0,0,0], 'intensity': 1}}}))
+#vimade.setup(**Minimalist(animate=True))
+#vimade.setup(**TYPE.extend(Ripple(animate=False)))
+#vimade.setup(**TYPE.extend(Duo(animate=True)))
+vimade.setup(recipe = ['Minimalist', {'animate':True}])
+#vimade.setup(**TYPE.extend(Default(animate=True)))
+EOF
+endfunction
+
+
+"let g:vimade.renderer='python'
+"let g:vimade = {}
+"let g:vimade.lazy = 1
+"au WinEnter * ++once call vimade#Load()
+
+au! User Vimade#PythonReady call PythonReady()
+"let g:vimade.renderer='python'
+"let g:vimade.disablebatch = 1
+"
+"let g:vimade.basebg=0x181818

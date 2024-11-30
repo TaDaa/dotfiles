@@ -1,6 +1,7 @@
 backup/*.*
 swap/*.*
 plugged/
+plugin-data/
 old/
 bundle/
 __pycache__/
