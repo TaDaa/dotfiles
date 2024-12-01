@@ -5,7 +5,7 @@ return {{
       silent = true,
       noremap = true,
       expr = true 
-      replace_keycodes = false,
+      replace_keycodes = false
     }
   end
 }}
