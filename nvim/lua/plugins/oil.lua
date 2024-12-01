@@ -209,18 +209,23 @@ return {{
     if vim.b.oil_rendering == false then
       vim.cmd('q!')
     else
-      vim.cmd('Oil --float')
+      oil.open_float()
+
+      local timer = vim.loop.new_timer()
+      timer:start(16, 16, function ()
+        vim.schedule(function()
+          local entry = oil.get_cursor_entry()
+          local done = entry or vim.b.oil_rendering == nil
+          if done then
+            timer:stop()
+            timer:close()
+            if entry then
+              oil.open_preview()
+            end
+          end
+        end)
+      end)
     end
   end)
-  vim.api.nvim_create_autocmd("User", {
-    pattern = "OilEnter",
-    callback = vim.schedule_wrap(function(args)
-      if vim.api.nvim_get_current_buf() == args.data.buf
-          and vim.api.nvim_win_get_config(0).relative ~= ''
-          and oil.get_cursor_entry() then
-        oil.open_preview()
-      end
-    end),
-  })
   end,
 }}
