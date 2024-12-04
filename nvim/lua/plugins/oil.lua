@@ -1,5 +1,5 @@
 return {{
-  'stevearc/oil.nvim',
+  'TaDaa/oil.nvim',
   dependencies = {
     "nvim-tree/nvim-web-devicons",
   },
@@ -68,7 +68,7 @@ return {{
       ["g?"] = "actions.show_help",
       ["<CR>"] = "actions.select",
       ["<C-v>"] = { "actions.select", opts = { vertical = true }, desc = "Open the entry in a vertical split" },
-      ["<C-x>"] = { "actions.select", opts = { horizontal = true }, desc = "Open the entry in a horizontal split" },
+      ["<C-s>"] = { "actions.select", opts = { horizontal = true }, desc = "Open the entry in a horizontal split" },
       ["<C-t>"] = { "actions.select", opts = { tab = true }, desc = "Open the entry in new tab" },
       ["<C-p>"] = "actions.preview",
       ["<C-c>"] = "actions.close",
@@ -221,7 +221,6 @@ return {{
           local done = entry or vim.b.oil_rendering == nil
           if done then
             timer:stop()
-            timer:close()
             if entry then
               oil.open_preview()
             end
