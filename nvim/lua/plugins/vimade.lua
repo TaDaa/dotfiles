@@ -1,6 +1,8 @@
 return {{
   'TaDaa/vimade',
   opts = {
-    recipe = {'minimalist', {animate = true}}
+    recipe = {'duo', {animate = true}},
+    tint={bg= {rgb={0,0,0}, intensity=0.3}},
   }
 }}
+
