@@ -1,15 +1,37 @@
 return {{
   'folke/flash.nvim',
+  enabled = true,
   ---@type Flash.Config
   config = function()
     require('flash').setup({
-       modes = {search = {enabled = false}, char = {enabled = false}}
+       search = {
+         multi_window = true,
+         mode = 'search',
+         wrap = true,
+         incremental = true
+       },
+       modes = {
+         search = {
+           enabled = true,
+           highlight = { backdrop = false },
+           jump = { history = true, register = true, nohlsearch = true },
+         },
+         char = {
+           enabled = true,
+           -- autohide makes things behave more like default vim bindings,
+           -- prefer this approach as other modes have tradeoffs
+           autohide = true,
+         }
+     }
     })
-    require('flash').toggle()
+    -- below ties into search and makes this work well
+    --require('flash').toggle()
+    require('flash').toggle(true)
   end,
   -- stylua: ignore
   keys = {
-    --{ "/", mode = { "n", "v"}, function() require("flash").jump() end, desc = "Flash" },
+    --{ "/", mode = { "n", "v"}, function() require("flash").jump({search = {forward = true, wrap = true, multi_window=true}}) end, desc = "Flash" },
+    --{ "n", mode = { "n", "v"}, function() require("flash").jump({search = {forward = true, wrap = false, multi_window=false}}) end, desc = "Flash" },
     { "s", mode = { "n", "x", "o" }, function() require("flash").jump() end, desc = "Flash" },
     { "S", mode = { "n", "x", "o" }, function() require("flash").treesitter() end, desc = "Flash Treesitter" },
     { "r", mode = "o", function() require("flash").remote() end, desc = "Remote Flash" },
