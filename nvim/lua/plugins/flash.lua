@@ -1,6 +1,6 @@
 return {{
   'folke/flash.nvim',
-  enabled = true,
+  enabled = false,
   ---@type Flash.Config
   config = function()
     require('flash').setup({
