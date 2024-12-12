@@ -1,6 +1,6 @@
 return {{
-  'folke/flash.nvim',
-  enabled = false,
+  'TaDaa/flash.nvim',
+  enabled = true,
   ---@type Flash.Config
   config = function()
     require('flash').setup({
@@ -13,7 +13,7 @@ return {{
        modes = {
          search = {
            enabled = true,
-           highlight = { backdrop = false },
+           highlight = { backdrop = true },
            jump = { history = true, register = true, nohlsearch = true },
          },
          char = {

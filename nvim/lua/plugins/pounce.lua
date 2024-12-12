@@ -1,7 +1,7 @@
 return {{
 opts = {},
 'TaDaa/pounce.nvim',
-enabled = true,
+enabled = false,
 config = function()
     require'pounce'.setup{
       accept_keys = 'JFKDLSAHGNUVRBYTMICEOXWPQZ',
